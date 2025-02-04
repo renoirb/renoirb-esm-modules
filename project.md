@@ -143,6 +143,19 @@ environment.
      - Support utilities
      - Unit testing foundation
 
+   - ▢ notice-box-element
+     - Simple UI component to display notices or alerts.
+     - Supports 'info', 'warn', and 'error' variants to represent different
+       levels of importance or severity.
+     - Implemented as a native Web Component for runtime independence and
+       reusability.
+     - Styling is currently done via inline styles and TailwindCSS class names,
+       with room for improvement in terms of theming and customization.
+     - The component logic is written in plain JavaScript, adhering to the
+       project's principle of using standard Web APIs.
+     - The component's appearance changes dynamically based on the `variant`
+       attribute, demonstrating attribute observation and dynamic rendering.
+
 3. Development Tools
    - ⬚ Component workbench (using migrated components)
      - ⬚ README display (using `markdown-content`)

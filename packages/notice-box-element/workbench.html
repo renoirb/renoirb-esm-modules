@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Notice Box Element Workbench</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 80ch;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .variant-group {
+        margin: 2rem 0;
+      }
+      .controls {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f0f0f0;
+        border-radius: 0.5rem;
+      }
+    </style>
+
+    <script type="module">
+      import NoticeBoxElement from 'https://renoirb.com/esm-modules/notice-box-element'
+      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
+      customElements.define('my-notice-box', NoticeBoxElement);
+      customElements.define('my-component-showcase', ComponentShowcaseElement);
+    </script>
+  </head>
+  <body>
+    <h1>Workbench</h1>
+      
+    <section>
+      <my-component-showcase name="notice-box-element" slots="bravo alpha delta charlie">
+        
+        <template slot="bravo" title="When only with a header">
+          <my-notice-box variant="error">
+            <p slot="header">This should be a error type with only a header.</p>
+          </my-notice-box>
+        </template>
+        
+        <template slot="alpha" title="When specifying everything">
+          <my-notice-box variant="warn">
+            <strong slot="header">Some warning title</strong>
+            <p>This should be a warning, have a header, and be the first of the list.</p>
+          </my-notice-box>
+        </template>
+
+        <template slot="charlie" title="When no header">
+          <my-notice-box variant="warn">
+            <p>This should be of type info, and without a title header</p>
+          </my-notice-box>
+        </template>
+
+        <template slot="delta" title="When no variant">
+          <my-notice-box>
+            <p>This should be of default type type info, and without a title header</p>
+          </my-notice-box>
+        </template>
+
+      </my-component-showcase>
+    </section>
+
+  </body>
+</html>

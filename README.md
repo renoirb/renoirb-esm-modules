@@ -45,6 +45,11 @@ informational content.
   <strong slot="header">Important Notice</strong>
   <p>Your message here...</p>
 </notice-card>
+<script type="module">
+  import NoticeBox from 'https://renoirb.com/esm-modules/notice-box-element.mjs'
+  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
+  registerCustomElement('notice-card', NoticeBox)
+</script>
 ```
 
 #### Application Layout Element
@@ -77,7 +82,6 @@ The person could see equivalent of;
   <dd><span label="Yes">👍</span></dd>
 </dl>
 ```
-
 
 #### Markdown Content Element
 
