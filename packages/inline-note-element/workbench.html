@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inline Note Element Workbench</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 80ch;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .variant-group {
+        margin: 2rem 0;
+      }
+      .controls {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f0f0f0;
+        border-radius: 0.5rem;
+      }
+    </style>
+
+    <script type="module">
+      import InlineNoteElement from 'https://renoirb.com/esm-modules/inline-note-element'
+      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
+      customElements.define('the-tested-element', InlineNoteElement)
+      customElements.define('my-component-showcase', ComponentShowcaseElement)
+    </script>
+  </head>
+  <body>
+    <h1>Workbench</h1>
+
+    <section>
+      <my-component-showcase name="inline-note-element" slots="alpha">
+        <template slot="alpha" title="Full usage">
+          <p>
+            Lorem Ipsum
+            <the-tested-element type="ins" date="2025-02-05">
+              dolor
+              <span slot="comment">So it is a text about pain.</span>
+            </the-tested-element>
+            sit amet.
+          </p>
+        </template>
+      </my-component-showcase>
+    </section>
+  </body>
+</html>
