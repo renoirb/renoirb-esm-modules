@@ -1,0 +1,30 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read scripts/dev-server.ts",
+    "generate-barrels": "deno run --allow-run --allow-read --allow-write scripts/generate-barrels.ts",
+    "code": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode all --prefix packages/",
+    "code-diff": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode diff --prefix packages/",
+    "code-staged": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode staged --prefix packages/",
+    "code-modified": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode modified --prefix packages/",
+    "test": "deno test --allow-net",
+    "lint": "deno lint"
+  },
+  "lint": {
+    "include": ["packages/*/src/", "scripts/"],
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": false,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["packages/*/src/", "scripts/"],
+    "exclude": []
+  }
+}
