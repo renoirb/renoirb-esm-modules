@@ -77,6 +77,9 @@ environment.
     └── build.ts
 ```
 
+Files in `core/` folder are meant to be pure logic that will work anywhere
+JavaScript runs.
+
 ### Testing Strategy
 
 - Core logic testing in Deno
@@ -140,6 +143,7 @@ environment.
      - Content handling patterns
      - Integration testing examples
    - ▢ element-utils
+
      - Support utilities
      - Unit testing foundation
 
