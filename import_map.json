@@ -1,8 +1,10 @@
 {
   "imports": {
     "https://renoirb.com/esm-modules/component-showcase-element": "./packages/component-showcase-element/src/browser/index.mjs",
+    "https://renoirb.com/esm-modules/context-api": "./packages/context-api/src/browser/index.mjs",
     "https://renoirb.com/esm-modules/inline-note-element": "./packages/inline-note-element/src/browser/index.mjs",
     "https://renoirb.com/esm-modules/monorepo-maintenance-utils/": "./packages/monorepo-maintenance-utils/src/deno/",
-    "https://renoirb.com/esm-modules/notice-box-element": "./packages/notice-box-element/src/browser/index.mjs"
+    "https://renoirb.com/esm-modules/notice-box-element": "./packages/notice-box-element/src/browser/index.mjs",
+    "https://renoirb.com/esm-modules/value-date-element": "./packages/value-date-element/src/browser/index.mjs"
   }
 }

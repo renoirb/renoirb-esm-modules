@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Value Date Element Workbench</title>
+    <script type="module">
+      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
+      import ValueDateElement from 'https://renoirb.com/esm-modules/value-date-element'
+      customElements.define('value-date', ValueDateElement)
+      customElements.define('my-component-showcase', ComponentShowcaseElement)
+    </script>
+    <script type="module">
+      import dayjs from 'https://cdn.skypack.dev/dayjs'
+      import { ContextRequest_DateConversion } from 'https://renoirb.com/esm-modules/value-date-element'
+      window.document.addEventListener('context-request', (event) => {
+        console.log('workbench 1', event)
+        if (event.context === ContextRequest_DateConversion) {
+          event.stopPropagation()
+          const date = event.target.getAttribute('date')
+          if (date) {
+            const data = dayjs(date)
+            const unixEpoch = data.unix()
+            const isoString = data.toISOString()
+            const human = data.format('MMM D, YYYY')
+            const payload = { date, human, isoString, unixEpoch }
+            console.log('workbench 2', payload)
+            event.callback(payload)
+          }
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <section>
+      <my-component-showcase name="value-date-element" slots="alpha">
+        <template slot="alpha" title="Simplest">
+          <value-date datetime="2025-02-08">...</value-date>
+        </template>
+      </my-component-showcase>
+    </section>
+  </body>
+</html>

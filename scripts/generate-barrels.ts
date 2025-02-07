@@ -3,10 +3,12 @@ import { generateBarrels } from 'https://renoirb.com/esm-modules/monorepo-mainte
 export const packages = [
   /*                    */
   'component-showcase-element',
+  'context-api',
   'element-utils',
   'inline-note-element',
   'monorepo-maintenance-utils',
   'notice-box-element',
+  'value-date-element',
 ]
 
 // Usage:
