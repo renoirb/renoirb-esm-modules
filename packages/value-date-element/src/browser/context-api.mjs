@@ -10,6 +10,7 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     const message = `No shadowRoot found! ${errorMessageSuffix}`
     throw new Error(message)
   }
+
   const timeEl = element.shadowRoot.querySelector('time')
   if (!timeEl) {
     const message = `No time element found! ${errorMessageSuffix}`
@@ -17,7 +18,6 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
   }
 
   const datetime = element.getAttribute('datetime')
-
   if (!datetime) {
     const message = `The host implementation MUST have a datetime attribute. ${errorMessageSuffix}`
     throw new Error(message)
