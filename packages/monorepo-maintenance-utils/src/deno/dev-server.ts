@@ -31,6 +31,26 @@ async function listPackagesWithWorkbench(
   return packages
 }
 
+const STYLESHEET = `<style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 80ch;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .variant-group {
+        margin: 2rem 0;
+      }
+      .controls {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f0f0f0;
+        border-radius: 0.5rem;
+      }
+      .package-list { padding: 1em; background: #f0f0f0; margin-bottom: 1em; }
+      .current { font-weight: bold; }
+    </style>`
+
 async function generatePackageList(
   packages: string[],
   currentPackage: string,
@@ -45,14 +65,12 @@ async function generatePackageList(
     .join('\n')
 
   return `
-    <style>
-      .package-list { padding: 1em; background: #f0f0f0; margin-bottom: 1em; }
-      .current { font-weight: bold; }
-    </style>
+    ${STYLESHEET}
     <div class="package-list">
       <h3>Available Packages:</h3>
       <ul>${links}</ul>
     </div>
+    <h1>Workbench</h1>
   `
 }
 
