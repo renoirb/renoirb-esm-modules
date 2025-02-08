@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --allow-net --allow-read scripts/dev-server.ts",
+    "dev": "deno run --allow-net --allow-read --allow-import scripts/dev-server.ts",
     "generate-barrels": "deno run --allow-run --allow-read --allow-write scripts/generate-barrels.ts",
     "code": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode all --prefix packages/",
     "code-diff": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode diff --prefix packages/",
@@ -8,6 +8,10 @@
     "code-modified": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode modified --prefix packages/",
     "test": "deno test --allow-net",
     "lint": "deno lint"
+  },
+  "importMap": "import_map.json",
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
   },
   "lint": {
     "include": ["packages/*/src/", "scripts/"],
