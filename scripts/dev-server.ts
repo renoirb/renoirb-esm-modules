@@ -2,5 +2,5 @@ import { devServer } from 'https://renoirb.com/esm-modules/monorepo-maintenance-
 
 await devServer({
   port: 8000,
-  defaultPackage: 'inline-note-element'
+  defaultPackage: 'inline-note-element',
 })

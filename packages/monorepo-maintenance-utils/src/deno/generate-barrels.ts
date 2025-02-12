@@ -63,7 +63,7 @@ export async function generateBarrels(
       await Deno.mkdir(runtimePath, { recursive: true })
     }
 
-    const barrel = TOP_OF_FILE + `\nexport * from './src/${runtime}/index.mjs';`
+    const barrel = TOP_OF_FILE + `\nexport * from './src/${runtime}/index.mjs'`
     const filePath = `${packagePath}/${runtime}.mjs`
     console.log(`Writing ${filePath}`)
     await Deno.writeTextFile(filePath, barrel)
@@ -85,11 +85,17 @@ export async function generateBarrels(
 
     for await (const file of files) {
       if (file.isFile && !file.name.startsWith('index.')) {
-        const basename = file.name.split('.')[0]
-        if (basename === 'element') {
-          exports.push(`export { default } from './${basename}.mjs'`)
+        const extension = file.name.split('.').pop()
+        const basename = file.name.slice(0, -(extension?.length ?? 0) - 1)
+        let message = `Found "${basename}" "${extension}"`
+        if (!/\.test$/.test(basename)) {
+          exports.push(`export * from './${basename}.${extension}'`)
+          message += ' and not a test file'
+        } else if (/-element$/.test(basename)) {
+          exports.push(`export { default } from './${basename}.${extension}'`)
+          message += ' is a component'
         }
-        exports.push(`export * from './${basename}.mjs'`)
+        console.log(message)
       }
     }
 
