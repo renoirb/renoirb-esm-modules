@@ -120,7 +120,7 @@ if (import.meta.main) {
     const output = await main(options)
     console.log(output)
   } catch (error) {
-    console.error('Error:', error.message)
+    console.error('Error:', (<Error> error).message)
     Deno.exit(1)
   }
 }

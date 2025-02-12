@@ -20,6 +20,6 @@ for (const pkg of packages) {
     })
     console.log(`✓ Successfully processed ${pkg}`)
   } catch (error) {
-    console.error(`✗ Failed to process ${pkg}:`, error.message)
+    console.error(`✗ Failed to process ${pkg}:`, (<Error> error).message)
   }
 }
