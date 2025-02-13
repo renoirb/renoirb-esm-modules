@@ -35,22 +35,10 @@ Import and use components directly in your HTML:
 
 ### Web Components
 
-#### Notice Box Element
+#### [Notice Box Element](./packages/notice-box-element/README.md)
 
 A versatile notification component for displaying status messages, warnings, or
 informational content.
-
-```html
-<notice-card variant="warn">
-  <strong slot="header">Important Notice</strong>
-  <p>Your message here...</p>
-</notice-card>
-<script type="module">
-  import NoticeBox from 'https://renoirb.com/esm-modules/notice-box-element.mjs'
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
-  registerCustomElement('notice-card', NoticeBox)
-</script>
-```
 
 #### Application Layout Element
 
@@ -132,13 +120,9 @@ Helper functions for Web Component registration and common DOM operations.
 import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
 ```
 
-#### Context API
+#### [Context API](./packages/context-api/README.md)
 
 Implementation of the W3C Web Components Community Group Context API protocol.
-
-```javascript
-import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api.mjs'
-```
 
 #### Load From GitHub
 

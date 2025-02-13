@@ -1,25 +1,83 @@
 # Context API Web Component Utilities
 
+Implementation of the W3C Web Components Community Group Context API protocol.
+
 Utilities to allow separating the concern handled by a dependency closer to the
 application and further from the web component that can request for it.
 
 ## Setup
 
-For example, say we want to update components that supports displaying date by
-responding with an object with formatted dates (e.g. `date`, `isoString`,
-`unixExpoch`, `human`) such as
-[value-date-element][renoirb-value-date-element-readme], we can simply setup our
-web application to respond and update the components.
+### From a component
 
-Note that the shape of an object with the properties: `date`, `isoString`,
-`unixExpoch`, `human` as example is the only requirement.
+For example, you want to create your own element to display a date yourself. You
+may have found
+'`[https://renoirb.com/esm-modules/value-date-element](https://renoirb.com/esm-modules/value-date-element)`',
+but you want it differently.
+
+Assuming you just need to have data formatted as ISO, UNIX Epoch, and a human
+readable for your component.
+
+The shape of data we want, a "_contextResponse_" could look like
+`{ date: '...', isoString: '...', unixEpoch: '...', human: '...' }`, and we
+define a name, say `'date-conversion'`.
 
 ```js
-import dayjs from 'https://esm.archive.org/dayjs'
-import { ContextRequest_DateConversion } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
+import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api'
+
+export class SomeExampleElement extends HTMLElement {
+  constructor() {
+    super()
+    this.attachShadow({ mode: 'open' })
+    const template = document.createElement('template')
+    template.innerHTML = `
+      <time datetime>
+        <!-- rest of your implementation -->
+      </time>
+    `
+    this.shadowRoot.appendChild(template.content.cloneNode(true))
+  }
+
+  connectedCallback() {
+    const datetime = this.getAttribute('datetime')
+    if (datetime) {
+      const subjectEl = this.shadowRoot.querySelector('time')
+      subjectEl.innerText = datetime
+      subjectEl.setAttribute('datetime', datetime)
+      this.dispatchEvent(
+        new ContextRequestEvent(
+          'date-conversion',
+          this._onDateConversionContextEvent,
+        ),
+      )
+    }
+  }
+
+  _onDateConversionContextEvent = (contextResponse) => {
+    const { human, isoString, unixEpoch } = contextResponse
+    const timeEl = this.shadowRoot.querySelector('time')
+    if (isoString) {
+      timeEl.setAttribute('datetime', isoString)
+    }
+    if (human) {
+      timeEl.textContent = human
+    }
+    if (unixEpoch) {
+      timeEl.setAttribute('data-unix-epoch', unixEpoch)
+    }
+  }
+}
+```
+
+### Setup ContextRequest Event Listener
+
+**WARNING** Make sure this is bound to the document earlier than the elements
+making use for that `ContextEvent`
+
+```js
+import dayjs from 'https://cdn.skypack.dev/dayjs'
 
 window.document.addEventListener('context-request', (event) => {
-  if (event.context === ContextRequest_DateConversion) {
+  if (event.context === 'date-conversion') {
     event.stopPropagation()
     const date = event.target.getAttribute('date')
     if (date) {
@@ -32,6 +90,9 @@ window.document.addEventListener('context-request', (event) => {
   }
 })
 ```
+
+The shape `{ date: '...', isoString: '...', unixEpoch: '...', human: '...' }` is
+the data for the `'date-conversion'` context.
 
 ## References
 
