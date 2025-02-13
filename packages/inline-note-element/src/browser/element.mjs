@@ -1,6 +1,6 @@
 import { classNameMap } from '../core/index.mjs'
 
-class InlineNoteElement extends HTMLElement {
+export class InlineNoteElement extends HTMLElement {
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
@@ -107,4 +107,3 @@ class InlineNoteElement extends HTMLElement {
   }
 }
 
-export default InlineNoteElement

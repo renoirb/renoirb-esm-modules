@@ -9,7 +9,7 @@
     "test": "deno test --allow-net",
     "lint": "deno lint"
   },
-  "importMap": "import_map.json",
+  "importMap": "import_map_workbench.json",
   "compilerOptions": {
     "lib": ["deno.ns", "dom"]
   },

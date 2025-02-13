@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std/http/server.ts'
-import { resolve, join, dirname } from 'https://deno.land/std/path/mod.ts'
+import { join } from 'https://deno.land/std/path/mod.ts'
 
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html',
@@ -10,6 +10,7 @@ const MIME_TYPES: Record<string, string> = {
 type DevServerOptions = {
   port?: number
   defaultPackage?: string
+  componentShowcaseScriptAsString: string
 }
 
 async function listPackagesWithWorkbench(
@@ -37,6 +38,7 @@ const STYLESHEET = `<style>
         max-width: 80ch;
         margin: 2rem auto;
         padding: 0 1rem;
+        background-color: #fff;
       }
       .variant-group {
         margin: 2rem 0;
@@ -47,7 +49,11 @@ const STYLESHEET = `<style>
         background: #f0f0f0;
         border-radius: 0.5rem;
       }
-      .package-list { padding: 1em; background: #f0f0f0; margin-bottom: 1em; }
+      .package-list { 
+        padding: 1em;
+        background-color: #e5e5e5;
+        margin-bottom: 1em;
+      }
       .current { font-weight: bold; }
     </style>`
 
@@ -111,7 +117,7 @@ async function handleRequest(
 
       if (ext === '.html') {
         const content = new TextDecoder().decode(file)
-        const importMapPath = join(projectRoot, 'import_map.json')
+        const importMapPath = join(projectRoot, 'import_map_workbench.json')
         const importMap = await Deno.readTextFile(importMapPath)
 
         // Get list of packages with workbench.html
@@ -121,7 +127,7 @@ async function handleRequest(
         const modified = content
           .replace(
             '<head>',
-            `<head>\n<script type="importmap">${importMap}</script>`,
+            `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>`,
           )
           .replace('<body>', `<body>\n${packageList}`)
 

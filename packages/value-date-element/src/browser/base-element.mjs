@@ -58,5 +58,3 @@ export class BaseValueDateElement extends HTMLElement {
     }
   }
 }
-
-export default BaseValueDateElement

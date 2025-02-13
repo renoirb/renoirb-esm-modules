@@ -31,7 +31,7 @@ const TEMPLATE = `
   </div>
 `
 
-class ComponentShowcase extends HTMLElement {
+export class ComponentShowcaseElement extends HTMLElement {
   static get observedAttributes() {
     return ['name', 'slots']
   }
@@ -117,4 +117,3 @@ class ComponentShowcase extends HTMLElement {
   }
 }
 
-export default ComponentShowcase

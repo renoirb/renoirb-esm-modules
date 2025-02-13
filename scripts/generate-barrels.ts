@@ -11,6 +11,9 @@ export const packages = [
   'value-date-element',
 ]
 
+console.log(`Need to rework this script to work for both Deno and Browser, you have to do it yourself until it’s fixed.`)
+Deno.exit(1)
+
 // Usage:
 for (const pkg of packages) {
   try {

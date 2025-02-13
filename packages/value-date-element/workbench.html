@@ -2,50 +2,30 @@
 <html>
   <head>
     <title>Value Date Element Workbench</title>
+    <script src="packages/value-date-element/workbench.mjs" type="module"></script>
     <script type="module">
-      import dayjs from 'https://cdn.skypack.dev/dayjs'
-      import 'https://cdn.skypack.dev/dayjs/locale/de'
-      import 'https://cdn.skypack.dev/dayjs/locale/es'
-      import weekday from 'https://cdn.skypack.dev/dayjs/plugin/weekday'
-      import customParseFormat from 'https://cdn.skypack.dev/dayjs/plugin/customParseFormat'
-      dayjs.extend(weekday);
-      dayjs.extend(customParseFormat);
-
-      import { ContextRequest_DateConversion } from 'https://renoirb.com/esm-modules/value-date-element'
-      window.document.addEventListener('context-request', (event) => {
-        if (event.context === ContextRequest_DateConversion) {
-          event.stopPropagation()
-          const element = event
-          const host = event.callback.__temporary_hack__
-          //         Yes this is ugly ^^^^^^^^^^^^^^^^^^^
-          // Gotta remember what I forgotten here.
-          const date = host.getAttribute('datetime')
-          const format = host.dataset.format || 'MMM D, YYYY'
-          const formatLocale = host.dataset.formatLocale || 'en'
-          if (date) {
-            const formatter = dayjs(date)
-            const unixEpoch = formatter.unix()
-            const isoString = formatter.toISOString()
-            const human = formatter.locale(formatLocale).format(format, formatLocale)
-            const payload = { date, human, isoString, unixEpoch }
-            event.callback(payload)
-          }
-        }
-      })
-    </script>
-    <script type="module">
-      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
-      import ValueDateElement from 'https://renoirb.com/esm-modules/value-date-element'
-      customElements.define('value-date', ValueDateElement)
-      customElements.define('my-component-showcase', ComponentShowcaseElement)
+      /* Reminder: The customElements.define MUST be AFTER the context-request event listener */
+      import {
+        /*                                  */
+        BaseValueDateElement,
+      } from 'https://renoirb.com/esm-modules/value-date-element'
+      customElements.define('the-tested-component', BaseValueDateElement)
     </script>
   </head>
   <body>
     <section>
-      <my-component-showcase name="value-date-element" slots="alpha">
+      <my-component-showcase name="BaseValueDateElement" slots="alpha">
+
         <template slot="alpha" title="Simplest">
-          <value-date datetime="2025-02-08" data-format="YYYY MMMM DD" data-format-locale="es">...</value-date>
+          <the-tested-component
+            datetime="2025-02-08"
+            data-date-format="YYYY MMMM DD"
+            data-date-locale="pt"
+          >
+            ...
+          </the-tested-component>
         </template>
+
       </my-component-showcase>
     </section>
   </body>

@@ -1,7 +1,6 @@
-import { styleMap, assertValidVariant } from '../core/styles.mjs'
-import { createVariantManager } from '../core/variants.mjs'
+import { createVariantManager, styleMap, assertValidVariant } from '../core/index.mjs'
 
-export const STYLE = `
+const STYLE = `
   :host {
     display: block;
 
@@ -89,7 +88,7 @@ export const STYLE = `
   }
   /** ----  END  ---- Dirty scavenging from TailwindCSS ---- */`
 
-export const TEMPLATE = `<div
+const TEMPLATE = `<div
   class="disposition-parent"
   data-alert-type="warn"
   role="alert"
@@ -107,7 +106,7 @@ export const TEMPLATE = `<div
 
 const variantManager = createVariantManager()
 
-class NoticeBoxElement extends HTMLElement {
+export class NoticeBoxElement extends HTMLElement {
   static get observedAttributes() {
     return ['variant']
   }
@@ -186,5 +185,3 @@ class NoticeBoxElement extends HTMLElement {
     }
   }
 }
-
-export default NoticeBoxElement

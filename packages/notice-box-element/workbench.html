@@ -3,39 +3,40 @@
   <head>
     <title>Notice Box Element Workbench</title>
     <script type="module">
-      import NoticeBoxElement from 'https://renoirb.com/esm-modules/notice-box-element'
-      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
-      customElements.define('my-notice-box', NoticeBoxElement);
-      customElements.define('my-component-showcase', ComponentShowcaseElement);
+      import {
+        /*                                  */
+        NoticeBoxElement,
+      } from 'https://renoirb.com/esm-modules/notice-box-element'
+      customElements.define('the-tested-component', NoticeBoxElement);
     </script>
   </head>
   <body>
     <section>
       <my-component-showcase name="notice-box-element" slots="bravo alpha delta charlie">
-        
+
         <template slot="bravo" title="When only with a header">
-          <my-notice-box variant="error">
+          <the-tested-component variant="error">
             <p slot="header">This should be a error type with only a header.</p>
-          </my-notice-box>
+          </the-tested-component>
         </template>
-        
+
         <template slot="alpha" title="When specifying everything">
-          <my-notice-box variant="warn">
+          <the-tested-component variant="warn">
             <strong slot="header">Some warning title</strong>
             <p>This should be a warning, have a header, and be the first of the list.</p>
-          </my-notice-box>
+          </the-tested-component>
         </template>
 
         <template slot="charlie" title="When no header">
-          <my-notice-box variant="warn">
+          <the-tested-component variant="warn">
             <p>This should be of type info, and without a title header</p>
-          </my-notice-box>
+          </the-tested-component>
         </template>
 
         <template slot="delta" title="When no variant">
-          <my-notice-box>
+          <the-tested-component>
             <p>This should be of default type type info, and without a title header</p>
-          </my-notice-box>
+          </the-tested-component>
         </template>
 
       </my-component-showcase>

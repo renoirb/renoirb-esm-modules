@@ -3,23 +3,24 @@
   <head>
     <title>Inline Note Element Workbench</title>
     <script type="module">
-      import InlineNoteElement from 'https://renoirb.com/esm-modules/inline-note-element'
-      import ComponentShowcaseElement from 'https://renoirb.com/esm-modules/component-showcase-element'
-      customElements.define('the-tested-element', InlineNoteElement)
-      customElements.define('my-component-showcase', ComponentShowcaseElement)
+      import {
+        /*                                  */
+        InlineNoteElement,
+      } from 'https://renoirb.com/esm-modules/inline-note-element'
+      customElements.define('the-tested-component', InlineNoteElement)
     </script>
   </head>
   <body>
     <section>
-      <my-component-showcase name="inline-note-element" slots="alpha">
+      <my-component-showcase name="InlineNoteElement" slots="alpha">
 
         <template slot="alpha" title="Full usage">
           <p>
             Lorem Ipsum
-            <the-tested-element type="ins" date="2025-02-05">
+            <the-tested-component type="ins" date="2025-02-05">
               dolor
               <span slot="comment">So it is a text about pain.</span>
-            </the-tested-element>
+            </the-tested-component>
             sit amet.
           </p>
         </template>

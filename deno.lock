@@ -6,6 +6,18 @@
     "https://deno.land/std/testing/asserts.ts": "https://deno.land/std@0.224.0/testing/asserts.ts"
   },
   "remote": {
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/optimized/dayjs.js": "596a73ea537b1d5350ff8ccdb35fdb86ed5b8c50112f8d2ceabeda4ab33f0458",
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/unoptimized/locale/de.js": "439bee9094e03e348ee6c323ebd08a6aaf0b58d9bb9e8df4b8744d1b248c9cd6",
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/unoptimized/locale/es.js": "f960d55209e8b50c6e8b64eea196d4ced8accbd163246e01e3e78dbc51b40c7d",
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/unoptimized/locale/pt.js": "4357db3e55ccae28539b02f41b8b573fc9eec42227a9e6cf8ba28f10f97483de",
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/unoptimized/plugin/customParseFormat.js": "630033148c9e80d029780bc5ed97efb7b42d67f0ea418590b66ba6c16a08020f",
+    "https://cdn.skypack.dev/-/dayjs@v1.11.13-VE4qN76xFOf6Bduj9jfS/dist=es2019,mode=imports/unoptimized/plugin/weekday.js": "64d2ff0953c9888ed06c84ce55f984d1c405f1284d02a8cadd2aa6bf1c1d9a6c",
+    "https://cdn.skypack.dev/dayjs": "d0f1a843dc957ca04a90599c778faea9479dd9dddab50d8cf371a5f61e36d7da",
+    "https://cdn.skypack.dev/dayjs/locale/de": "229fb820262240d60bc89657eed5eadee41722f7328c5812798e1584d3725273",
+    "https://cdn.skypack.dev/dayjs/locale/es": "98b5b84e2ed3a1e29136bf7dfe8c547c779f3783f74cb88bd075d2770d1b2e8e",
+    "https://cdn.skypack.dev/dayjs/locale/pt": "70f4d3ce864d1e48e2ab8e7305ce0f6b6bfae23e7e9ff041f1980821f93011cd",
+    "https://cdn.skypack.dev/dayjs/plugin/customParseFormat": "2c0580d5ebd468ce496c9c8e1ce9d595c8606eae9cfb251b6d78e7994cf801bb",
+    "https://cdn.skypack.dev/dayjs/plugin/weekday": "0c32660e1e752588463bf783c57f14eb52a0af5bb85c7f5a31751aa590299e47",
     "https://deno.land/std@0.224.0/assert/_constants.ts": "a271e8ef5a573f1df8e822a6eb9d09df064ad66a4390f21b3e31f820a38e0975",
     "https://deno.land/std@0.224.0/assert/assert.ts": "09d30564c09de846855b7b071e62b5974b001bb72a4b797958fe0660e7849834",
     "https://deno.land/std@0.224.0/assert/assert_almost_equals.ts": "9e416114322012c9a21fa68e187637ce2d7df25bcbdbfd957cd639e65d3cf293",
