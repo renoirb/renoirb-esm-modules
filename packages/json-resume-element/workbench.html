@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JSONResume Workbench</title>
+    <script
+      src="packages/value-date-element/workbench.mjs"
+      type="module"
+    ></script>
+    <script type="module">
+      import {
+        /*                                  */
+        WorkExperienceElement,
+      } from 'https://renoirb.com/esm-modules/json-resume-element'
+      WorkExperienceElement.setDateComponentTagName(/*'value-date-whatever'*/'work-experience-date')
+      customElements.define('the-tested-component', WorkExperienceElement)
+    </script>
+  </head>
+  <body>
+    <section>
+      <my-component-showcase
+        name="WorkExperienceElement"
+        slots="bravo alpha charlie"
+      >
+        <template slot="alpha" title="With all props and slots">
+          <the-tested-component
+            workFor="GoTo Inc."
+            workForUrl="https://www.GoTo.com/"
+            workPosition="Staff Software Developer"
+            dateStart="2021-01-01"
+            dateEnd="2022-05-01"
+          >
+            <p>
+              Contributed to an established micro-frontend architecture based on
+              Web Components and lit-element, helping teams leverage its
+              framework-agnostic foundations. Provided technical guidance on
+              native Web Platform capabilities, demonstrating how to maintain
+              accessibility and performance while integrating with React, and
+              other frameworks. Created documentation and working examples
+              showing how to effectively use the existing component system
+              across different technology stacks.
+            </p>
+          </the-tested-component>
+        </template>
+
+        <template slot="bravo" title="Empty">
+          <the-tested-component></the-tested-component>
+        </template>
+
+        <template slot="charlie" title="No End Date">
+          <the-tested-component>
+            <p>Lorem Ipsum Dolor</p>
+          </the-tested-component>
+        </template>
+      </my-component-showcase>
+      <script type="module" defer>
+        import {
+          /*                                  */
+          BaseValueDateElement,
+        } from 'https://renoirb.com/esm-modules/value-date-element'
+        customElements.define(/*'value-date-whatever'*/'work-experience-date', BaseValueDateElement)
+      </script>
+    </section>
+  </body>
+</html>
