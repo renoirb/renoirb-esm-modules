@@ -1,0 +1,8 @@
+{
+  "name": "@renoirb-esm-modules/json-resume-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  }
+}
