@@ -24,7 +24,7 @@ Import and use components directly in your HTML:
 <script type="module">
   import AppLayout from 'https://renoirb.com/esm-modules/app-layout-element.mjs'
   import NoticeBox from 'https://renoirb.com/esm-modules/notice-box-element.mjs'
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
+  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
 
   registerCustomElement('my-app-layout', AppLayout)
   registerCustomElement('notice-card', NoticeBox)
@@ -39,6 +39,15 @@ Import and use components directly in your HTML:
 
 A versatile notification component for displaying status messages, warnings, or
 informational content.
+
+#### [Component Showcase Element](./packages/component-showcase-element/README.md)
+
+Visualize many variations of usage of a web component.
+
+#### [Inline Note Element](./packages/inline-note-element/README.md)
+
+Wrap text to add comments, remove or add section in the text. It can be used to
+do hilighting or commenting.
 
 #### Application Layout Element
 
@@ -90,7 +99,7 @@ Hello **World**.
     ContextRequest_MarkdownContent,
     default as MarkdownContentElement,
   } from 'https://renoirb.com/esm-modules/markdown-content.mjs'
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
+  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
 
   registerCustomElement('kool-mark-a-dawn', MarkdownContentElement)
 
