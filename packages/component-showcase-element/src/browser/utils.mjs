@@ -1,9 +1,9 @@
 import {
-  /*                          */
+  /*                                   */
   assertNonEmptyString,
   assertValidSlotName,
   normalizeSpaceSeparated,
-} from './element-utils.mjs'
+} from 'https://renoirb.com/esm-modules/element-utils'
 
 export const validateSlotsList = (slotsAttr) => {
   assertNonEmptyString(slotsAttr, 'slots attribute is required')

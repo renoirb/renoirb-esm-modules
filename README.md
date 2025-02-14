@@ -112,13 +112,9 @@ Hello **World**.
 
 ### Utility Modules
 
-#### Element Utils
+#### [Element Utils](./packages/element-utils/README.md)
 
 Helper functions for Web Component registration and common DOM operations.
-
-```javascript
-import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
-```
 
 #### [Context API](./packages/context-api/README.md)
 

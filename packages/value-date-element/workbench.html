@@ -3,13 +3,18 @@
   <head>
     <title>Value Date Element Workbench</title>
     <script src="packages/value-date-element/workbench.mjs" type="module"></script>
+    <!--                                     ^^^^^^^^^^^^^
+      Reminder: The customElements.define MUST be AFTER the context-request event listener
+                In this example, it is defined in workbench.mjs import above
+                and the registration is done after (below)
+    -->
     <script type="module">
-      /* Reminder: The customElements.define MUST be AFTER the context-request event listener */
+      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
       import {
         /*                                  */
         BaseValueDateElement,
       } from 'https://renoirb.com/esm-modules/value-date-element'
-      customElements.define('the-tested-component', BaseValueDateElement)
+      registerCustomElement(window, 'the-tested-component', BaseValueDateElement)
     </script>
   </head>
   <body>

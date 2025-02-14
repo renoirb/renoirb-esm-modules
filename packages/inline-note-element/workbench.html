@@ -3,11 +3,12 @@
   <head>
     <title>Inline Note Element Workbench</title>
     <script type="module">
+      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
       import {
         /*                                  */
         InlineNoteElement,
       } from 'https://renoirb.com/esm-modules/inline-note-element'
-      customElements.define('the-tested-component', InlineNoteElement)
+      registerCustomElement(window, 'the-tested-component', InlineNoteElement)
     </script>
   </head>
   <body>

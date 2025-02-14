@@ -1,5 +1,5 @@
 import {
-  /*                          */
+  /*                                   */
   validateSlotsList,
 } from './utils.mjs'
 
@@ -73,8 +73,10 @@ export class ComponentShowcaseElement extends HTMLElement {
       throw new Error('name attribute is required')
     }
 
-    // Set title
-    this.shadowRoot.querySelector('.title').textContent = name.trim()
+    if (this.shadowRoot.querySelector('.title')) {
+      // Set title
+      this.shadowRoot.querySelector('.title').textContent = name.trim()
+    }
 
     // Validate and normalize slots
     const slots = validateSlotsList(this.getAttribute('slots'))
@@ -116,4 +118,3 @@ export class ComponentShowcaseElement extends HTMLElement {
     }
   }
 }
-

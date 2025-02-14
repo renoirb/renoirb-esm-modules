@@ -2,6 +2,7 @@
   "imports": {
     "https://renoirb.com/esm-modules/component-showcase-element": "./packages/component-showcase-element/src/browser.mjs",
     "https://renoirb.com/esm-modules/context-api": "./packages/context-api/src/browser.mjs",
+    "https://renoirb.com/esm-modules/element-utils": "./packages/element-utils/src/browser.mjs",
     "https://renoirb.com/esm-modules/inline-note-element": "./packages/inline-note-element/src/browser.mjs",
     "https://renoirb.com/esm-modules/monorepo-maintenance-utils/": "./packages/monorepo-maintenance-utils/src/deno/",
     "https://renoirb.com/esm-modules/notice-box-element": "./packages/notice-box-element/src/browser.mjs",
