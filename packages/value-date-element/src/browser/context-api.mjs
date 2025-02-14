@@ -1,5 +1,28 @@
 export const ContextRequest_DateConversion = 'date-conversion'
 
+/**
+ * @param {import('./types.ts').DateContextPayload} data
+ */
+export const isDateContextPayload = (data) => {
+  return (
+    data &&
+    typeof data === 'object' &&
+    'human' in data &&
+    'isoString' in data &&
+    'unixEpoch' in data
+  )
+}
+
+/**
+ * @param {import('./types.ts').DateContextPayload} data
+ */
+export const assertIsDateContextPayload = (data) => {
+  if (!isDateContextPayload(data)) {
+    throw new Error('Invalid DateContextPayload')
+  }
+}
+
+
 export const bindContextResponseHandlerMethodForDateContext = (element) => {
   // Expecting to find a shadowRoot, that finds only one time element
   const errorMessageSuffix = `
@@ -17,14 +40,8 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     throw new Error(message)
   }
 
-  const datetime = element.getAttribute('datetime')
-  if (!datetime) {
-    const message = `The host implementation MUST have a datetime attribute. ${errorMessageSuffix}`
-    throw new Error(message)
-  }
-
   /**
-   * @param {import('../core/types.ts').DateContextPayload} data
+   * @param {import('./types.ts').DateContextPayload} data
    */
   const handleDateContextResponse = (contextResponse) => {
     const { human, isoString, unixEpoch } = contextResponse

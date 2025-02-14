@@ -1,1 +1,1 @@
-export * from './validator.mjs'
+export * from './calculate-duration.mjs'

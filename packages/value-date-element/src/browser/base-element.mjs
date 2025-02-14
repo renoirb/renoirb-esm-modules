@@ -4,7 +4,6 @@ import {
   ContextRequest_DateConversion,
 } from './context-api.mjs'
 
-
 export const STYLE = `
   :host {
     display: inline;
@@ -12,7 +11,6 @@ export const STYLE = `
 `
 
 export class BaseValueDateElement extends HTMLElement {
-
   static get observedAttributes() {
     return ['datetime']
   }
@@ -25,7 +23,8 @@ export class BaseValueDateElement extends HTMLElement {
     const styleElement = new CSSStyleSheet()
     styleElement.replaceSync(STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
-    this._onDateConversionContextEvent = bindContextResponseHandlerMethodForDateContext(this)
+    this._onDateConversionContextEvent =
+      bindContextResponseHandlerMethodForDateContext(this)
     Reflect.set(this._onDateConversionContextEvent, '__temporary_hack__', this)
     //                                              ^ Yes this is ugly ^
     // To my recollection, the point of this.dispatchEvent() is to tell who emitted the event
