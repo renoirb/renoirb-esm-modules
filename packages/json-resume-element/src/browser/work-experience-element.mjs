@@ -14,7 +14,6 @@ const TEMPLATE = `
           <time id="dateEnd" datetime></time>
         </span>
         <span id="duration" class="initially-hidden">
-          <i class="icon-clock mr-5"></i>
           <time datetime></time>
         </span>
       </small>
@@ -66,11 +65,27 @@ const ATTRIBUTES = new Set([
   'dateStart',
 ])
 
-const WORK_EXPERIENCE_DATE_ELEMENT = 'work-experience-date'
+const DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT = 'work-experience-date'
+let WORK_EXPERIENCE_DATE_ELEMENT = DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
+
+const changeOnlyOnce = (candidate) => {
+  if (WORK_EXPERIENCE_DATE_ELEMENT === DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT) {
+    WORK_EXPERIENCE_DATE_ELEMENT = candidate
+  } else if (
+    WORK_EXPERIENCE_DATE_ELEMENT !== DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
+  ) {
+    const message = `Cannot set to "${candidate}" it is already set to ${WORK_EXPERIENCE_DATE_ELEMENT}.`
+    throw new Error(message)
+  }
+}
 
 export class WorkExperienceElement extends HTMLElement {
   static get observedAttributes() {
     return [...ATTRIBUTES]
+  }
+
+  static setDateComponentTagName(variant) {
+    changeOnlyOnce(variant)
   }
 
   constructor() {
@@ -85,9 +100,8 @@ export class WorkExperienceElement extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
-
   connectedCallback() {
-    [...ATTRIBUTES].forEach((attributeName) => {
+    ;[...ATTRIBUTES].forEach((attributeName) => {
       this.#updateAttribute(attributeName)
     })
   }
@@ -98,38 +112,41 @@ export class WorkExperienceElement extends HTMLElement {
       const message = `Unsupported attribute "${attributeName}", can only be one of [${supported}]`
       throw new Error(message)
     }
-    switch(attributeName) {
+    switch (attributeName) {
       case 'workFor':
         const workFor = this.getAttribute('workFor')
         this.shadowRoot.getElementById('workFor').innerText = workFor
-        break;
+        break
 
       case 'workForUrl':
         const workForUrl = this.getAttribute('workForUrl')
-        this.shadowRoot.getElementById('workFor').setAttribute('href', workForUrl)
-        break;
+        this.shadowRoot
+          .getElementById('workFor')
+          .setAttribute('href', workForUrl)
+        break
 
       case 'workPosition':
         const workPosition = this.getAttribute('workPosition')
         this.shadowRoot.getElementById('workPosition').innerText = workPosition
-        break;
+        break
 
       case 'dateEnd':
       case 'dateStart':
         const attributeValue = this.getAttribute(attributeName)
         if (attributeValue) {
-          const initialDateElement = this.shadowRoot.getElementById(attributeName)
+          const initialDateElement =
+            this.shadowRoot.getElementById(attributeName)
           initialDateElement.setAttribute('datetime', attributeValue)
-          const replacingWith = document.createElement(WORK_EXPERIENCE_DATE_ELEMENT)
+          const replacingWith = document.createElement(
+            WORK_EXPERIENCE_DATE_ELEMENT,
+          )
           replacingWith.setAttribute('datetime', attributeValue)
           replacingWith.dataset.dateFormat = 'YYYY-MM'
           initialDateElement.replaceWith(replacingWith)
         }
-        break;
+        break
     }
   }
-
-
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (ATTRIBUTES.has(name) && oldValue !== newValue) {
