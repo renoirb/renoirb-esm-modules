@@ -7,8 +7,8 @@ import dayjs from 'https://cdn.skypack.dev/dayjs'
 import 'https://cdn.skypack.dev/dayjs/locale/pt'
 import weekday from 'https://cdn.skypack.dev/dayjs/plugin/weekday'
 import customParseFormat from 'https://cdn.skypack.dev/dayjs/plugin/customParseFormat'
-dayjs.extend(weekday);
-dayjs.extend(customParseFormat);
+dayjs.extend(weekday)
+dayjs.extend(customParseFormat)
 
 /**
  * From the client-side, and early in the document, we
@@ -35,4 +35,7 @@ const dateConversionContextResponder = (event) => {
   }
 }
 
-window.document.body.addEventListener('context-request', dateConversionContextResponder)
+window.document.body.addEventListener(
+  'context-request',
+  dateConversionContextResponder,
+)

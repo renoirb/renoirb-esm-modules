@@ -17,8 +17,8 @@ See example in [workbench.mjs](workbench.mjs)
 
 ```html
 <script type="module">
-  import ValueDateElement from 'https://renoirb.com/esm-modules/value-date-element'
-  customElements.define('value-date', ValueDateElement)
+  import { BaseValueDateElement } from 'https://renoirb.com/esm-modules/value-date-element'
+  customElements.define('value-date', BaseValueDateElement)
 </script>
 ```
 
@@ -57,6 +57,8 @@ Form that allows selecting two dates according to limitations such as only in th
 
 
 ## References
+
+- [@renoirb/context-api **Context API**][renoirb-context-api-readme] as per W3C’s Web Component Community Group ContextAPI protocol
 
 [renoirb-context-api-readme]:
   https://renoirb.com/esm-modules/context-api/README.md

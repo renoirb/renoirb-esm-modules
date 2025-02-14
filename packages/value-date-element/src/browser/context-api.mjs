@@ -17,12 +17,6 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     throw new Error(message)
   }
 
-  const datetime = element.getAttribute('datetime')
-  if (!datetime) {
-    const message = `The host implementation MUST have a datetime attribute. ${errorMessageSuffix}`
-    throw new Error(message)
-  }
-
   /**
    * @param {import('../core/types.ts').DateContextPayload} data
    */
