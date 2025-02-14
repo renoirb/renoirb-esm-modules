@@ -145,7 +145,7 @@ async function handleRequest(
       }
 
       // For other files, check if it's in our import map
-      const importMapPath = join(projectRoot, 'import_map.json')
+      const importMapPath = join(projectRoot, 'import_map_workbench.json')
       const importMapText = await Deno.readTextFile(importMapPath)
       const importMap = JSON.parse(importMapText)
 
