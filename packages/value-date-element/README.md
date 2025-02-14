@@ -7,7 +7,7 @@ Batteries non included element specialized for displaying date related values.
 Leverage [**Context API**][renoirb-context-api-readme], to handle date
 formatting.
 
-Important: Register the `context-request` event handler *BEFORE* registering
+Important: Register the `context-request` event handler _BEFORE_ registering
 
 ### Step 1: Register the context-request
 
@@ -34,10 +34,11 @@ window.document.addEventListener('context-request', (event) => {
 
 ```html
 <script type="module">
-  import ValueDateElement from 'https://renoirb.com/esm-modules/value-date-element'
+  import { ValueDateElement } from 'https://renoirb.com/esm-modules/value-date-element'
   customElements.define('value-date', ValueDateElement)
 </script>
 ```
+
 ## References
 
 [renoirb-context-api-readme]:
