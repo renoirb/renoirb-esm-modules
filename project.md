@@ -7,10 +7,10 @@ environment.
 
 ## Status Indicators
 
-- ☒ Done/Complete
-- ▣ In Progress
-- ▢ Code ready to migrate
 - ⬚ Planned
+- ▢ Code ready to migrate
+- ▣ In Progress
+- ☒ Done/Complete
 
 ## Core Principles
 
@@ -20,12 +20,12 @@ environment.
 - Platform-agnostic core logic
 - Runtime-specific entry points
 - Current targets include:
-  - Browsers (ESM imports over HTTP, e.g.
-    `import from 'https://example.org/main.mjs'`)
+  - Browsers (as <abbr title="ECMAScript Modules">ESM</abbr> imports over
+    <abbr title="The Hypertext Transfer Protocol">HTTP</abbr>)
   - Deno
   - Node.js
   - CloudFlare Workers
-  - NGINX JavaScript (ngx_http_js)
+  - <abbr title="Engine X Web Server">NGINX</abbr> JavaScript (ngx_http_js)
   - Future JavaScript platforms
 
 ### Development Simplicity
@@ -50,7 +50,7 @@ environment.
 
 - ▣ Deno for development
   - ▣ TypeScript processing
-  - ⬚ Testing framework
+  - ▣ Testing framework
   - ⬚ Build tooling
 - ⬚ Minimal build requirements
   - ⬚ Shell scripts or Makefile
@@ -64,14 +64,14 @@ environment.
 ├── packages/
 │   ├── {package-name}/
 │   │   ├── src/
-│   │   │   ├── core/           # Platform-agnostic logic
-│   │   │   ├── browser/        # Browser-specific entry
-│   │   │   ├── deno/          # Deno-specific entry
-│   │   │   └── {runtime}/     # Other runtime entries
+│   │   │   ├── core/        # Platform-agnostic logic
+│   │   │   ├── browser/     # Browser-specific entry
+│   │   │   ├── deno/        # Deno-specific entry
+│   │   │   └── {runtime}/   # Other runtime entries
 │   │   ├── tests/
-│   │   │   ├── core/          # Core logic tests
-│   │   │   └── runtime/       # Runtime-specific tests
-│   │   └── package.json
+│   │   │   ├── core/        # Core logic tests
+│   │   │   └── runtime/     # Runtime-specific tests
+│   │   └── deno.json
 │   └── ...
 └── scripts/
     └── build.ts
@@ -104,7 +104,7 @@ JavaScript runs.
 
 - ☒ Simple direct imports
   ```js
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils.mjs'
+  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
   ```
 - Current implementation:
   - ☒ Static file hosting
@@ -130,23 +130,26 @@ JavaScript runs.
 
 1. Core Infrastructure
 
-   - ▣ Basic project structure
-   - ⬚ Testing conventions and tooling
+   - ☒ Basic project structure
+   - ▣ Testing conventions and tooling
    - ⬚ Documentation loading (using existing `loadFromGitHub`)
 
-2. First Components Migration
+2. First Components, starting by migrating already written ones:
 
-   - ▣ inline-note-element
-   - ▣ notice-box-element
-   - ▣ value-date-element
-   - ▢ element-utils
-   - ▢ markdown-content
-
+   - ▢ abbr-generator
+   - ▣ layout-variant
+   - ▣ markdown-content
+   - ▢ taxonomy
+   - ▣ [element-utils](./packages/element-utils/README.md)
+   - ☒ [inline-note-element](./packages/inline-note-element/README.md)
+   - ▣ [notice-box-element](./packages/notice-box-element/README.md)
+   - ▣ [value-date-element](./packages/value-date-element/README.md)
 
 3. Development Tools
    - ⬚ Component workbench (using migrated components)
      - ⬚ README display (using `markdown-content`)
-     - ⬚ Component variants (using `notice-box` for status)
+     - ⬚ Component variants (using
+       [notice-box-element](./packages/notice-box-element/README.md) for status)
      - ⬚ Test results visualization
 
 ## Development Workflow

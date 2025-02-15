@@ -9,28 +9,6 @@ other JavaScript runtimes.
 > listed below are currently available but will be migrated to this new
 > management structure.
 
-## Quick Start
-
-Import and use components directly in your HTML:
-
-```html
-<my-app-layout>
-  <notice-card variant="warn">
-    <strong slot="header">Document status: DRAFT</strong>
-    <p>The contents of this page are currently in draft status.</p>
-  </notice-card>
-</my-app-layout>
-
-<script type="module">
-  import AppLayout from 'https://renoirb.com/esm-modules/app-layout-element.mjs'
-  import NoticeBox from 'https://renoirb.com/esm-modules/notice-box-element.mjs'
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
-
-  registerCustomElement('my-app-layout', AppLayout)
-  registerCustomElement('notice-card', NoticeBox)
-</script>
-```
-
 ## Available Modules
 
 ### Web Components
@@ -54,70 +32,19 @@ do hilighting or commenting.
 A customizable application shell component providing consistent navigation and
 structure across pages.
 
-```html
-<my-app-layout>
-  <!-- Your page content -->
-</my-app-layout>
-```
+<!-- TODO: Migrate AppLayoutElement -->
 
 #### Value Boolean Element
 
 Visual representation of boolean states using icons.
 
-```html
-<dl>
-  <dt>Status</dt>
-  <dd><value-boolean value="true"></value-boolean></dd>
-</dl>
-```
-
-The person could see equivalent of;
-
-```html
-<dl>
-  <dt>Read</dt>
-  <dd><span label="Yes">👍</span></dd>
-</dl>
-```
+<!-- TODO: Migrate ValueBooleanElement -->
 
 #### Markdown Content Element
 
 A markdown rendering container that lets you use your preferred markdown parser.
 
-<!-- prettier-ignore-start -->
-```html
-  <kool-mark-a-dawn>
-
-# My Cool Page
-
-Hello **World**.
-
-  </kool-mark-a-dawn>
-
-<script type="module">
-  import {
-    ContextRequest_MarkdownContent,
-    default as MarkdownContentElement,
-  } from 'https://renoirb.com/esm-modules/markdown-content.mjs'
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
-
-  registerCustomElement('kool-mark-a-dawn', MarkdownContentElement)
-
-  // Handle markdown conversion with your preferred library
-  const handler = (event) => {
-    if (event.context === ContextRequest_MarkdownContent) {
-      event.stopPropagation()
-      // Use your markdown parser here
-      event.callback({
-        markdown: event.target.innerHTML,
-        html: convertMarkdown(event.target.innerHTML),
-      })
-    }
-  }
-  document.addEventListener('context-request', handler)
-</script>
-```
-<!-- prettier-ignore-end -->
+<!-- TODO: Migrate MarkdownContentElement markdown-content -->
 
 ### Utility Modules
 
@@ -129,27 +56,21 @@ Helper functions for Web Component registration and common DOM operations.
 
 Implementation of the W3C Web Components Community Group Context API protocol.
 
+<!-- TODO: Upgrade version as the documented version was before it got released in @lit/context -->
+
 #### Load From GitHub
 
 Load and render markdown content from GitHub Gists.
 
-```javascript
-import loadFromGitHub from 'https://renoirb.com/esm-modules/load-from-github.mjs'
-
-loadFromGitHub(
-  document.querySelector('#target'),
-  'gist-id',
-  'filename.md',
-  true,
-)
-```
+<!-- TODO: Migrate loadFromGitHub -->
 
 ## Design Philosophy
 
 Each module is:
 
 - Self-contained with minimal dependencies
-- Written using standard Web APIs
+- Written using standard Web
+  <abbr title="Application Programming Interface">API</abbr>s
 - Flexible for different use cases
 - Framework-agnostic
 
