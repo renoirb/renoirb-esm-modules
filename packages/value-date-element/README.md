@@ -17,7 +17,7 @@ See example in [workbench.mjs](workbench.mjs)
 
 ```html
 <script type="module">
-  import ValueDateElement from 'https://renoirb.com/esm-modules/value-date-element'
+  import { ValueDateElement } from 'https://renoirb.com/esm-modules/value-date-element'
   customElements.define('value-date', ValueDateElement)
 </script>
 ```
