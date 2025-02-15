@@ -2,13 +2,19 @@
 <html>
   <head>
     <title>Inline Note Element Workbench</title>
+    <script src="packages/value-date-element/workbench.mjs" type="module"></script>
     <script type="module">
       import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
       import {
         /*                                  */
         InlineNoteElement,
       } from 'https://renoirb.com/esm-modules/inline-note-element'
+      import {
+        /*                                  */
+        BaseValueDateElement,
+      } from 'https://renoirb.com/esm-modules/value-date-element'
       registerCustomElement(window, 'the-tested-component', InlineNoteElement)
+      registerCustomElement(window, 'value-date', BaseValueDateElement)
     </script>
   </head>
   <body>

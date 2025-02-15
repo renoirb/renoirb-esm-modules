@@ -1,5 +1,9 @@
 import { classNameMap } from '../core/index.mjs'
 
+//
+// See also: https://gist.github.com/renoirb/7e06321cfee47263a12838c17d32e981
+//
+
 export class InlineNoteElement extends HTMLElement {
   constructor() {
     super()
@@ -49,7 +53,7 @@ export class InlineNoteElement extends HTMLElement {
                     )} ${classNameMap.get(
         'tooltipHidden',
       )} left-1/2 transform -translate-x-1/2" style="min-width: 120px; bottom: 100%;" id="tooltip">
-                        ${date ? `<div>Date: ${date}</div>` : ''}
+                        ${date ? `<div>Date: <value-date data-date-format="YYYY-MM-DD" datetime="${date}">${date}</value-date></div>` : ''}
                         ${
                           hasComment
                             ? '<div>Comment: <slot name="comment"></slot></div>'
