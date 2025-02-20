@@ -1,4 +1,4 @@
-import { devServer } from 'https://renoirb.com/esm-modules/monorepo-maintenance-utils/dev-server.ts'
+import { devServer } from 'https://renoirb.com/esm-modules/workbench-maintenance-utils/dev-server.ts'
 
 /**
  * Define your own 'my-component-showcase' element to be used in workbench.

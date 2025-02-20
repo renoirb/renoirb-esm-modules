@@ -30,5 +30,14 @@
     "proseWrap": "preserve",
     "include": ["packages/*/src/", "scripts/"],
     "exclude": []
-  }
+  },
+  "workspace": [
+    "./packages/component-showcase-element",
+    "./packages/context-api",
+    "./packages/element-utils",
+    "./packages/inline-note-element",
+    "./packages/notice-box-element",
+    "./packages/value-date-element",
+    "./packages/workbench-maintenance-utils"
+  ]
 }

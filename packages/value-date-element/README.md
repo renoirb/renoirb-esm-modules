@@ -22,6 +22,40 @@ See example in [workbench.mjs](workbench.mjs)
 </script>
 ```
 
+## More to come
+
+- Display two dates as range
+  - Calculate duration
+  - When no end date, use "today", and write "*current*" or another similar label. So we can translate
+
+### Calculate Distance Dates
+
+#### Display
+
+To specify a duration using a date, with the length and direction (ago, upcoming)
+
+- https://gist.github.com/renoirb/3ac53c986c0284d6f0be585cc5bac3c9
+- `AppContentDate` https://github.com/renoirb/site/blob/2020/components/global/AppContentDate.vue
+
+
+#### `DateRange` form
+
+Form that allows selecting two dates according to limitations such as only in the future, or only in the past, etc.
+
+- https://github.com/renoirb/evenements-entre-deux-dates/blob/main/src/components/DateRange.vue
+
+#### Relative Date Range Form
+
+- https://github.com/renoirb/evenements-entre-deux-dates/blob/main/src/components/RelativeDateRangeForm.vue
+
+### Coercers and sanity
+
+- Takes an UNIX Epoch number, coerces into milliseconds, seconds
+- Check if browser Intl `hasIntl`
+
+- https://github.com/renoirb/experiments-201908-rush-typescript-just-bili-monorepo/blob/master/packages/date-epoch/src/helpers.ts
+
+
 ## References
 
 [renoirb-context-api-readme]:

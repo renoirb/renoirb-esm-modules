@@ -1,4 +1,4 @@
-import { generateBarrels } from 'https://renoirb.com/esm-modules/monorepo-maintenance-utils/generate-barrels.ts'
+import { generateBarrels } from 'https://renoirb.com/esm-modules/workbench-maintenance-utils/generate-barrels.ts'
 
 export const packages = [
   /*                    */
@@ -6,7 +6,7 @@ export const packages = [
   'context-api',
   'element-utils',
   'inline-note-element',
-  'monorepo-maintenance-utils',
+  'workbench-maintenance-utils',
   'notice-box-element',
   'value-date-element',
 ]

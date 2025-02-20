@@ -1,0 +1,11 @@
+{
+  "name": "@renoirb-esm-modules/value-date-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  },
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
+  }
+}

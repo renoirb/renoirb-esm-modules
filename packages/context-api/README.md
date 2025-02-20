@@ -94,6 +94,88 @@ window.document.addEventListener('context-request', (event) => {
 The shape `{ date: '...', isoString: '...', unixEpoch: '...', human: '...' }` is
 the data for the `'date-conversion'` context.
 
+## More To Come
+
+### Upgrade API
+
+The API version changed since the code samples were created, they're released in @lit/context
+
+The experimentations were mostly written back around 2022.
+
+Among the API changes
+[we now have `contextTarget` that's been added](https://github.com/lit/lit/compare/%40lit/context%401.1.3...lit:a66737f#diff-0ac16504b1478a71748d852ad8f58f66301be80264e9caa6307252837992c6e0R30-R78),
+that is probably the thing I was trying to remember when I wrote the `__temporary_hack__` and the ContextEvent to have a reference to the node emitting the event.
+
+Thoughts:
+- It is either I copy-paste from source lit implementation or import
+- If it is importing: maybe I'll have to use [`deps.ts` pattern to import if I want to extend](https://dotland.deno.dev/manual@v1.32.0/examples/manage_dependencies)
+
+<!--
+
+Probably this won't work like that.
+
+Because I use at root import map full URLs as module, I get the error:
+
+> Warning "imports" and "scopes" field is ignored when "importMap" is specified in the root config file.
+
+```patch
+diff --git a/packages/context-api/deno.json b/packages/context-api/deno.json
+index 418d..ad79 100644
+--- a/packages/context-api/deno.json
++++ b/packages/context-api/deno.json
+@@ -4,5 +4,8 @@
+   "exports": {
+     ".": "./browser.mjs",
+     "./browser": "./browser.mjs"
++  },
++  "imports": {
++    "@lit/context": "npm:@lit/context@1.1.4"
+   }
+ }
+\ No newline at end of file
+```
+
+-->
+
+### Fast has a "Context"
+
+[@microsoft/fast](https://www.npmjs.com/package/@microsoft/fast-element) NPM package ([site](https://fast.design/))
+now also has a [Context API](https://github.com/microsoft/fast/blob/dd87b12b/packages/web-components/fast-element/src/context.ts)
+([docs](https://fast.design/docs/api/fast-element/context/fast-element))
+
+> Enables using: [W3C Community Context protocol](https://github.com/webcomponents-cg/community-protocols/blob/main/proposals/context.md).
+
+([source](https://fast.design/docs/api/fast-element/context/fast-element#:~:text=Enables%20using:%20W3C%20Community%20Context%20protocol))
+
+```ts
+type Context = Readonly<
+    eventType: "context-request";
+    for<T = unknown>(name: string): FASTContext<T>;
+    create<T_1 = unknown>(name: string, initialValue?: T_1 | undefined): FASTContext<T_1>;
+    setDefaultRequestStrategy(strategy: FASTContextRequestStrategy): void;
+    get<T_2 extends UnknownContext>(target: EventTarget, context: T_2): ContextType<T_2>;
+    request<T_3 extends UnknownContext>(target: EventTarget, context: T_3, callback: ContextCallback<ContextType<T_3>>, multiple?: boolean): void;
+    dispatch<T_4 extends UnknownContext>(target: EventTarget, context: T_4, callback: ContextCallback<ContextType<T_4>>, multiple?: boolean): void;
+    provide<T_5 extends UnknownContext>(target: EventTarget, context: T_5, value: ContextType<T_5>): void;
+    handle<T_6 extends UnknownContext>(target: EventTarget, callback: (event: ContextEvent<T_6>) => void, context?: T_6 | undefined): void;
+    defineProperty<T_7 extends UnknownContext>(target: Constructable<EventTarget> | EventTarget, propertyName: string, context: T_7): void;
+>
+```
+([source](https://fast.design/docs/api/fast-element/context/fast-element.context))
+
+
+### Look for `ContextConsumer` from lit
+
+See example usage in following Gist.
+
+https://gist.github.com/renoirb/d0d92314b04927c8513a86810902a53a
+
+### Other Experiments
+
+There's some bad code in the following gist, but there's also good too.
+
+https://gist.github.com/renoirb/21e31aab8d4cbcebb24afede7c49e449#file-context-api-ts
+
 ## References
 
 ### Bookmarks

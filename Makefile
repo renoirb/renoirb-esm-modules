@@ -1,8 +1,11 @@
 .DEFAULT: fmt
 
-.PHONY: fmt
-fmt:
+.PHONY: md
+md:
 	npx @renoirb/conventions-use-prettier -w *.md
+
+.PHONY: fmt
+fmt: md
 	npx @renoirb/conventions-use-prettier -w **/*.mjs
 
 .PHONY: dev-server

@@ -1,0 +1,12 @@
+{
+  "name": "@renoirb-esm-modules/inline-note-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./core": "./core.mjs",
+    "./browser": "./browser.mjs"
+  },
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
+  }
+}
