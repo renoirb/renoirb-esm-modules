@@ -217,7 +217,7 @@ Output:
 ```
 -->
 
-### [Workbench Maintenance Utils](./packages/workbench-aintenance-utils/README.md)
+### [Workbench Maintenance Utils](./packages/workbench-maintenance-utils/README.md)
 
 ## Contributing
 

@@ -36,8 +36,8 @@
     "./packages/context-api",
     "./packages/element-utils",
     "./packages/inline-note-element",
-    "./packages/workbench-maintenance-utils",
     "./packages/notice-box-element",
-    "./packages/value-date-element"
+    "./packages/value-date-element",
+    "./packages/workbench-maintenance-utils"
   ]
 }
