@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "deno_dom": "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "semiColons": false,
+    "singleQuote": true,
+    "useTabs": false
+  }
+}
