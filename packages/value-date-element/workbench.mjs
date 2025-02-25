@@ -1,6 +1,7 @@
 import {
   /*                                  */
   ContextRequest_DateConversion,
+  assertIsDateContextPayload,
 } from 'https://renoirb.com/esm-modules/value-date-element'
 
 import dayjs from 'https://cdn.skypack.dev/dayjs'
@@ -18,9 +19,7 @@ dayjs.extend(customParseFormat)
 const dateConversionContextResponder = (event) => {
   if (event.context === ContextRequest_DateConversion) {
     event.stopPropagation()
-    const host = event.callback.__temporary_hack__
-    //         Yes this is ugly ^^^^^^^^^^^^^^^^^^^
-    // Gotta remember what I forgotten here.
+    const host = event.contextTarget
     const date = host.getAttribute('datetime')
     const format = host.dataset.dateFormat || 'MMM D, YYYY'
     const formatLocale = host.dataset.dateLocale || 'en'
@@ -30,6 +29,7 @@ const dateConversionContextResponder = (event) => {
       const isoString = formatter.toISOString()
       const human = formatter.locale(formatLocale).format(format, formatLocale)
       const payload = { date, human, isoString, unixEpoch }
+      assertIsDateContextPayload(payload)
       event.callback(payload)
     }
   }

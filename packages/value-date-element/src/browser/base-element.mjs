@@ -25,9 +25,6 @@ export class BaseValueDateElement extends HTMLElement {
     this.shadowRoot.adoptedStyleSheets = [styleElement]
     this._onDateConversionContextEvent =
       bindContextResponseHandlerMethodForDateContext(this)
-    Reflect.set(this._onDateConversionContextEvent, '__temporary_hack__', this)
-    //                                              ^ Yes this is ugly ^
-    // To my recollection, the point of this.dispatchEvent() is to tell who emitted the event
   }
 
   connectedCallback() {
@@ -41,7 +38,6 @@ export class BaseValueDateElement extends HTMLElement {
           ContextRequest_DateConversion,
           this,
           this._onDateConversionContextEvent,
-          // ^ Yes this is ugly: Gotta remember what I forgotten here.
         ),
       )
     }
