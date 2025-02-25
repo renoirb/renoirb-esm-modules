@@ -1,3 +1,5 @@
+// Copy-pasta from https://github.com/lit/lit/blob/a66737fc/packages/context/src/lib/context-request-event.ts
+
 /**
  * An event fired by a context requester to signal it desires a specified context with the given key.
  *
@@ -11,30 +13,26 @@
  * If no `subscribe` value is present in the event, then the provider can assume that this is a 'one time'
  * request for the context and can therefore not track the consumer.
  *
- * ----
- *
- * To read more, refer to {@link https://github.com/webcomponents-cg/community-protocols/blob/d81a5fb5/proposals/context.md}
- *
- * ----
- *
- * This class is a copy from Lit.dev
- *
- * See:
- * - https://github.com/lit/lit/pull/1955
- * - https://github.com/lit/lit/blob/%40lit-labs%2Fcontext%400.2.0/packages/labs/context/src/lib/context-request-event.ts
- * - https://github.com/lit/lit/blob/%40lit-labs/context%400.2.0/packages/labs/context/src/lib/value-notifier.ts
- * - https://github.com/lit/lit/blob/%40lit-labs/context%400.2.0/packages/labs/context/src/lib/context-root.ts
+ * Copy-Pasta from: <https://github.com/lit/lit/blob/a66737fc/packages/context/src/lib/context-request-event.ts>
  */
 export class ContextRequestEvent extends Event {
   /**
    * @param context the context key to request
+   * @param contextTarget the original context target of the requester
    * @param callback the callback that should be invoked when the context with the specified key is available
-   * @param subscribe an optional argument, if true indicates we want to subscribe to future updates
+   * @param subscribe when, true indicates we want to subscribe to future updates
    */
-  constructor(context, callback, subscribe) {
+  constructor(
+    context,
+    contextTarget,
+    callback,
+    subscribe,
+  ) {
     super('context-request', { bubbles: true, composed: true })
     this.context = context
+    this.contextTarget = contextTarget
     this.callback = callback
-    this.subscribe = subscribe
+    this.subscribe = subscribe ?? false
   }
 }
+

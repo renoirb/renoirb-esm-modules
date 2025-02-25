@@ -40,6 +40,7 @@ export class BaseValueDateElement extends HTMLElement {
       this.dispatchEvent(
         new ContextRequestEvent(
           ContextRequest_DateConversion,
+          this,
           this._onDateConversionContextEvent,
           // ^ Yes this is ugly: Gotta remember what I forgotten here.
         ),
@@ -52,6 +53,7 @@ export class BaseValueDateElement extends HTMLElement {
       this.dispatchEvent(
         new ContextRequestEvent(
           ContextRequest_DateConversion,
+          this,
           this._onDateConversionContextEvent,
         ),
       )
