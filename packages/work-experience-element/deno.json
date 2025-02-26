@@ -1,5 +1,5 @@
 {
-  "name": "@renoirb-esm-modules/json-resume-element",
+  "name": "@renoirb-esm-modules/work-experience-element",
   "version": "0.1.0",
   "exports": {
     ".": "./browser.mjs",
