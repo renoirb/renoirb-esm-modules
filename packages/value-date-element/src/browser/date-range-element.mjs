@@ -1,12 +1,17 @@
-import { STYLE } from './base-element.mjs'
 import { calculateDuration } from '../core/index.mjs'
+
+export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
+  :host {
+    display: inline;
+  }
+`
 
 export const VALUE_DATE_RANGE_TEMPLATE = `
   <span id="root">
     <span>
       <span id="date-begin"></span>&hellip;<span id="date-end"></span>
     </span>
-    <small>(<smal id="spanning"></span>)</small>
+    <small id="duration-text"></small>
   </span>
 `
 
@@ -20,16 +25,16 @@ export class ValueDateRangeElement extends HTMLElement {
       /*                    */
       'data-date-begin',
       'data-date-end',
+      'data-range-hide-duration',
+      'data-date-format',
     ]
   }
 
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
-    const timeEl = document.createElement('time')
-    this.shadowRoot.appendChild(timeEl)
     const styleElement = new CSSStyleSheet()
-    styleElement.replaceSync(STYLE)
+    styleElement.replaceSync(VALUE_DATE_RANGE_ELEMENT_STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
     const template = document.createElement('template')
     template.innerHTML = VALUE_DATE_RANGE_TEMPLATE
@@ -58,13 +63,8 @@ export class ValueDateRangeElement extends HTMLElement {
         case 'data-date-begin': {
           const minted = this.ownerDocument.createElement(mintingElementName)
           minted.setAttribute('id', id)
-          if (mintingElementName === 'span') {
-            minted.innerText = TEXT_TO_TRANSLATE_TODAY
-            // https://www.w3.org/TR/2013/CR-html5-20130806/dom.html#the-translate-attribute
-            minted.setAttribute('translate', '')
-            minted.setAttribute('data-translate-key', TEXT_TO_TRANSLATE_TODAY)
-          } else {
-            minted.setAttribute('data-date-format', DATE_FORMAT)
+          if (mintingElementName !== 'span') {
+            minted.setAttribute('data-date-format', this.getAttribute('data-date-format') ?? DATE_FORMAT)
             minted.setAttribute('datetime', newValue)
           }
           targetNode.replaceWith(minted)
@@ -82,7 +82,7 @@ export class ValueDateRangeElement extends HTMLElement {
   #updateDuration = () => {
     const dateBegin = this.getAttribute('data-date-begin')
     const dateEnd = this.getAttribute('data-date-end')
-    const durationTargetNode = this.shadowRoot.querySelector('#spanning')
+    const durationTargetNode = this.shadowRoot.getElementById('duration-text')
     let durationTextContent = ''
     try {
       const calculated = calculateDuration(dateBegin, dateEnd)
@@ -95,7 +95,13 @@ export class ValueDateRangeElement extends HTMLElement {
     } catch {
       durationTextContent = ''
     }
-    durationTargetNode.textContent = durationTextContent
+    if (this.getAttribute('data-range-hide-duration') !== null) {
+      durationTargetNode.textContent = '' 
+      this.setAttribute('title', durationTextContent)
+    } else {
+      this.removeAttribute('title')
+      durationTargetNode.textContent = '(' + durationTextContent + ')'
+    }
     if (!dateEnd) {
       const targetNode = this.shadowRoot.querySelector(`#date-end`)
       const minted = this.ownerDocument.createElement('span')

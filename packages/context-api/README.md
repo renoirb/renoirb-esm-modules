@@ -46,6 +46,7 @@ export class SomeExampleElement extends HTMLElement {
       this.dispatchEvent(
         new ContextRequestEvent(
           'date-conversion',
+          this,
           this._onDateConversionContextEvent,
         ),
       )

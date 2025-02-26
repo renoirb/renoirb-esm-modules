@@ -29,6 +29,10 @@ export class ContextRequestEvent extends Event {
     subscribe,
   ) {
     super('context-request', { bubbles: true, composed: true })
+    if (!Reflect.has(contextTarget ?? {}, 'getAttribute')) {
+      const message = `Unexpected error, the 2nd ContextRequestEvent constructor argument must be a reference to the current element`
+      throw new Error(message)
+    }
     this.context = context
     this.contextTarget = contextTarget
     this.callback = callback

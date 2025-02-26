@@ -78,6 +78,10 @@ export class ComponentShowcaseElement extends HTMLElement {
       this.shadowRoot.querySelector('.title').textContent = name.trim()
     }
 
+    // Validate template[slot] to exist only once for one name.
+    const templateList = [...this.querySelectorAll('template')].map(t => t.getAttribute('slot'))
+    validateSlotsList(templateList.join(' '))
+
     // Validate and normalize slots
     const slots = validateSlotsList(this.getAttribute('slots'))
     const variants = this.shadowRoot.querySelector('.variants')
