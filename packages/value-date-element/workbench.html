@@ -13,22 +13,40 @@
       import {
         /*                                  */
         BaseValueDateElement,
+        ValueDateRangeElement,
       } from 'https://renoirb.com/esm-modules/value-date-element'
-      registerCustomElement(window, 'the-tested-component', BaseValueDateElement)
+      registerCustomElement(window, 'value-date', BaseValueDateElement)
+      registerCustomElement(window, 'value-date-range', ValueDateRangeElement)
     </script>
   </head>
   <body>
     <section>
 
-      <my-component-showcase name="BaseValueDateElement" slots="alpha">
+      <my-component-showcase name="BaseValueDateElement" slots="alpha bravo">
         <template slot="alpha" title="Simplest">
-          <the-tested-component
+          <value-date
             datetime="2025-02-08"
             data-date-format="YYYY MMMM DD"
             data-date-locale="pt"
           >
             ...
-          </the-tested-component>
+          </value-date>
+        </template>
+
+        <template slot="bravo" title="Two Dates">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2025-09-10"
+          >
+          </value-date-range>
+        </template>
+
+
+        <template slot="bravo" title="Only a begin date">
+          <value-date-range
+            data-date-begin="2024-09-01"
+          >
+          </value-date-range>
         </template>
 
       </my-component-showcase>
