@@ -2,22 +2,12 @@
  * The following is scavenged markup from JSONResume Registry for now
  * https://registry.jsonresume.org/renoirb
  */
-const TEMPLATE = `
+const VALUE_WORK_EXPERIENCE_TEMPLATE = `
   <div class="p-experience">
     <p class="clear-margin relative">
       <strong id="workPosition"></strong>,&nbsp;<a target="_blank" id="workFor"></a>
     </p>
-    <p class="text-muted">
-      <small>
-        <span class="space-right">
-          <time id="dateStart" datetime></time>&nbsp;-&nbsp;
-          <time id="dateEnd" datetime></time>
-        </span>
-        <span id="duration" class="initially-hidden">
-          <time datetime></time>
-        </span>
-      </small>
-    </p>
+    <p class="text-muted" id="dateRange"></p>
     <div class="p-summary mop-wrapper space-bottom">
       <slot></slot>
     </div>
@@ -28,7 +18,7 @@ const TEMPLATE = `
   </div>
 `
 
-const STYLE = `
+const VALUE_WORK_EXPERIENCE_STYLE = `
   :host {
     display: block;
     margin-bottom: 1.5rem;
@@ -56,16 +46,22 @@ const STYLE = `
   }
 `
 
-const ATTRIBUTES = new Set([
+/**
+ * Transform string from "fooBarBaz" (camelCase) into "foo-bar-baz" (kebab-case)
+ */
+const camelCaseToKebab = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
+
+const ATTRIBUTES = new Map([
   /*                 */
   'workFor',
   'workForUrl',
   'workPosition',
+  'dateBegin',
   'dateEnd',
-  'dateStart',
-])
+].map(i => ([i, `data-${camelCaseToKebab(i)}`])))
 
-const DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT = 'work-experience-date'
+
+const DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT = 'value-date-range'
 let WORK_EXPERIENCE_DATE_ELEMENT = DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
 
 const changeOnlyOnce = (candidate) => {
@@ -81,7 +77,7 @@ const changeOnlyOnce = (candidate) => {
 
 export class WorkExperienceElement extends HTMLElement {
   static get observedAttributes() {
-    return [...ATTRIBUTES]
+    return [...ATTRIBUTES.keys()]
   }
 
   static setDateComponentTagName(variant) {
@@ -91,66 +87,74 @@ export class WorkExperienceElement extends HTMLElement {
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
-    const sheet = new CSSStyleSheet()
-    sheet.replaceSync(STYLE)
-    this.shadowRoot.adoptedStyleSheets = [sheet]
+    const styleElement = new CSSStyleSheet()
+    styleElement.replaceSync(VALUE_WORK_EXPERIENCE_STYLE)
+    this.shadowRoot.adoptedStyleSheets = [styleElement]
 
     const template = document.createElement('template')
-    template.innerHTML = TEMPLATE
+    template.innerHTML = VALUE_WORK_EXPERIENCE_TEMPLATE
     this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
   connectedCallback() {
-    ;[...ATTRIBUTES].forEach((attributeName) => {
+    ;[...ATTRIBUTES.keys()].forEach((attributeName) => {
       this.#updateAttribute(attributeName)
     })
   }
 
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue && this.isConnected) {
+      this.#updateAttribute(name)
+    }
+  }
+
+  #updateDateRange = (dateBegin, dateEnd) => {
+    if (typeof dateBegin === 'string') {
+      console.log('#updateDateRange', {dateBegin, dateEnd})
+      const wherever = this.shadowRoot.getElementById('dateRange')
+      wherever.innerHTML = ''
+      const minted = this.ownerDocument.createElement(WORK_EXPERIENCE_DATE_ELEMENT)
+      minted.setAttribute('data-date-begin', dateBegin)
+      if (dateEnd) {
+        minted.setAttribute('data-date-end', dateEnd)
+      }
+      minted.setAttribute('data-date-format', 'YYYY-MM')
+      wherever.appendChild(minted)
+    }
+  }
+
   #updateAttribute = (attributeName) => {
     if (!ATTRIBUTES.has(attributeName)) {
-      const supported = [...ATTRIBUTES].join(', ')
+      const supported = [...ATTRIBUTES.keys()].join(', ')
       const message = `Unsupported attribute "${attributeName}", can only be one of [${supported}]`
       throw new Error(message)
     }
     switch (attributeName) {
-      case 'workFor':
+      case 'workFor': {
         const workFor = this.getAttribute('workFor')
         this.shadowRoot.getElementById('workFor').innerText = workFor
         break
-
-      case 'workForUrl':
+      }
+      case 'workForUrl': {
         const workForUrl = this.getAttribute('workForUrl')
         this.shadowRoot
           .getElementById('workFor')
           .setAttribute('href', workForUrl)
         break
-
-      case 'workPosition':
+      }
+      case 'workPosition': {
         const workPosition = this.getAttribute('workPosition')
         this.shadowRoot.getElementById('workPosition').innerText = workPosition
         break
-
+      }
       case 'dateEnd':
-      case 'dateStart':
-        const attributeValue = this.getAttribute(attributeName)
-        if (attributeValue) {
-          const initialDateElement =
-            this.shadowRoot.getElementById(attributeName)
-          initialDateElement.setAttribute('datetime', attributeValue)
-          const replacingWith = document.createElement(
-            WORK_EXPERIENCE_DATE_ELEMENT,
-          )
-          replacingWith.setAttribute('datetime', attributeValue)
-          replacingWith.dataset.dateFormat = 'YYYY-MM'
-          initialDateElement.replaceWith(replacingWith)
-        }
+      case 'dateBegin': {
+        const dateBegin = this.getAttribute('dateBegin')
+        const dateEnd = this.getAttribute('dateEnd')
+        this.#updateDateRange(dateBegin, dateEnd)
         break
-    }
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (ATTRIBUTES.has(name) && oldValue !== newValue) {
-      this.shadowRoot.getElementById(name).innerText = newValue
+      }
     }
   }
 }
