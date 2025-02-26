@@ -1,9 +1,9 @@
 export const ContextRequest_DateConversion = 'date-conversion'
 
 /**
- * @param {import('./types.ts').DateContextPayload} data
+ * @param {import('./types.ts').DateConversionContextPayload} data
  */
-export const isDateContextPayload = (data) => {
+export const isDateConversionContextPayload = (data) => {
   return (
     data &&
     typeof data === 'object' &&
@@ -14,11 +14,11 @@ export const isDateContextPayload = (data) => {
 }
 
 /**
- * @param {import('./types.ts').DateContextPayload} data
+ * @param {import('./types.ts').DateConversionContextPayload} data
  */
-export const assertIsDateContextPayload = (data) => {
-  if (!isDateContextPayload(data)) {
-    throw new Error('Invalid DateContextPayload')
+export const assertIsDateConversionContextPayload = (data) => {
+  if (!isDateConversionContextPayload(data)) {
+    throw new Error('Invalid DateConversionContextPayload')
   }
 }
 
@@ -41,7 +41,7 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
   }
 
   /**
-   * @param {import('./types.ts').DateContextPayload} data
+   * @param {import('./types.ts').DateConversionContextPayload} data
    */
   const handleDateContextResponse = (contextResponse) => {
     const { human, isoString, unixEpoch } = contextResponse

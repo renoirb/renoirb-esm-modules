@@ -4,7 +4,7 @@ import {
   ContextRequest_DateConversion,
 } from './context-api.mjs'
 
-export const STYLE = `
+export const BASE_VALUE_ELEMENT_STYLE = `
   :host {
     display: inline;
   }
@@ -21,7 +21,7 @@ export class BaseValueDateElement extends HTMLElement {
     const timeEl = document.createElement('time')
     this.shadowRoot.appendChild(timeEl)
     const styleElement = new CSSStyleSheet()
-    styleElement.replaceSync(STYLE)
+    styleElement.replaceSync(BASE_VALUE_ELEMENT_STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
     this._onDateConversionContextEvent =
       bindContextResponseHandlerMethodForDateContext(this)

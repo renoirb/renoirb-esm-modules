@@ -22,7 +22,8 @@
   <body>
     <section>
 
-      <my-component-showcase name="BaseValueDateElement" slots="alpha bravo">
+      <my-component-showcase name="BaseValueDateElement" slots="alpha bravo charlie delta echo">
+
         <template slot="alpha" title="Simplest">
           <value-date
             datetime="2025-02-08"
@@ -42,9 +43,27 @@
         </template>
 
 
-        <template slot="bravo" title="Only a begin date">
+        <template slot="charlie" title="Only a begin date">
           <value-date-range
             data-date-begin="2024-09-01"
+          >
+          </value-date-range>
+        </template>
+
+        <template slot="delta" title="Hide duration">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-range-hide-duration=""
+          >
+          </value-date-range>
+        </template>
+
+
+        <template slot="echo" title="Pass formatting">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2024-05-01"
+            data-date-format="YYYY"
           >
           </value-date-range>
         </template>

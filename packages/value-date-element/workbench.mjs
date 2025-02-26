@@ -1,7 +1,7 @@
 import {
   /*                                  */
   ContextRequest_DateConversion,
-  assertIsDateContextPayload,
+  assertIsDateConversionContextPayload,
 } from 'https://renoirb.com/esm-modules/value-date-element'
 
 import dayjs from 'https://cdn.skypack.dev/dayjs'
@@ -29,7 +29,7 @@ const dateConversionContextResponder = (event) => {
       const isoString = formatter.toISOString()
       const human = formatter.locale(formatLocale).format(format, formatLocale)
       const payload = { date, human, isoString, unixEpoch }
-      assertIsDateContextPayload(payload)
+      assertIsDateConversionContextPayload(payload)
       event.callback(payload)
     }
   }
