@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>JSONResume Workbench</title>
+    <title>Workbench</title>
     <script
       src="packages/value-date-element/workbench.mjs"
       type="module"
     ></script>
-    <script type="module">
-      import {
-        /*                                  */
-        WorkExperienceElement,
-      } from 'https://renoirb.com/esm-modules/work-experience-element'
-      WorkExperienceElement.setDateComponentTagName(/*'value-date-whatever'*/'work-experience-date')
-      customElements.define('the-tested-component', WorkExperienceElement)
-    </script>
   </head>
   <body>
     <section>
@@ -26,7 +18,7 @@
             workFor="GoTo Inc."
             workForUrl="https://www.GoTo.com/"
             workPosition="Staff Software Developer"
-            dateStart="2021-01-01"
+            dateBegin="2021-01-01"
             dateEnd="2022-05-01"
           >
             <p>
@@ -47,18 +39,37 @@
         </template>
 
         <template slot="charlie" title="No End Date">
-          <the-tested-component>
-            <p>Lorem Ipsum Dolor</p>
+          <the-tested-component
+            workFor="Myself"
+            workForUrl="https://renoirboulanger.com/"
+            workPosition="Full Time Dad"
+            dateBegin="2022-05-01"
+          >
+            <p>
+              Full-time caregiver for children.
+            </p>
           </the-tested-component>
         </template>
+
       </my-component-showcase>
+
       <script type="module" defer>
+        import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
         import {
           /*                                  */
+          ValueDateRangeElement,
           BaseValueDateElement,
         } from 'https://renoirb.com/esm-modules/value-date-element'
-        customElements.define(/*'value-date-whatever'*/'work-experience-date', BaseValueDateElement)
+        import {
+          /*                                  */
+          WorkExperienceElement,
+        } from 'https://renoirb.com/esm-modules/work-experience-element'
+        WorkExperienceElement.setDateComponentTagName(/*'value-date-range'*/'work-experience-date')
+        registerCustomElement(window, 'the-tested-component', WorkExperienceElement)
+        registerCustomElement(window, 'work-experience-date', ValueDateRangeElement)
+        registerCustomElement(window, 'value-date', BaseValueDateElement)
       </script>
+
     </section>
   </body>
 </html>
