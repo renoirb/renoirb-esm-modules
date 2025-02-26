@@ -4,9 +4,9 @@
     "https://renoirb.com/esm-modules/context-api": "./packages/context-api/src/browser.mjs",
     "https://renoirb.com/esm-modules/element-utils": "./packages/element-utils/src/browser.mjs",
     "https://renoirb.com/esm-modules/inline-note-element": "./packages/inline-note-element/src/browser.mjs",
-    "https://renoirb.com/esm-modules/json-resume-element": "./packages/json-resume-element/src/browser.mjs",
     "https://renoirb.com/esm-modules/notice-box-element": "./packages/notice-box-element/src/browser.mjs",
     "https://renoirb.com/esm-modules/value-date-element": "./packages/value-date-element/src/browser.mjs",
+    "https://renoirb.com/esm-modules/work-experience-element": "./packages/work-experience-element/src/browser.mjs",
     "https://renoirb.com/esm-modules/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/src/deno/"
   }
 }
