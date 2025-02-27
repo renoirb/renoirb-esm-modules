@@ -2,10 +2,10 @@
  * The following is scavenged markup from JSONResume Registry for now
  * https://registry.jsonresume.org/renoirb
  */
-const VALUE_WORK_EXPERIENCE_TEMPLATE = `
+const WORK_EXPERIENCE_TEMPLATE = `
   <div class="p-experience">
     <p class="clear-margin relative">
-      <strong id="workPosition"></strong>,&nbsp;<a target="_blank" id="workFor"></a>
+      <strong id="workPosition"></strong><span id="workFor"></span>
     </p>
     <p class="text-muted" id="dateRange"></p>
     <div class="p-summary mop-wrapper space-bottom">
@@ -18,7 +18,7 @@ const VALUE_WORK_EXPERIENCE_TEMPLATE = `
   </div>
 `
 
-const VALUE_WORK_EXPERIENCE_STYLE = `
+const WORK_EXPERIENCE_STYLE = `
   :host {
     display: block;
     margin-bottom: 1.5rem;
@@ -64,7 +64,7 @@ const ATTRIBUTES = new Map([
 const DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT = 'value-date-range'
 let WORK_EXPERIENCE_DATE_ELEMENT = DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
 
-const changeOnlyOnce = (candidate) => {
+const setDateComponentTagName = (candidate) => {
   if (WORK_EXPERIENCE_DATE_ELEMENT === DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT) {
     WORK_EXPERIENCE_DATE_ELEMENT = candidate
   } else if (
@@ -80,19 +80,17 @@ export class WorkExperienceElement extends HTMLElement {
     return [...ATTRIBUTES.keys()]
   }
 
-  static setDateComponentTagName(variant) {
-    changeOnlyOnce(variant)
-  }
+  static setDateComponentTagName = setDateComponentTagName
 
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
     const styleElement = new CSSStyleSheet()
-    styleElement.replaceSync(VALUE_WORK_EXPERIENCE_STYLE)
+    styleElement.replaceSync(WORK_EXPERIENCE_STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
 
     const template = document.createElement('template')
-    template.innerHTML = VALUE_WORK_EXPERIENCE_TEMPLATE
+    template.innerHTML = WORK_EXPERIENCE_TEMPLATE
     this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
@@ -104,6 +102,7 @@ export class WorkExperienceElement extends HTMLElement {
 
 
   attributeChangedCallback(name, oldValue, newValue) {
+    // #TODO: Fix observedAttributes updates, it's broken. Later.
     if (oldValue !== newValue && this.isConnected) {
       this.#updateAttribute(name)
     }
@@ -111,16 +110,15 @@ export class WorkExperienceElement extends HTMLElement {
 
   #updateDateRange = (dateBegin, dateEnd) => {
     if (typeof dateBegin === 'string') {
-      console.log('#updateDateRange', {dateBegin, dateEnd})
-      const wherever = this.shadowRoot.getElementById('dateRange')
-      wherever.innerHTML = ''
+      const targetElement = this.shadowRoot.getElementById('dateRange')
+      targetElement.innerHTML = ''
       const minted = this.ownerDocument.createElement(WORK_EXPERIENCE_DATE_ELEMENT)
       minted.setAttribute('data-date-begin', dateBegin)
       if (dateEnd) {
         minted.setAttribute('data-date-end', dateEnd)
       }
       minted.setAttribute('data-date-format', 'YYYY-MM')
-      wherever.appendChild(minted)
+      targetElement.appendChild(minted)
     }
   }
 
@@ -130,28 +128,46 @@ export class WorkExperienceElement extends HTMLElement {
       const message = `Unsupported attribute "${attributeName}", can only be one of [${supported}]`
       throw new Error(message)
     }
+
+    const workFor = this.getAttribute('workFor')
+    const workForUrl = this.getAttribute('workForUrl')
+    const workPosition = this.getAttribute('workPosition')
+    const dateBegin = this.getAttribute('dateBegin')
+    const dateEnd = this.getAttribute('dateEnd')
+
     switch (attributeName) {
       case 'workFor': {
-        const workFor = this.getAttribute('workFor')
-        this.shadowRoot.getElementById('workFor').innerText = workFor
+        const targetElement = this.shadowRoot.getElementById('workFor')
+        targetElement.textContent = workFor
         break
       }
       case 'workForUrl': {
-        const workForUrl = this.getAttribute('workForUrl')
-        this.shadowRoot
-          .getElementById('workFor')
-          .setAttribute('href', workForUrl)
+        const targetElement = this.shadowRoot.getElementById('workFor')
+        let href
+        try {
+          href = (workForUrl !== null) ? new URL(workForUrl) : null
+        } catch (e) {
+          console.error(String(e) + `: ${workForUrl}`)
+          workForUrl = null
+        }
+        if (href) {
+          const minted = this.ownerDocument.createElement('a')
+          minted.setAttribute('id', 'workFor')
+          minted.setAttribute('href', href)
+          minted.setAttribute('target', '_blank')
+          minted.textContent = workFor
+          targetElement.replaceWith(minted)
+        }
         break
       }
       case 'workPosition': {
-        const workPosition = this.getAttribute('workPosition')
-        this.shadowRoot.getElementById('workPosition').innerText = workPosition
+        const targetElement = this.shadowRoot.getElementById('workPosition')
+        const textContent = (workPosition !== null) ? workPosition + ', ': ''
+        targetElement.textContent = textContent
         break
       }
       case 'dateEnd':
       case 'dateBegin': {
-        const dateBegin = this.getAttribute('dateBegin')
-        const dateEnd = this.getAttribute('dateEnd')
         this.#updateDateRange(dateBegin, dateEnd)
         break
       }

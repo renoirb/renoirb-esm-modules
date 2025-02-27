@@ -109,7 +109,7 @@ theme
       <span class="space-right"> May, 2017 - Feb, 2020 </span>
       <span>
         <i class="icon-clock mr-5"></i
-        ><!-- 
+        ><!--
         -->2 years 9 months
       </span>
     </small>
