@@ -11,15 +11,24 @@ application and further from the web component that can request for it.
 
 For example, you want to create your own element to display a date yourself. You
 may have found
-'`[https://renoirb.com/esm-modules/value-date-element](https://renoirb.com/esm-modules/value-date-element)`',
+[https://renoirb.com/esm-modules/value-date-element](https://renoirb.com/esm-modules/value-date-element),
 but you want it differently.
 
-Assuming you just need to have data formatted as ISO, UNIX Epoch, and a human
-readable for your component.
+Assuming you want a date formatted "`2025-02-27`" just need to have data
+formatted as ISO, UNIX Epoch, and a human readable for your component.
 
-The shape of data we want, a "_contextResponse_" could look like
-`{ date: '...', isoString: '...', unixEpoch: '...', human: '...' }`, and we
-define a name, say `'date-conversion'`.
+The shape of data we want, a "_contextResponse_" could look like;
+
+```json
+{
+  "date": "...",
+  "isoString": "...",
+  "unixEpoch": "...",
+  "human": "..."
+}
+```
+
+and we define a name, say `'date-conversion'`.
 
 ```js
 import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api'
