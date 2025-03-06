@@ -12,3 +12,7 @@ fmt: md
 dev-server:
 	deno run --allow-net --allow-read scripts/dev-server.ts
 
+.PHONY: publish
+publish:
+	npx push-dir --dir=dist/http --branch=published --local-branch-name=main --cleanup
+
