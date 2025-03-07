@@ -1,10 +1,15 @@
 export const OUTER_WORKBENCH_APP_LAYOUT_STYLE = `
   body {
     font-family: system-ui, sans-serif;
+    background-color: #fff;
+  }
+  body:has(> section) {
     max-width: 80ch;
     margin: 2rem auto;
     padding: 0 1rem;
-    background-color: #fff;
+  }
+  body:has(app-layout) {
+    /* Nothing to do here just yet */
   }
 `
 

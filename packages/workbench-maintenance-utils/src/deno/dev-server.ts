@@ -36,11 +36,20 @@ const HTML_HEAD_TEMPLATE = `
   <script type="module">
     import {
       /*                    */
+      AppLayoutAlphaElement,
+    } from 'https://code.renoirb.com/app-layout-element@0.1.0/browser.mjs'
+    import {
+      /*                    */
       init,
     } from '/packages/workbench-maintenance-utils/browser.mjs'
     await init(window)
+    customElements.define('app-layout', AppLayoutAlphaElement)
   </script>
 `
+
+const WRAPPER_TAGS = ['app-layout']
+const RE_HTML_NAVIGATION = new RegExp(`</(${WRAPPER_TAGS.join('|')})>`, 'i')
+
 async function handleRequest(
   request: Request,
   options: DevServerOptions,
@@ -84,9 +93,18 @@ async function handleRequest(
         const importMapPath = join(projectRoot, 'import_map_workbench.json')
         const importMap = await Deno.readTextFile(importMapPath)
 
+        let modified = content
+          .replace('<head>', '<head>' + HTML_HEAD_TEMPLATE)
+          .replace(
+            '<head>',
+            `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>\n`,
+          )
+
         // Get list of packages with workbench.html
         const packages = (await listPackagesWithWorkbench(projectRoot)).sort()
-        const packagesListAsString = packages.join(/* Stringify list of packages the same way we stringify a classList */ ' ')
+        const packagesListAsString = packages.join(
+          /* Stringify list of packages the same way we stringify a classList */ ' ',
+        )
         const HTML_NAVIGATION = `
           <workbench-nav
             data-workbench-current="${packageName}"
@@ -94,13 +112,23 @@ async function handleRequest(
           >
           </workbench-nav>
         `
-        const modified = content
-          .replace('<head>', '<head>' + HTML_HEAD_TEMPLATE)
-          .replace(
-            '<head>',
-            `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>\n`,
+
+        const match = content.match(RE_HTML_NAVIGATION)
+
+        if (match) {
+          // Use the captured tag name in replacement
+          const [fullMatch, tagName] = match
+          modified = modified.replace(
+            fullMatch,
+            `\n${HTML_NAVIGATION}\n</${tagName}>\n`,
           )
-          .replace('</head>', `\n${HTML_NAVIGATION}\n</head>\n`)
+        } else {
+          // Fallback to body if no wrapper tags found
+          modified = modified.replace(
+            '</head>',
+            `\n${HTML_NAVIGATION}\n</head>\n`,
+          )
+        }
 
         return new Response(modified, {
           headers: { 'content-type': contentType },
