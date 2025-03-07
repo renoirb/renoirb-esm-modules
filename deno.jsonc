@@ -33,6 +33,7 @@
     "exclude": []
   },
   "workspace": [
+    "./packages/app-layout-element",
     "./packages/component-showcase-element",
     "./packages/context-api",
     "./packages/element-utils",

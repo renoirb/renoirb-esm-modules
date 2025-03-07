@@ -59,7 +59,7 @@ Output:
 ```
 -->
 
-#### Application Layout Element
+#### [Application Layout Element](./packages/app-layout-element/README.md)
 
 A customizable application shell component providing consistent navigation and
 structure across pages.

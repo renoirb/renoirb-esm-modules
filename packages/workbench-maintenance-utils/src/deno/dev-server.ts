@@ -125,8 +125,8 @@ async function handleRequest(
         } else {
           // Fallback to body if no wrapper tags found
           modified = modified.replace(
-            '</head>',
-            `\n${HTML_NAVIGATION}\n</head>\n`,
+            '</body>',
+            `\n${HTML_NAVIGATION}\n</body>\n`,
           )
         }
 

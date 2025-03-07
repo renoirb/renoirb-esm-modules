@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workbench</title>
+    <script type="module">
+      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
+      import {
+        /*                                  */
+        AppLayoutAlphaElement,
+      } from 'https://renoirb.com/esm-modules/app-layout-element/browser.mjs'
+      registerCustomElement(
+        window,
+        'the-tested-component',
+        AppLayoutAlphaElement,
+      )
+    </script>
+  </head>
+  <body>
+    <the-tested-component>
+
+      <div slot="top-left">
+        <h3>AppLayout Workbench</h3>
+      </div>
+
+
+      <section>
+        <h2>Visualizing HTML Content formatting</h2>
+        <summary>
+          <h3>Some Document</h3>
+          <details>
+            <p>
+              Renoir Boulanger<br />
+              2025-02-04
+            </p>
+            <p>
+              Hiring Manager<br />
+              SomeCorp Corp.
+            </p>
+            <p>
+              I am writing to express my interest in the Web Developer position at
+              SomeCorp Corp. Your mission of "building a more human Web" deeply
+              resonates with my work in web protocols and standards, particularly
+              through my active participation in
+              <abbr title="World Wide Web Consortium">W3C</abbr> Working Groups.
+              I've contributed to the Web Components Community Group's ContextAPI
+              development and participated in the Solid Community Group, working on
+              decentralized data and access control protocols—areas which feels to
+              be aligned with <em>Lorem</em> and <tt>Ipsum</tt>.
+            </p>
+            <p>
+              Best regards,<br />
+              Renoir Boulanger
+            </p>
+            <hr />
+            <p>
+              Contents from this page is coming from a GitHub Gist:
+              <a
+                href="https://gist.github.com/renoirb/"
+                target="_blank"
+                >Source Gist</a
+              >
+            </p>
+          </details>
+        </summary>
+      </section>
+    </the-tested-component>
+  </body>
+</html>
