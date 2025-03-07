@@ -61,7 +61,7 @@ async function generatePackageList(
   packages: string[],
   currentPackage: string,
 ): string {
-  const links = packages
+  const links = packages.sort()
     .map(
       (pkg) =>
         `<li><a href="/?package=${pkg}" ${
@@ -71,7 +71,6 @@ async function generatePackageList(
     .join('\n')
 
   return `
-    ${STYLESHEET}
     <div class="package-list">
       <h3>Available Packages:</h3>
       <ul>${links}</ul>
@@ -130,6 +129,7 @@ async function handleRequest(
             `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>`,
           )
           .replace('<body>', `<body>\n${packageList}`)
+          .replace('</body>', '</body>' + STYLESHEET)
 
         return new Response(modified, {
           headers: { 'content-type': contentType },
