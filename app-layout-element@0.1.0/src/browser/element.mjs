@@ -24,7 +24,7 @@
 import {
   /*                                   */
   createLinkStlesheets,
-} from 'https://renoirb.com/esm-modules/element-utils'
+} from 'https://code.renoirb.com/element-utils@0.1.0/browser.mjs'
 
 const APP_LAYOUT_ALPHA_STYLES_EXTERNAL = [
   'https://renoirboulanger.com/_nuxt/vendors/app.css',
