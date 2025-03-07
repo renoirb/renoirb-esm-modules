@@ -7,7 +7,7 @@ const MIME_TYPES: Record<string, string> = {
   '.json': 'application/json',
 }
 
-type DevServerOptions = {
+export type DevServerOptions = {
   port?: number
   defaultPackage?: string
   componentShowcaseScriptAsString: string
@@ -32,53 +32,15 @@ async function listPackagesWithWorkbench(
   return packages
 }
 
-const STYLESHEET = `<style>
-      body {
-        font-family: system-ui, sans-serif;
-        max-width: 80ch;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        background-color: #fff;
-      }
-      .variant-group {
-        margin: 2rem 0;
-      }
-      .controls {
-        margin: 1rem 0;
-        padding: 1rem;
-        background: #f0f0f0;
-        border-radius: 0.5rem;
-      }
-      .package-list { 
-        padding: 1em;
-        background-color: #e5e5e5;
-        margin-bottom: 1em;
-      }
-      .current { font-weight: bold; }
-    </style>`
-
-async function generatePackageList(
-  packages: string[],
-  currentPackage: string,
-): string {
-  const links = packages.sort()
-    .map(
-      (pkg) =>
-        `<li><a href="/?package=${pkg}" ${
-          pkg === currentPackage ? 'class="current"' : ''
-        }>${pkg}</a></li>`,
-    )
-    .join('\n')
-
-  return `
-    <div class="package-list">
-      <h3>Available Packages:</h3>
-      <ul>${links}</ul>
-    </div>
-    <h1>Workbench</h1>
-  `
-}
-
+const HTML_HEAD_TEMPLATE = `
+  <script type="module">
+    import {
+      /*                    */
+      init,
+    } from '/packages/workbench-maintenance-utils/browser.mjs'
+    await init(window)
+  </script>
+`
 async function handleRequest(
   request: Request,
   options: DevServerOptions,
@@ -105,9 +67,12 @@ async function handleRequest(
       projectRoot,
       filepath.startsWith('/') ? filepath.slice(1) : filepath,
     )
+
+    /*
     console.log(
       `Looking for:\n  path: ${filepath}\n  normalizedPath: ${normalizedPath}\n`,
     )
+    */
 
     try {
       const file = await Deno.readFile(normalizedPath)
@@ -120,16 +85,22 @@ async function handleRequest(
         const importMap = await Deno.readTextFile(importMapPath)
 
         // Get list of packages with workbench.html
-        const packages = await listPackagesWithWorkbench(projectRoot)
-        const packageList = await generatePackageList(packages, packageName)
-
+        const packages = (await listPackagesWithWorkbench(projectRoot)).sort()
+        const packagesListAsString = packages.join(/* Stringify list of packages the same way we stringify a classList */ ' ')
+        const HTML_NAVIGATION = `
+          <workbench-nav
+            data-workbench-current="${packageName}"
+            data-workbench-list="${packagesListAsString}"
+          >
+          </workbench-nav>
+        `
         const modified = content
+          .replace('<head>', '<head>' + HTML_HEAD_TEMPLATE)
           .replace(
             '<head>',
-            `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>`,
+            `<head>\n<script type="importmap">${importMap}</script>\n<script type="module">${options.componentShowcaseScriptAsString}</script>\n`,
           )
-          .replace('<body>', `<body>\n${packageList}`)
-          .replace('</body>', '</body>' + STYLESHEET)
+          .replace('</head>', `\n${HTML_NAVIGATION}\n</head>\n`)
 
         return new Response(modified, {
           headers: { 'content-type': contentType },
