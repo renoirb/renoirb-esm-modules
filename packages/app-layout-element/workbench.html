@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workbench</title>
+    <script type="module">
+      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
+      import {
+        /*                                  */
+        AppLayoutAlphaElement,
+      } from 'https://renoirb.com/esm-modules/app-layout-element'
+      registerCustomElement(
+        window,
+        'the-tested-component',
+        AppLayoutAlphaElement,
+      )
+    </script>
+    <script type="module">
+      import { moveElementsIntoTarget } from '/packages/app-layout-element/workbench.mjs'
+      // Wait for custom element to be defined before moving elements
+      if (customElements.get('the-tested-component')) {
+        moveElementsIntoTarget('the-tested-component')
+      } else {
+        // Wait for the custom element to be defined
+        customElements
+          .whenDefined('the-tested-component')
+          .then(() => moveElementsIntoTarget('the-tested-component'))
+      }
+    </script>
+  </head>
+  <body>
+    <the-tested-component>
+      Hello World
+
+      <div slot="top-left">
+        <!-- #TODO This should be instead of the logo (my name), bug? -->
+        <h3>Testing Things</h3>
+      </div>
+
+    </the-tested-component>
+  </body>
+</html>
