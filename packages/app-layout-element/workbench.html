@@ -9,6 +9,18 @@
       } from '@renoirb/app-layout-element'
       customElements.define('app-layout', AppLayoutAlphaElement)
     </script>
+    <script type="module">
+      import { moveElementsIntoTarget } from '/packages/app-layout-element/workbench.mjs'
+      // Wait for custom element to be defined before moving elements
+      if (customElements.get('the-tested-component')) {
+        moveElementsIntoTarget('the-tested-component')
+      } else {
+        // Wait for the custom element to be defined
+        customElements
+          .whenDefined('the-tested-component')
+          .then(() => moveElementsIntoTarget('the-tested-component'))
+      }
+    </script>
   </head>
   <body>
     <app-layout>
