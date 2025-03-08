@@ -9,12 +9,12 @@
                 and the registration is done after (below)
     -->
     <script type="module">
-      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
+      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
       import {
         /*                                  */
         BaseValueDateElement,
         ValueDateRangeElement,
-      } from 'https://renoirb.com/esm-modules/value-date-element'
+      } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
       registerCustomElement(window, 'value-date', BaseValueDateElement)
       registerCustomElement(window, 'value-date-range', ValueDateRangeElement)
     </script>

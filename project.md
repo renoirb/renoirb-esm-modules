@@ -104,7 +104,7 @@ JavaScript runs.
 
 - ☒ Simple direct imports
   ```js
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils'
+  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
   ```
 - Current implementation:
   - ☒ Static file hosting

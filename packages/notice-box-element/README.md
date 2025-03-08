@@ -17,7 +17,7 @@ Component for runtime independence and reusability.
 Register the element under the name you need
 
 ```js
-import { NoticeBoxElement } from 'https://renoirb.com/esm-modules/notice-box-element'
+import { NoticeBoxElement } from 'https://renoirb.com/esm-modules/notice-box-element/browser.mjs'
 customElements.define('notice-card', NoticeBoxElement)
 ```
 

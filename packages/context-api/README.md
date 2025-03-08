@@ -31,7 +31,7 @@ The shape of data we want, a "_contextResponse_" could look like;
 and we define a name, say `'date-conversion'`.
 
 ```js
-import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api'
+import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api/browser.mjs'
 
 export class SomeExampleElement extends HTMLElement {
   constructor() {
