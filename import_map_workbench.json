@@ -1,5 +1,6 @@
 {
   "imports": {
+    "jsonc-parser": "jsr:@std/jsonc@^1.0.1",
     "https://renoirb.com/esm-modules/component-showcase-element/": "./packages/component-showcase-element/",
     "https://renoirb.com/esm-modules/context-api/": "./packages/context-api/",
     "https://renoirb.com/esm-modules/element-utils": "./packages/element-utils/browser.mjs",

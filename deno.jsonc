@@ -1,5 +1,6 @@
 {
   "tasks": {
+    "build": "deno run --allow-read --allow-write --allow-run --allow-net scripts/build.ts",
     "dev": "deno run --allow-net --allow-read --allow-import scripts/dev-server.ts",
     "generate-barrels": "deno run --allow-run --allow-read --allow-write scripts/generate-barrels.ts",
     "code": "deno run --allow-run --allow-read scripts/prepare-sharing-code.ts --mode all --prefix packages/",
