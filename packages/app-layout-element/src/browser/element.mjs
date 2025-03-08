@@ -27,7 +27,7 @@
 
 import {
   /*                    */
-  createLinkStlesheets,
+  optimizedExternalStyles,
 } from '@renoirb/element-utils'
 
 const LIST_EXTERNAL_STYLE = [
@@ -316,24 +316,43 @@ export class AppLayoutAlphaElement extends HTMLElement {
     elRoot.setAttribute('id', 'app-layout')
     elRoot.appendChild(elBody)
     this.shadowRoot.appendChild(elRoot)
-
-    /**
-     * This is ugly, to add CSS to the parent. But whatever. For now.
-     */
-    this.shadowRoot.appendChild(
-      createLinkStlesheets(window, this.localName, LIST_EXTERNAL_STYLE),
-    )
-    document.head.appendChild(
-      createLinkStlesheets(window, this.localName, LIST_EXTERNAL_STYLE),
-    )
     this.setAttribute('class', 'nuxt-content')
+  }
+
+  async connectedCallback() {
+    if (!this.isConnected) return
+
+    try {
+      const styles = await optimizedExternalStyles(
+        window,
+        LIST_EXTERNAL_STYLE,
+        {
+          componentName: this.localName,
+          avoidDuplicates: true
+        }
+      )
+
+      // Apply to Shadow DOM
+      if (styles.shadow instanceof CSSStyleSheet) {
+        this.shadowRoot.adoptedStyleSheets = [styles.shadow]
+      } else if (styles.shadow) {
+        this.shadowRoot.appendChild(styles.shadow)
+      }
+
+      // Apply to document head if not already there
+      if (styles.document && !styles.document.isConnected) {
+        document.head.appendChild(styles.document)
+      }
+    } catch (error) {
+      console.error('Style loading failed:', error)
+    }
   }
 
   /**
    * Enforce idea that this component must be as first child of body to ensure
    * that this component takes up all the available space as designed
    *
-  connectedCallback() {
+  _enforceOnlyChildOfParent = () => {
     const parentElement = this.parentElement
     const isBody = parentElement.localName === 'body'
     if (!isBody) {
