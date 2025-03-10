@@ -3,25 +3,26 @@
   <head>
     <title>Workbench</title>
     <script type="module">
-      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
       import {
         /*                                  */
         AppLayoutAlphaElement,
-      } from 'https://renoirb.com/esm-modules/app-layout-element/browser.mjs'
-      registerCustomElement(
-        window,
-        'the-tested-component',
-        AppLayoutAlphaElement,
-      )
+      } from 'https://dist.renoirb.com/esm/own/app-layout-element/browser.mjs'
+      customElements.define('app-layout', AppLayoutAlphaElement)
     </script>
   </head>
   <body>
-    <the-tested-component>
+    <app-layout>
 
       <div slot="top-left">
-        <h3>AppLayout Workbench</h3>
+        Workbench to work on AppLayout
       </div>
-
+      <div slot="top-right">
+        <a href="https://github.com/renoirb/renoirb-esm-modules/">renoirb-esm-modules</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div slot="footer-left">
+        my own footer.
+      </div>
 
       <section>
         <h2>Visualizing HTML Content formatting</h2>
@@ -63,6 +64,7 @@
           </details>
         </summary>
       </section>
-    </the-tested-component>
+
+    </app-layout>
   </body>
 </html>

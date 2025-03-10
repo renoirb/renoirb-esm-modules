@@ -143,59 +143,62 @@ const TEMPLATE = `
       <div class="app-footer--component disposition-parent w-full bottom">
         <footer
           class="zone__sandwich__bottom container flex items-center justify-between p-10 mx-auto no-print"
+          part="slot-parent-footer-left"
           style="position: relative"
         >
-          <dl class="contact items-item disposition-item no-print">
-            <dt class="mb-4 font-serif text-2xl">Contact</dt>
-            <dd>
-              <a href="https://renoirboulanger.com">Renoir Boulanger</a> ✪ Full-Stack Developer &amp; Web Hosting systems
-              reliability professional
-            </dd>
-            <dd class="underline">
-              <a rel="me" href="https://mastodon.social/@renoirb"
-                >@renoirb@mastodon.social</a
-              >
-            </dd>
-            <dt>CV</dt>
-            <dd>
-              <a
-                href="https://github.com/renoirb/site/blob/2020/content/resume/jsonresume-renoirb.yaml"
-                target="_blank"
-                >source stored on GitHub</a
-              >
-            </dd>
-            <dd>
-              <a
-                href="https://renoirboulanger.com/files/resume/Resume-Renoir-Boulanger.doc"
-                target="_blank"
-                >Word</a
-              >
-            </dd>
-            <dd>
-              <a
-                href="https://renoirboulanger.com/files/resume/Resume-Renoir-Boulanger.pdf"
-                target="_blank"
-                >PDF</a
-              >
-            </dd>
-            <dd>
-              <a href="http://registry.jsonresume.org/renoirb" target="_blank"
-                >HTML</a
-              >
-            </dd>
-          </dl>
-          <div class="items-item disposition-item">
-            <dl class="see-also">
-              <dt>See also…</dt>
+          <slot name="footer-left">
+            <dl class="contact items-item disposition-item no-print">
+              <dt class="mb-4 font-serif text-2xl">Contact</dt>
               <dd>
-                <a href="https://renoirboulanger.com/glossary"> Glossary </a>
+                <a href="https://renoirboulanger.com">Renoir Boulanger</a> ✪ Full-Stack Developer &amp; Web Hosting systems
+                reliability professional
+              </dd>
+              <dd class="underline">
+                <a rel="me" href="https://mastodon.social/@renoirb"
+                  >@renoirb@mastodon.social</a
+                >
+              </dd>
+              <dt>CV</dt>
+              <dd>
+                <a
+                  href="https://github.com/renoirb/site/blob/2020/content/resume/jsonresume-renoirb.yaml"
+                  target="_blank"
+                  >source stored on GitHub</a
+                >
               </dd>
               <dd>
-                <a href="https://renoirboulanger.com/code-review">
-                  Code-Review notes
-                </a>
+                <a
+                  href="https://renoirboulanger.com/files/resume/Resume-Renoir-Boulanger.doc"
+                  target="_blank"
+                  >Word</a
+                >
+              </dd>
+              <dd>
+                <a
+                  href="https://renoirboulanger.com/files/resume/Resume-Renoir-Boulanger.pdf"
+                  target="_blank"
+                  >PDF</a
+                >
+              </dd>
+              <dd>
+                <a href="http://registry.jsonresume.org/renoirb" target="_blank"
+                  >HTML</a
+                >
               </dd>
             </dl>
+            <div class="items-item disposition-item">
+              <dl class="see-also">
+                <dt>See also…</dt>
+                <dd>
+                  <a href="https://renoirboulanger.com/glossary"> Glossary </a>
+                </dd>
+                <dd>
+                  <a href="https://renoirboulanger.com/code-review">
+                    Code-Review notes
+                  </a>
+                </dd>
+              </dl>
+            </slot>
           </div>
         </footer>
       </div>

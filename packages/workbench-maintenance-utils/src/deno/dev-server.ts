@@ -36,14 +36,9 @@ const HTML_HEAD_TEMPLATE = `
   <script type="module">
     import {
       /*                    */
-      AppLayoutAlphaElement,
-    } from 'https://code.renoirb.com/app-layout-element@0.1.0/browser.mjs'
-    import {
-      /*                    */
       init,
     } from '/packages/workbench-maintenance-utils/browser.mjs'
     await init(window)
-    customElements.define('app-layout', AppLayoutAlphaElement)
   </script>
 `
 
