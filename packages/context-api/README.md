@@ -140,8 +140,7 @@ index 418d..ad79 100644
 +++ b/packages/context-api/deno.json
 @@ -4,5 +4,8 @@
    "exports": {
-     ".": "./browser.mjs",
-     "./browser": "./browser.mjs"
+     ".": "./browser.mjs"
 +  },
 +  "imports": {
 +    "@lit/context": "npm:@lit/context@1.1.4"

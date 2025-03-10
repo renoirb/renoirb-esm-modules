@@ -1,9 +1,5 @@
 {
-  "name": "@renoirb-esm-modules/workbench-maintenance-utils",
-  "version": "0.1.0",
   "exports": {
-    "./browser.mjs": "./browser.mjs",
-    "./dev-server": "./src/deno/dev-server.ts",
-    "./generate-barrels": "./src/deno/generate-barrels.ts"
+    ".": "./deno.ts"
   }
 }

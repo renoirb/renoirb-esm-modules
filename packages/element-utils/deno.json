@@ -1,9 +1,4 @@
 {
   "name": "@renoirb-esm-modules/element-utils",
-  "version": "0.1.0",
-  "exports": {
-    ".": "./deno.mjs",
-    "./deno": "./deno.mjs",
-    "./browser": "./browser.mjs"
-  },
+  "version": "0.1.0"
 }

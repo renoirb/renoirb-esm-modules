@@ -2,13 +2,15 @@ import { generateBarrels } from 'https://renoirb.com/esm-modules/workbench-maint
 
 export const packages = [
   /*                    */
+  'app-layout-element',
   'component-showcase-element',
   'context-api',
   'element-utils',
   'inline-note-element',
-  'workbench-maintenance-utils',
   'notice-box-element',
   'value-date-element',
+  'work-experience-element',
+  'workbench-maintenance-utils',
 ]
 
 console.log(`Need to rework this script to work for both Deno and Browser, you have to do it yourself until it’s fixed.`)
