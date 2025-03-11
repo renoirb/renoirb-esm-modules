@@ -1,4 +1,4 @@
-import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api/browser.mjs'
+import { ContextRequestEvent } from '@renoirb/context-api'
 import {
   bindContextResponseHandlerMethodForDateContext,
   ContextRequest_DateConversion,

@@ -11,7 +11,7 @@ application and further from the web component that can request for it.
 
 For example, you want to create your own element to display a date yourself. You
 may have found
-[https://renoirb.com/esm-modules/value-date-element](https://renoirb.com/esm-modules/value-date-element),
+[@renoirb/value-date-element](@renoirb/value-date-element),
 but you want it differently.
 
 Assuming you want a date formatted "`2025-02-27`" just need to have data
@@ -31,7 +31,7 @@ The shape of data we want, a "_contextResponse_" could look like;
 and we define a name, say `'date-conversion'`.
 
 ```js
-import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api/browser.mjs'
+import { ContextRequestEvent } from '@renoirb/context-api'
 
 export class SomeExampleElement extends HTMLElement {
   constructor() {
@@ -211,4 +211,4 @@ This is following the ContextAPI community protocol, to read more about it
 - https://github.com/lit/lit/blob/%40lit-labs/context%400.2.0/packages/labs/context/src/lib/context-root.ts
 
 [renoirb-value-date-element-readme]:
-  https://renoirb.com/esm-modules/value-date-element/README.md
+  @renoirb/value-date-element/v0.1.0/README.md

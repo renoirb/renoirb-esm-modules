@@ -16,8 +16,15 @@ See example in [workbench.mjs](workbench.mjs)
 ### Step 2: Import and register the CustomElement
 
 ```html
+<script type="importmap">
+  {
+    "imports": {
+      "@renoirb/value-date-element": "https://dist.renoirb.com/esm/own/value-date-element/v1.0.0/browser.mjs"
+    }
+  }
+</script>
 <script type="module">
-  import { BaseValueDateElement } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
+  import { BaseValueDateElement } from '@renoirb/value-date-element'
   customElements.define('value-date', BaseValueDateElement)
 </script>
 ```
@@ -61,4 +68,4 @@ Form that allows selecting two dates according to limitations such as only in th
 - [@renoirb/context-api **Context API**][renoirb-context-api-readme] as per W3C’s Web Component Community Group ContextAPI protocol
 
 [renoirb-context-api-readme]:
-  https://renoirb.com/esm-modules/context-api/README.md
+  https://github.com/renoirb/renoirb-esm-modules/blob/main/packages/context-api/README.md

@@ -1,4 +1,4 @@
-import { generateBarrels } from 'https://renoirb.com/esm-modules/workbench-maintenance-utils/generate-barrels.ts'
+import { generateBarrels } from '@renoirb/workbench-maintenance-utils/deno.ts'
 
 export const packages = [
   /*                    */

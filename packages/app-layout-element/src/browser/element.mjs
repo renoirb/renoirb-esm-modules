@@ -28,7 +28,7 @@
 import {
   /*                    */
   createLinkStlesheets,
-} from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
+} from '@renoirb/element-utils'
 
 const LIST_EXTERNAL_STYLE = [
   'https://renoirboulanger.com/_nuxt/vendors/app.css',
