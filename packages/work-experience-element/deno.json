@@ -1,4 +1,8 @@
 {
   "name": "@renoirb/work-experience-element",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  }
 }

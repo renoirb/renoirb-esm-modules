@@ -10,7 +10,7 @@ export const BASE_VALUE_ELEMENT_STYLE = `
   }
 `
 
-export class BaseValueDateElement extends HTMLElement {
+export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
     return ['datetime']
   }

@@ -5,7 +5,10 @@ import {
   normalizeSpaceSeparated,
 } from '@renoirb/element-utils'
 
-export const validateSlotsList = (slotsAttr) => {
+/**
+ * Pass a space separated list of slot names and confirm there are no duplicates
+ */
+export const ensureUniqueInSpaceSeparatedListOfSlotNames = (slotsAttr) => {
   assertNonEmptyString(slotsAttr, 'slots attribute is required')
 
   const slotNames = new Set()

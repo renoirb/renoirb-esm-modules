@@ -1,4 +1,9 @@
 {
   "name": "@renoirb/element-utils",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs",
+    "./core": "./core.mjs"
+  }
 }

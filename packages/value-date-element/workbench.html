@@ -11,17 +11,17 @@
     <script type="module">
       import {
         /*                                  */
-        BaseValueDateElement,
+        ValueDateElement,
         ValueDateRangeElement,
       } from '@renoirb/value-date-element'
-      customElements.define('value-date', BaseValueDateElement)
+      customElements.define('value-date', ValueDateElement)
       customElements.define('value-date-range', ValueDateRangeElement)
     </script>
   </head>
   <body>
     <section>
 
-      <my-component-showcase name="BaseValueDateElement" slots="alpha bravo charlie delta echo">
+      <my-component-showcase name="ValueDateElement" slots="alpha bravo charlie delta echo">
 
         <template slot="alpha" title="Simplest">
           <value-date

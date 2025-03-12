@@ -1,6 +1,6 @@
 import {
   /*                                   */
-  validateSlotsList,
+  ensureUniqueInSpaceSeparatedListOfSlotNames,
 } from './utils.mjs'
 
 const STYLE = `
@@ -80,10 +80,10 @@ export class ComponentShowcaseElement extends HTMLElement {
 
     // Validate template[slot] to exist only once for one name.
     const templateList = [...this.querySelectorAll('template')].map(t => t.getAttribute('slot'))
-    validateSlotsList(templateList.join(' '))
+    ensureUniqueInSpaceSeparatedListOfSlotNames(templateList.join(' '))
 
     // Validate and normalize slots
-    const slots = validateSlotsList(this.getAttribute('slots'))
+    const slots = ensureUniqueInSpaceSeparatedListOfSlotNames(this.getAttribute('slots'))
     const variants = this.shadowRoot.querySelector('.variants')
     variants.innerHTML = '' // Clear existing content
 

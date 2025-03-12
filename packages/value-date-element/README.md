@@ -24,8 +24,8 @@ See example in [workbench.mjs](workbench.mjs)
   }
 </script>
 <script type="module">
-  import { BaseValueDateElement } from '@renoirb/value-date-element'
-  customElements.define('value-date', BaseValueDateElement)
+  import { ValueDateElement } from '@renoirb/value-date-element'
+  customElements.define('value-date', ValueDateElement)
 </script>
 ```
 
