@@ -9,7 +9,6 @@ export const BASE_VALUE_ELEMENT_STYLE = `
     display: inline;
   }
 `
-
 export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
     return ['datetime']
