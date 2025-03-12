@@ -9,7 +9,7 @@ export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
 export const VALUE_DATE_RANGE_TEMPLATE = `
   <span id="root">
     <span>
-      <span id="date-begin"></span>&hellip;<span id="date-end"></span>
+      <value-date id="date-begin"></value-date><span id="sep">-</span><value-date id="date-end"></value-date>
     </span>
     <small id="duration-text"></small>
   </span>
@@ -46,28 +46,16 @@ export class ValueDateRangeElement extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    let mintingElementName = /* BaseValueDateElement */ 'value-date'
     const id = name.replace('data-', '')
     const targetNode = this.shadowRoot.querySelector(`#${id}`)
+    const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
     if (oldValue !== newValue && this.isConnected) {
-      if (
-        oldValue !== newValue &&
-        typeof newValue !== 'string' &&
-        name.startsWith('data-date')
-      ) {
-        // We do not have a date
-        mintingElementName = 'span'
-      }
       switch (name) {
         case 'data-date-end':
         case 'data-date-begin': {
-          const minted = this.ownerDocument.createElement(mintingElementName)
-          minted.setAttribute('id', id)
-          if (mintingElementName !== 'span') {
-            minted.setAttribute('data-date-format', this.getAttribute('data-date-format') ?? DATE_FORMAT)
-            minted.setAttribute('datetime', newValue)
-          }
-          targetNode.replaceWith(minted)
+          targetNode.setAttribute('data-date-format', dateFormat)
+          targetNode.setAttribute('datetime', newValue)
+          targetNode.innerText = newValue
           this.#updateDuration()
           break
         }
