@@ -71,8 +71,8 @@ export class ValueDateRangeElement extends HTMLElement {
     const dateBegin = this.getAttribute('data-date-begin')
     const dateEnd = this.getAttribute('data-date-end')
     const durationTargetNode = this.shadowRoot.getElementById('duration-text')
-    this.shadowRoot.getElementById('date-end').innerText = dateEnd
-    this.shadowRoot.getElementById('date-begin').innerText = dateBegin
+    this.shadowRoot.getElementById('date-end').textContent = dateEnd
+    this.shadowRoot.getElementById('date-begin').textContent = dateBegin
     let durationTextContent = ''
     try {
       const calculated = calculateDuration(dateBegin, dateEnd)
