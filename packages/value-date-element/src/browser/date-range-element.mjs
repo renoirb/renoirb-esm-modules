@@ -20,6 +20,13 @@ const DATE_FORMAT = 'YYYY-MM'
 const TEXT_TO_TRANSLATE_TODAY = 'today'
 
 export class ValueDateRangeElement extends HTMLElement {
+
+  static get dependentElements() {
+    return Object.freeze({
+      'value-date': 'https://dist.renoirb.com/esm/own/value-date-element/v0.1.0/browser.mjs'
+    });
+  }
+
   static get observedAttributes() {
     return [
       /*                    */
