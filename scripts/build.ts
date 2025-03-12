@@ -56,7 +56,7 @@ async function buildForHTTP(
   console.log(`Building ${config.name} for HTTP serving...`)
 
   const packageName = basename(packagePath)
-  const httpDist = join(DIST_ROOT, 'http', 'esm-modules', packageName)
+  const httpDist = join(DIST_ROOT, 'http', packageName)
   await ensureDir(httpDist)
 
   // Copy source .mjs files directly - we keep the original directory structure
@@ -65,7 +65,7 @@ async function buildForHTTP(
   })
 
   // Copy entry point files
-  const entries = ['browser.mjs', 'core.mjs']
+  const entries = ['browser.mjs', 'core.mjs', 'main.mjs']
   for (const entry of entries) {
     try {
       await Deno.copyFile(join(packagePath, entry), join(httpDist, entry))
@@ -86,13 +86,6 @@ async function buildForHTTP(
         throw error
       }
     }
-  }
-
-  // If versioned distribution is needed, also copy to a versioned directory
-  if (config.version) {
-    const versionedDist = join(DIST_ROOT, 'http', 'esm-modules', `${packageName}@${config.version}`)
-    await ensureDir(dirname(versionedDist))
-    await copy(httpDist, versionedDist, { overwrite: true })
   }
 }
 
