@@ -10,7 +10,6 @@
     "test": "deno test --allow-net",
     "lint": "deno lint"
   },
-  "importMap": "import_map_workbench.json",
   "compilerOptions": {
     "lib": ["deno.ns", "dom"]
   },
@@ -42,5 +41,16 @@
     "./packages/value-date-element",
     "./packages/work-experience-element",
     "./packages/workbench-maintenance-utils"
-  ]
+  ],
+  "imports": {
+    "@renoirb/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/",
+    "@renoirb/app-layout-element": "./packages/app-layout-element/browser.mjs",
+    "@renoirb/component-showcase-element": "./packages/component-showcase-element/browser.mjs",
+    "@renoirb/context-api": "./packages/context-api/browser.mjs",
+    "@renoirb/element-utils": "./packages/element-utils/browser.mjs",
+    "@renoirb/inline-note-element": "./packages/inline-note-element/browser.mjs",
+    "@renoirb/notice-box-element": "./packages/notice-box-element/browser.mjs",
+    "@renoirb/value-date-element": "./packages/value-date-element/browser.mjs",
+    "@renoirb/work-experience-element": "./packages/work-experience-element/browser.mjs",
+  }
 }

@@ -9,20 +9,19 @@
                 and the registration is done after (below)
     -->
     <script type="module">
-      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
       import {
         /*                                  */
-        BaseValueDateElement,
+        ValueDateElement,
         ValueDateRangeElement,
-      } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
-      registerCustomElement(window, 'value-date', BaseValueDateElement)
-      registerCustomElement(window, 'value-date-range', ValueDateRangeElement)
+      } from '@renoirb/value-date-element'
+      customElements.define('value-date', ValueDateElement)
+      customElements.define('value-date-range', ValueDateRangeElement)
     </script>
   </head>
   <body>
     <section>
 
-      <my-component-showcase name="BaseValueDateElement" slots="alpha bravo charlie delta echo">
+      <my-component-showcase name="ValueDateElement" slots="alpha bravo charlie delta echo">
 
         <template slot="alpha" title="Simplest">
           <value-date

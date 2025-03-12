@@ -1,5 +1,5 @@
 {
-  "name": "@renoirb-esm-modules/context-api",
+  "name": "@renoirb/context-api",
   "version": "0.1.0",
   "exports": {
     ".": "./browser.mjs",

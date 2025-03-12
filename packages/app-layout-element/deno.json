@@ -1,8 +1,8 @@
 {
-  "name": "@renoirb-esm-modules/app-layout-element",
+  "name": "@renoirb/app-layout-element",
   "version": "0.1.0",
   "exports": {
     ".": "./browser.mjs",
-    "./browser.mjs": "./browser.mjs"
+    "./browser": "./browser.mjs"
   }
 }

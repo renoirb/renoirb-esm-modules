@@ -1,4 +1,4 @@
-import { ContextRequestEvent } from 'https://renoirb.com/esm-modules/context-api/browser.mjs'
+import { ContextRequestEvent } from '@renoirb/context-api'
 import {
   bindContextResponseHandlerMethodForDateContext,
   ContextRequest_DateConversion,
@@ -10,7 +10,7 @@ export const BASE_VALUE_ELEMENT_STYLE = `
   }
 `
 
-export class BaseValueDateElement extends HTMLElement {
+export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
     return ['datetime']
   }

@@ -2,7 +2,7 @@ import {
   /*                                  */
   ContextRequest_DateConversion,
   assertIsDateConversionContextPayload,
-} from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
+} from '@renoirb/value-date-element'
 
 import dayjs from 'https://cdn.skypack.dev/dayjs'
 import 'https://cdn.skypack.dev/dayjs/locale/pt'

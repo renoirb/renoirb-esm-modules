@@ -1,15 +1,15 @@
 {
   "imports": {
     "jsonc-parser": "jsr:@std/jsonc@^1.0.1",
-    "https://renoirb.com/esm-modules/app-layout-element/": "./packages/app-layout-element/",
-    "https://renoirb.com/esm-modules/component-showcase-element/": "./packages/component-showcase-element/",
-    "https://renoirb.com/esm-modules/context-api/": "./packages/context-api/",
-    "https://renoirb.com/esm-modules/element-utils": "./packages/element-utils/browser.mjs",
-    "https://renoirb.com/esm-modules/element-utils/": "./packages/element-utils/",
-    "https://renoirb.com/esm-modules/inline-note-element/": "./packages/inline-note-element/",
-    "https://renoirb.com/esm-modules/notice-box-element/": "./packages/notice-box-element/",
-    "https://renoirb.com/esm-modules/value-date-element/": "./packages/value-date-element/",
-    "https://renoirb.com/esm-modules/work-experience-element/": "./packages/work-experience-element/",
-    "https://renoirb.com/esm-modules/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/src/deno/"
+    "@renoirb/app-layout-element": "http://localhost:8000/packages/app-layout-element/browser.mjs",
+    "@renoirb/component-showcase-element": "http://localhost:8000/packages/component-showcase-element/browser.mjs",
+    "@renoirb/context-api": "http://localhost:8000/packages/context-api/browser.mjs",
+    "https://renoirb.com/esm-modules/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
+    "@renoirb/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
+    "@renoirb/inline-note-element": "http://localhost:8000/packages/inline-note-element/browser.mjs",
+    "@renoirb/notice-box-element": "http://localhost:8000/packages/notice-box-element/browser.mjs",
+    "@renoirb/value-date-element": "http://localhost:8000/packages/value-date-element/browser.mjs",
+    "@renoirb/work-experience-element": "http://localhost:8000/packages/work-experience-element/browser.mjs",
+    "@renoirb/workbench-maintenance-utils": "http://localhost:8000/packages/workbench-maintenance-utils/browser.mjs"
   }
 }

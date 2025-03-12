@@ -1,4 +1,4 @@
-import { classNameMap } from '../core/index.mjs'
+import { classNameMap } from '../core.mjs'
 
 //
 // See also: https://gist.github.com/renoirb/7e06321cfee47263a12838c17d32e981

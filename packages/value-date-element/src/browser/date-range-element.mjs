@@ -1,4 +1,4 @@
-import { calculateDuration } from '../core/index.mjs'
+import { calculateDuration } from '../core.mjs'
 
 export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
   :host {

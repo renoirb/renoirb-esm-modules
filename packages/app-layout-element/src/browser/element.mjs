@@ -1,5 +1,5 @@
 /*!
- * https://renoirb.com/esm-modules/app-layout-element.mjs v1.0.0
+ * @renoirb/app-layout-element v1.0.0
  *
  * Maintainer: Renoir Boulanger <contribs@renoirboulanger.com>
  *
@@ -22,13 +22,13 @@
  * Time spent:
  *   20230211: 2h
  *   20250307: 2h Making it as part of a monorepo
- *   20250308: 3h Build script and deploy on https://code.renoirb.com/
+ *   20250308: 3h Build script and deploy on https://dist.renoirb.com/
  */
 
 import {
   /*                    */
   createLinkStlesheets,
-} from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
+} from '@renoirb/element-utils'
 
 const LIST_EXTERNAL_STYLE = [
   'https://renoirboulanger.com/_nuxt/vendors/app.css',

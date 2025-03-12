@@ -4,17 +4,16 @@
     <title>Inline Note Element Workbench</title>
     <script src="packages/value-date-element/workbench.mjs" type="module"></script>
     <script type="module">
-      import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
       import {
         /*                                  */
         InlineNoteElement,
-      } from 'https://renoirb.com/esm-modules/inline-note-element/browser.mjs'
+      } from '@renoirb/inline-note-element'
       import {
         /*                                  */
-        BaseValueDateElement,
-      } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
-      registerCustomElement(window, 'the-tested-component', InlineNoteElement)
-      registerCustomElement(window, 'value-date', BaseValueDateElement)
+        ValueDateElement,
+      } from '@renoirb/value-date-element'
+      customElements.define('the-tested-component', InlineNoteElement)
+      customElements.define('value-date', ValueDateElement)
     </script>
   </head>
   <body>

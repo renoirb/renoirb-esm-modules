@@ -102,19 +102,35 @@ JavaScript runs.
 
 #### HTTP Direct Access
 
-- ☒ Simple direct imports
+- ⬚ Simple direct imports
   ```js
-  import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
+  import { registerCustomElement } from '@renoirb/element-utils'
   ```
+  - Unsure still about whether it's best to have packages declare dependencies using URL when there will be different versions.
 - Current implementation:
   - ☒ Static file hosting
   - ☒ Basic directory structure
   - ☒ Direct file access
+  - ☒ Package publication process as files into folder hierarchy on GitHub
+    - ☒ GitHub repository "`renoirb-esm-modules`"
+    - ☒ GitHub pages hosted on orphan branch, available as `https://renoirb.github.io/renoirb-esm-modules`
+    - ☒ leave room to breathe and be explicit in URL, currently only ESM modules I maintain and own `esm/own/`, `https://renoirb.github.io/renoirb-esm-modules/esm/own/`
+    - ☒ example package `@renoirb/element-utils` at version `0.1.0` as `esm/own/element-utils/v0.1.0/`, accessible as `https://renoirb.github.io/renoirb-esm-modules/esm/own/element-utils/v0.1.0/`
 - Future enhancements:
-  - ⬚ CloudFlare Worker routing
-    - ⬚ Path pattern: `/esm-modules/<package-name>@<version>`
+  - x ~~CloudFlare Worker~~ — Let's use Fastly instead
+  - ⬚ Fastly Service
+    - ☒ Published path pattern: `/esm/own/<package-name>/v<version>/`
+    - ☒ CDN service
+      - ☒ Domain "dist.renoirb.com"
+      - ☒ Origin "renoirb.github.io"
+      - ☒ VCL Snippet to proxy `https://renoirb.github.io/renoirb-esm-modules/` as `https://dist.renoirb.com/esm/own/` for ESM modules
+      - ⬚ Find way to mirror all packages into JSR.io
+    - ⬚ Compute Service
+      - ⬚ `Content-Type: text/html` request to `/esm/own/<package-name>/`, and `/esm/own/<package-name>/v<version>/`, Serve synthetic HTML document to give human friendly version of stored README.md
+      - ⬚ Package.json/Deno.json Resolution and Redirection
     - ⬚ Graceful error handling
     - ⬚ Version negotiation
+      - ⬚ Fastly Compute Service Dynamic Version Resolution for "latest" (`/esm/own/<package-name>/` redirect to highest version number in `/esm/own/<package-name>/v<version>/`)
     - ⬚ Cache management
   - ⬚ Integrity verification
   - ⬚ CORS configuration

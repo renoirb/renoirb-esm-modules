@@ -79,20 +79,19 @@
       </my-component-showcase>
 
       <script type="module" defer>
-        import { registerCustomElement } from 'https://renoirb.com/esm-modules/element-utils/browser.mjs'
         import {
           /*                                  */
           ValueDateRangeElement,
-          BaseValueDateElement,
-        } from 'https://renoirb.com/esm-modules/value-date-element/browser.mjs'
+          ValueDateElement,
+        } from '@renoirb/value-date-element'
         import {
           /*                                  */
           WorkExperienceElement,
-        } from 'https://renoirb.com/esm-modules/work-experience-element/browser.mjs'
+        } from '@renoirb/work-experience-element'
         WorkExperienceElement.setDateComponentTagName(/*'value-date-range'*/'work-experience-date')
-        registerCustomElement(window, 'the-tested-component', WorkExperienceElement)
-        registerCustomElement(window, 'work-experience-date', ValueDateRangeElement)
-        registerCustomElement(window, 'value-date', BaseValueDateElement)
+        customElements.define('the-tested-component', WorkExperienceElement)
+        customElements.define('work-experience-date', ValueDateRangeElement)
+        customElements.define('value-date', ValueDateElement)
       </script>
 
     </section>
