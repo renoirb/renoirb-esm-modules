@@ -9,7 +9,7 @@ export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
 export const VALUE_DATE_RANGE_TEMPLATE = `
   <span id="root">
     <span>
-      <value-date id="date-begin"></value-date><span id="sep">-</span><value-date id="date-end"></value-date>
+      <value-date id="date-begin"></value-date><slot name="separator">-</slot><value-date id="date-end"></value-date>
     </span>
     <small id="duration-text"></small>
   </span>
@@ -42,20 +42,28 @@ export class ValueDateRangeElement extends HTMLElement {
   }
 
   connectedCallback() {
+    const dateBegin = this.getAttribute('data-date-begin')
+    const dateEnd = this.getAttribute('data-date-end')
+    this.shadowRoot.getElementById('date-end').textContent = dateEnd
+    this.shadowRoot.getElementById('date-begin').textContent = dateBegin
     this.#updateDuration()
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     const id = name.replace('data-', '')
-    const targetNode = this.shadowRoot.querySelector(`#${id}`)
-    const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
-    if (oldValue !== newValue && this.isConnected) {
+    const targetNode = this.shadowRoot.getElementById(id)
+    if (
+      targetNode &&
+      oldValue !== newValue && 
+      this.isConnected
+    ) {
+      const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
       switch (name) {
         case 'data-date-end':
         case 'data-date-begin': {
           targetNode.setAttribute('data-date-format', dateFormat)
           targetNode.setAttribute('datetime', newValue)
-          targetNode.innerText = newValue
+          targetNode.textContent = newValue
           this.#updateDuration()
           break
         }
@@ -71,8 +79,6 @@ export class ValueDateRangeElement extends HTMLElement {
     const dateBegin = this.getAttribute('data-date-begin')
     const dateEnd = this.getAttribute('data-date-end')
     const durationTargetNode = this.shadowRoot.getElementById('duration-text')
-    this.shadowRoot.getElementById('date-end').textContent = dateEnd
-    this.shadowRoot.getElementById('date-begin').textContent = dateBegin
     let durationTextContent = ''
     try {
       const calculated = calculateDuration(dateBegin, dateEnd)
@@ -86,16 +92,15 @@ export class ValueDateRangeElement extends HTMLElement {
       durationTextContent = ''
     }
     if (this.getAttribute('data-range-hide-duration') !== null) {
-      durationTargetNode.textContent = '' 
       this.setAttribute('title', durationTextContent)
+      durationTargetNode.textContent = '' 
     } else {
       this.removeAttribute('title')
       durationTargetNode.textContent = '(' + durationTextContent + ')'
     }
     if (!dateEnd) {
-      const targetNode = this.shadowRoot.querySelector(`#date-end`)
-      const minted = this.ownerDocument.createElement('span')
-      minted.innerText = TEXT_TO_TRANSLATE_TODAY
+      const targetNode = this.shadowRoot.getElementById('date-end')
+      targetNode.textContent = TEXT_TO_TRANSLATE_TODAY
       // https://www.w3.org/TR/2013/CR-html5-20130806/dom.html#the-translate-attribute
       minted.setAttribute('translate', '')
       minted.setAttribute('data-translate-key', TEXT_TO_TRANSLATE_TODAY)
