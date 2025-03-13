@@ -9,7 +9,7 @@ export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
 export const VALUE_DATE_RANGE_TEMPLATE = `
   <span id="root">
     <span>
-      <value-date id="date-begin"></value-date><span id="range-separator">-</span><value-date id="date-end"></value-date>
+      <value-date id="date-begin"></value-date><slot name="separator">-</slot><value-date id="date-end"></value-date>
     </span>
     <small id="duration-text"></small>
   </span>
@@ -26,7 +26,6 @@ export class ValueDateRangeElement extends HTMLElement {
       'data-date-begin',
       'data-date-end',
       'data-range-hide-duration',
-      'data-range-separator',
       'data-date-format',
     ]
   }
@@ -66,11 +65,6 @@ export class ValueDateRangeElement extends HTMLElement {
           targetNode.setAttribute('datetime', newValue)
           targetNode.textContent = newValue
           this.#updateDuration()
-          break
-        }
-        case 'data-range-separator': {
-          const sep = newValue ?? '..'
-          targetNode.textContent = sep
           break
         }
         default: {
