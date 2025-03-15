@@ -8,9 +8,10 @@ export const packages = [
   'element-utils',
   'http-utils',
   'inline-note-element',
+  'jsonresume-element',
+  'jsonresume-utils',
   'notice-box-element',
   'value-date-element',
-  'work-experience-element',
   'workbench-maintenance-utils',
 ]
 

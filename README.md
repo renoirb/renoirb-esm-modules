@@ -177,6 +177,18 @@ There's
 
 <!-- TODO: moar -->
 
+### [JSONResume Element](./packages/jsonresume-element/README.md)
+
+JSONResume as HTML using Web Components.
+
+### [JSONResume Utils](./packages/jsonresume-utils/README.md)
+
+JSONResume data manipulation and normalization.
+
+### [HTTP-Utils](./packages/http-utils/README.md)
+
+Dependency-free utilities to handle HTTP request patterns.
+
 ### Value Trinary Element
 
 Visual representation of a boolean (plus one) state value using icons.

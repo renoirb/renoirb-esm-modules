@@ -1,0 +1,16 @@
+{
+  "name": "@renoirb/jsonresume-utils",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./core.mjs",
+    "./deno": "./deno.mjs",
+    "./core": "./core.mjs"
+  },
+  "tasks": {
+    "merge-resume": "deno run --allow-net --allow-read ./bin/merge-resume.mjs"
+  },
+  "imports": {
+    "@dep/yaml": "https://esm.sh/yaml@2.8.0",
+    "@renoirb/http-utils": "../http-utils/core.mjs"
+  }
+}

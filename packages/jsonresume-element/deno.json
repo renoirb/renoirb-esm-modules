@@ -1,0 +1,13 @@
+{
+  "name": "@renoirb/jsonresume-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./core.mjs",
+    "./browser": "./browser.mjs",
+    "./deno": "./deno.mjs",
+    "./core": "./core.mjs"
+  },
+  "imports": {
+    "@renoirb/jsonresume-utils": "../jsonresume-utils/core.mjs"
+  }
+}

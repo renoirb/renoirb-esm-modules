@@ -12,7 +12,7 @@ if (
   typeof customElements !== 'undefined'
 ) {
   const { ComponentShowcaseElement: ElementClass$1 } = await import(
-    './src/browser.mjs'
+    './src/browser/element.mjs'
   )
   ComponentShowcaseElement = ElementClass$1
 } else {

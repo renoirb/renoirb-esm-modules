@@ -9,7 +9,6 @@ export const fetchOnce = (() => {
     if (dataPromise !== null) {
       return dataPromise
     }
-
     // Create and cache the promise for fetching resume data
     dataPromise = (async () => {
       try {

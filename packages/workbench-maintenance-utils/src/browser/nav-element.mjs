@@ -52,7 +52,6 @@ const generateListItems = (
  *     <li><a href="/?package=inline-note-element" class="current">inline-note-element</a></li>
  *     <li><a href="/?package=notice-box-element">notice-box-element</a></li>
  *     <li><a href="/?package=value-date-element">value-date-element</a></li>
- *     <li><a href="/?package=work-experience-element">work-experience-element</a></li>
  *   </ul>
  * </div>
  * ```

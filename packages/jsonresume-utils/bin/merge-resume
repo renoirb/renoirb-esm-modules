@@ -1,0 +1,52 @@
+#!/usr/bin/env -S deno run --allow-net --allow-read
+
+import { getJsonResumeOverrideWith } from '../src/deno/override.mjs'
+
+/**
+ * CLI for JSONResume YAML merging
+ * Usage: deno task merge-resume <base-url-or-path> <override-path>
+ */
+async function main() {
+  const args = Deno.args
+
+  if (args.length !== 2) {
+    console.error(
+      'Usage: deno task merge-resume <base-url-or-path> <override-path>',
+    )
+    console.error('')
+    console.error('Arguments:')
+    console.error('  base-url-or-path    Base resume (HTTP URL or local file)')
+    console.error(
+      '  override-path       Override file being edited (local file)',
+    )
+    console.error('')
+    console.error('Examples:')
+    console.error(
+      '  deno task merge-resume https://my-site.com/base-resume.yaml ./targeted-cv.yaml',
+    )
+    console.error(
+      '  deno task merge-resume ./base-resume.yaml ./targeted-cv.yaml',
+    )
+    console.error('')
+    console.error(
+      'Note: If override file has meta.override.yaml, base-url-or-path is ignored',
+    )
+    Deno.exit(1)
+  }
+
+  const [baseUrlOrPath, overridePath] = args
+
+  try {
+    const result = await getJsonResumeOverrideWith(baseUrlOrPath, overridePath)
+
+    // Output merged JSONResume as JSON
+    console.log(JSON.stringify(result, null, 2))
+  } catch (error) {
+    console.error('Error:', error.message)
+    Deno.exit(1)
+  }
+}
+
+if (import.meta.main) {
+  main()
+}
