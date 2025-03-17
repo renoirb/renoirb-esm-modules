@@ -37,6 +37,7 @@
     "./packages/context-api",
     "./packages/element-utils",
     "./packages/inline-note-element",
+    "./packages/markdown-content-element",
     "./packages/notice-box-element",
     "./packages/value-date-element",
     "./packages/work-experience-element",
@@ -49,9 +50,10 @@
     "@renoirb/context-api": "./packages/context-api/browser.mjs",
     "@renoirb/element-utils": "./packages/element-utils/browser.mjs",
     "@renoirb/inline-note-element": "./packages/inline-note-element/browser.mjs",
+    "@renoirb/markdown-content-element": "./packages/markdown-content-element/browser.mjs",
     "@renoirb/notice-box-element": "./packages/notice-box-element/browser.mjs",
     "@renoirb/value-date-element": "./packages/value-date-element/browser.mjs",
     "@renoirb/work-experience-element": "./packages/work-experience-element/browser.mjs",
-    "@renoirb/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/",
+    "@renoirb/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/"
   }
 }
