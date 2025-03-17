@@ -7,6 +7,8 @@ import {
 import dayjs from 'https://cdn.skypack.dev/dayjs'
 import 'https://cdn.skypack.dev/dayjs/locale/pt'
 import weekday from 'https://cdn.skypack.dev/dayjs/plugin/weekday'
+// https://day.js.org/docs/en/plugin/custom-parse-format
+// https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
 import customParseFormat from 'https://cdn.skypack.dev/dayjs/plugin/customParseFormat'
 dayjs.extend(weekday)
 dayjs.extend(customParseFormat)

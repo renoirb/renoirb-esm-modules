@@ -1,15 +1,23 @@
 import { calculateDuration } from '../core.mjs'
 
-export const VALUE_DATE_RANGE_ELEMENT_STYLE = `
+export const STYLE = `
   :host {
     display: inline;
   }
 `
 
-export const VALUE_DATE_RANGE_TEMPLATE = `
+export const TEMPLATE = `
   <span id="root">
     <span>
-      <span id="date-begin"></span>&hellip;<span id="date-end"></span>
+      <value-date
+        id="date-begin"
+        data-date-format="YYYY-MM"
+      ></value-date><span
+        id="range-separator"
+      >-</span><value-date
+        id="date-end"
+        data-date-format="YYYY-MM"
+      ></value-date>
     </span>
     <small id="duration-text"></small>
   </span>
@@ -19,56 +27,91 @@ const DATE_FORMAT = 'YYYY-MM'
 
 const TEXT_TO_TRANSLATE_TODAY = 'today'
 
+const ATTRIBUTES = {
+  dateBegin: {
+    name: 'data-date-begin',
+  },
+  dateEnd: {
+    name: 'data-date-end',
+  },
+  dateFormat: {
+    name: 'data-date-format',
+    default: DATE_FORMAT,
+  },
+  rangeHideDuration: {
+    name: 'data-range-hide-duration',
+    default: false,
+  },
+  rangeSeparator: {
+    name: 'data-range-separator',
+    default: '—',
+  },
+}
+
 export class ValueDateRangeElement extends HTMLElement {
   static get observedAttributes() {
-    return [
-      /*                    */
-      'data-date-begin',
-      'data-date-end',
-      'data-range-hide-duration',
-      'data-date-format',
-    ]
+    return Object.values(ATTRIBUTES).map(({ name }) => name)
   }
 
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
     const styleElement = new CSSStyleSheet()
-    styleElement.replaceSync(VALUE_DATE_RANGE_ELEMENT_STYLE)
+    styleElement.replaceSync(STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
     const template = document.createElement('template')
-    template.innerHTML = VALUE_DATE_RANGE_TEMPLATE
+    template.innerHTML = TEMPLATE
     this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
   connectedCallback() {
+    for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
+      if (!this.hasAttribute(config.name)) {
+        if (config.default) {
+          this.setAttribute(config.name, config.default)
+        }
+      }
+    }
+    for (const k of ['date-begin', 'date-end']) {
+      const datasetKey = `data-${k}`
+      const value = this.getAttribute(datasetKey)
+      const targetNode = this.shadowRoot.getElementById(k)
+      if (value) {
+        console.assert(targetNode !== null, `Template error missing expected target node`)
+        targetNode.textContent = value
+        targetNode.setAttribute('data-date-format', DATE_FORMAT)
+      }
+    }
     this.#updateDuration()
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    let mintingElementName = /* BaseValueDateElement */ 'value-date'
     const id = name.replace('data-', '')
     const targetNode = this.shadowRoot.querySelector(`#${id}`)
-    if (oldValue !== newValue && this.isConnected) {
-      if (
-        oldValue !== newValue &&
-        typeof newValue !== 'string' &&
-        name.startsWith('data-date')
-      ) {
-        // We do not have a date
-        mintingElementName = 'span'
-      }
+    if (
+      targetNode &&
+      oldValue !== newValue &&
+      this.isConnected
+    ) {
+      const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
       switch (name) {
         case 'data-date-end':
         case 'data-date-begin': {
-          const minted = this.ownerDocument.createElement(mintingElementName)
-          minted.setAttribute('id', id)
-          if (mintingElementName !== 'span') {
-            minted.setAttribute('data-date-format', this.getAttribute('data-date-format') ?? DATE_FORMAT)
-            minted.setAttribute('datetime', newValue)
-          }
-          targetNode.replaceWith(minted)
+          console.assert(targetNode !== null, `Template error missing expected target node`)
+          targetNode.setAttribute('data-date-format', dateFormat)
+          targetNode.setAttribute('datetime', newValue)
+          targetNode.textContent = newValue
           this.#updateDuration()
+          break
+        }
+        case 'data-date-format': {
+          this.shadowRoot.getElementById('date-end')?.setAttribute(name, newValue)
+          this.shadowRoot.getElementById('date-begin')?.setAttribute(name, newValue)
+          break
+        }
+        case 'data-range-separator': {
+          console.assert(targetNode !== null, `Template error missing expected target node`)
+          targetNode.textContent = newValue
           break
         }
         default: {
@@ -79,7 +122,7 @@ export class ValueDateRangeElement extends HTMLElement {
     }
   }
 
-  #updateDuration = () => {
+  #updateDuration() {
     const dateBegin = this.getAttribute('data-date-begin')
     const dateEnd = this.getAttribute('data-date-end')
     const durationTargetNode = this.shadowRoot.getElementById('duration-text')
@@ -96,7 +139,7 @@ export class ValueDateRangeElement extends HTMLElement {
       durationTextContent = ''
     }
     if (this.getAttribute('data-range-hide-duration') !== null) {
-      durationTargetNode.textContent = '' 
+      durationTargetNode.textContent = ''
       this.setAttribute('title', durationTextContent)
     } else {
       this.removeAttribute('title')

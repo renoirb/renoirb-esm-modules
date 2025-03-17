@@ -11,7 +11,7 @@
     <script type="module">
       import {
         /*                                  */
-        ValueDateElement,
+        default as ValueDateElement,
         ValueDateRangeElement,
       } from '@renoirb/value-date-element'
       customElements.define('value-date', ValueDateElement)
@@ -21,19 +21,49 @@
   <body>
     <section>
 
-      <my-component-showcase name="ValueDateElement" slots="alpha bravo charlie delta echo">
+      <my-component-showcase name="ValueDateElement" slots="alpha bravo charlie">
 
         <template slot="alpha" title="Simplest">
+          <value-date
+            datetime="2025-02-08"
+          >
+          </value-date>
+        </template>
+
+        <template slot="bravo" title="Change date format to YYYY MMMM DD and change locale">
           <value-date
             datetime="2025-02-08"
             data-date-format="YYYY MMMM DD"
             data-date-locale="pt"
           >
-            ...
           </value-date>
         </template>
 
-        <template slot="bravo" title="Two Dates">
+        <template slot="charlie" title="Change date format to D/M/YY">
+          <value-date
+            datetime="2025-02-08"
+            data-date-format="D/M/YY"
+          >
+          </value-date>
+        </template>
+
+
+      </my-component-showcase>
+
+      <my-component-showcase name="ValueDateRangeElement" slots="bravo charlie delta echo echo1 foxtrot golf">
+
+
+        <template slot="alpha" title="Changing format">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2025-09-10"
+            data-date-format="YYYY MMMM DD"
+            data-date-locale="pt"
+          >
+          </value-date-range>
+        </template>
+
+        <template slot="bravo" title="Typical usage">
           <value-date-range
             data-date-begin="2022-05-01"
             data-date-end="2025-09-10"
@@ -57,12 +87,38 @@
           </value-date-range>
         </template>
 
-
-        <template slot="echo" title="Pass formatting">
+        <template slot="echo" title="Format as YYYY (e.g. 2025)">
           <value-date-range
             data-date-begin="2022-05-01"
             data-date-end="2024-05-01"
             data-date-format="YYYY"
+          >
+          </value-date-range>
+        </template>
+
+        <template slot="echo1" title="Format as Month Year (e.g. Jan 2025)">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2024-10-01"
+            data-date-format="MMM YYYY"
+          >
+          </value-date-range>
+        </template>
+
+        <template slot="foxtrot" title="Change separator">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2024-05-01"
+            data-range-separator=".."
+          >
+          </value-date-range>
+        </template>
+
+        <template slot="golf" title="Space in separator">
+          <value-date-range
+            data-date-begin="2022-05-01"
+            data-date-end="2024-05-01"
+            data-range-separator=" - "
           >
           </value-date-range>
         </template>
