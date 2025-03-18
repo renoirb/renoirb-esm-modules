@@ -1,0 +1,11 @@
+{
+  "name": "@renoirb/json-resume-parent-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  },
+  // "imports": {
+  //   "@renoirb/work-experience-element": "??..."
+  // }
+}
