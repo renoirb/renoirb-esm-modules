@@ -65,7 +65,7 @@ async function buildForHTTP(
   })
 
   // Copy entry point files
-  const entries = ['browser.mjs', 'core.mjs', 'main.mjs']
+  const entries = ['browser.mjs', 'core.mjs', 'main.mjs', 'example-context-api.mjs']
   for (const entry of entries) {
     try {
       await Deno.copyFile(join(packagePath, entry), join(httpDist, entry))
