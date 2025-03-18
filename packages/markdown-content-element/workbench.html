@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workbench</title>
+    <script
+      src="packages/markdown-content-element/workbench.mjs?workbench"
+      type="module"
+    ></script>
+    <script type="module">
+      import MarkdownContentElement from '@renoirb/markdown-content-element'
+      customElements.define('the-tested-component', MarkdownContentElement)
+    </script>
+  </head>
+  <body>
+    <section>
+      <my-component-showcase name="MarkdownContentElement" slots="alpha">
+
+        <template slot="alpha" title="Markdown as default slot">
+          <the-tested-component>
+
+# Lorem Ipsum 
+
+Dolor sit amet, consectetur adipiscing elit. Phasellus
+et eleifend magna. Duis [dictum erat nec nisi](#dictum) lobortis
+scelerisque. `Ut bibendum` sollicitudin sapien et condimentum.
+
+Suspendisse quis dignissim orci, in **accumsan** tellus. _Morbi_ volutpat
+quis dolor sit amet bibendum.   
+Etiam blandit diam egestas eros consectetur, ac interdum turpis blandit. 
+
+```js
+/**
+ * In commodo sodales urna, id fermentum massa pulvinar ut.
+ */
+export const etiamSemper = (blandit) => {
+  return `rius vel aliquam.`
+}
+```
+
+Aenean ac quam congue purus commodo molestie. Sed vehicula tellus
+libero, non ornare massa mollis sit amet. Pellentesque vitae
+hendrerit lectus. Duis malesuada mauris vitae nibh semper dignissim.
+Donec dignissim ultricies ipsum sit amet tempus. 
+Maecenas feugiat erat id porta dapibus. 
+Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
+
+![kitten](https://placecats.com/300/200)
+
+---
+
+Aliquam nec tellus at mi ultricies gravida non quis lorem.
+
+          </the-tested-component>
+        </template>
+
+      </my-component-showcase>
+    </section>
+  </body>
+</html>
