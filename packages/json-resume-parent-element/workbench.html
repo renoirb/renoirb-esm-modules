@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workbench</title>
+    <script
+      src="packages/value-date-element/workbench.mjs"
+      type="module"
+    ></script>
+    <script
+      src="packages/json-resume-parent-element/workbench.mjs"
+      type="module"
+    ></script>
+    <script type="module">
+      import {
+        /*                                  */
+        default as TheTestedElement,
+       } from '@renoirb/json-resume-parent-element'
+       customElements.define('the-tested-component', TheTestedElement)
+       window.customElements.whenDefined('the-tested-component').then((_el) => {
+        const targetEl = document.querySelector('the-tested-component')
+        const location = {
+          city: 'Montréal',
+          countryCode: 'CA',
+          region: 'Québec',
+        }
+        const basics = {
+          name: 'Renoir Boulanger',
+          label: 'Web Developer',
+          email: 'hello@renoirboulanger.com',
+          url: 'https://renoirboulanger.com/blog/',
+          location,
+        }
+        targetEl.renderBasics(basics)
+      });
+    </script>
+  </head>
+  <body>
+
+    <section>
+      <the-tested-component>
+        <div id="work-experience" slot="work-experience"></div>
+      </the-tested-component>
+    </section>
+    <!--
+
+    ------------------------------ COPY-PASTA STUB BELOW ------------------------------
+
+
+
+
+
+
+
+
+    -->
+    <script type="module">
+      import WorkExperienceElement from '@renoirb/work-experience-element'
+      import {
+        default as ValueDateElement,
+        ValueDateRangeElement,
+      } from '@renoirb/value-date-element'
+      customElements.define('app-work-experience', WorkExperienceElement)
+      customElements.define('value-date', ValueDateElement)
+      customElements.define('value-date-range', ValueDateRangeElement)
+    </script>
+    <script type="module" defer>
+      const JSONRESUME =
+        'https://renoirboulanger.com/files/resume/jsonresume-renoirb.json'
+      const request = new Request(JSONRESUME)
+      const response = await fetch(request)
+      const data = await response.json()
+      document.getElementById('work-experience').innerHTML = ''
+      const fragment = new DocumentFragment()
+      const { work = [] } = data
+      for (const experience of work) {
+        const {
+          company = '',
+          endDate = '',
+          startDate = '',
+          url,
+          position = '',
+          summary,
+          description,
+          hilights = [],
+        } = experience
+        const el = document.createElement('app-work-experience')
+        el.setAttribute('workFor', company)
+        el.setAttribute('workPosition', position)
+        el.setAttribute('dateBegin', startDate)
+        el.setAttribute('dateEnd', endDate)
+        if (url) {
+          el.setAttribute('workForUrl', url)
+        }
+        if (summary) {
+          el.innerHTML = `<p>${summary}</p>`
+        }
+        fragment.append(el)
+      }
+      document.getElementById('work-experience').appendChild(fragment)
+    </script>
+  </body>
+</html>
