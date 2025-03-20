@@ -38,8 +38,8 @@ export const contextRequestListener = async (event) => {
 
 if (window?.document?.body) {
   const currentUrl = new URL(import.meta.url)
-  const hasWorkbenchQuerySearch = currentUrl.searchParams.has('workbench')
-  if (hasWorkbenchQuerySearch) {
+  const setup = currentUrl.searchParams.has('setup')
+  if (setup) {
     window.document.body.addEventListener(
       'context-request',
       contextRequestListener,
