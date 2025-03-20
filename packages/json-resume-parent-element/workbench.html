@@ -80,12 +80,12 @@
           hilights = [],
         } = experience
         const el = document.createElement('app-work-experience')
-        el.setAttribute('workFor', company)
-        el.setAttribute('workPosition', position)
-        el.setAttribute('dateBegin', startDate)
-        el.setAttribute('dateEnd', endDate)
+        el.setAttribute('data-entity-name', company)
+        el.setAttribute('data-position-title', position)
+        el.setAttribute('data-date-begin', startDate)
+        el.setAttribute('data-date-end', endDate)
         if (url) {
-          el.setAttribute('workForUrl', url)
+          el.setAttribute('data-entity-url', url)
         }
         if (summary) {
           el.innerHTML = `<p>${summary}</p>`
