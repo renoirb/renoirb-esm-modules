@@ -16,9 +16,11 @@ export class ThrottledProcessor {
     this.watchdogId = null
     this.isDestroyed = false
     this.startWatchdog()
+    console.log('ThrottledProcessor ctor')
   }
 
   add(task)/*: Promise<void> */ {
+    console.log('ThrottledProcessor.add', task)
     if (this.isDestroyed) {
       return Promise.reject(new Error('Processor has been destroyed'))
     }

@@ -84,19 +84,26 @@ export const contextRequestListener = async (event) => {
 }
 
 
-if (window?.document?.body) {
+if (typeof window !== 'undefined') {
   const currentUrl = new URL(import.meta.url)
   const setup = currentUrl.searchParams.has('setup')
   if (setup) {
-    window.document.body.addEventListener(
-      'context-request',
-      contextRequestListener,
-    )
     loadDayjs().catch(error => {
       console.warn('Failed to pre-load dayjs:', error)
     })
+    const setupListener = () => {
+      document.addEventListener(
+        'context-request',
+        contextRequestListener
+      )
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupListener)
+    } else {
+      setupListener()
+    }
     window.addEventListener('unload', () => {
-      window.document.body.removeEventListener(
+      window.document.removeEventListener(
         'context-request',
         contextRequestListener,
       )
