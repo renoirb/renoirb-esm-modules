@@ -33,6 +33,13 @@ const ATTRIBUTES = {
   },
   dateEnd: {
     name: 'data-date-end',
+    get default () {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = String(today.getMonth() + 1).padStart(2, '0')
+      const day = String(today.getDay() + 1).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    },
   },
   dateFormat: {
     name: 'data-date-format',
@@ -72,14 +79,14 @@ export class ValueDateRangeElement extends HTMLElement {
         }
       }
     }
+    const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
     for (const k of ['date-begin', 'date-end']) {
       const datasetKey = `data-${k}`
       const value = this.getAttribute(datasetKey)
       const targetNode = this.shadowRoot.getElementById(k)
-      if (value) {
-        console.assert(targetNode !== null, `Template error missing expected target node`)
+      if (value && targetNode) {
         targetNode.textContent = value
-        targetNode.setAttribute('data-date-format', DATE_FORMAT)
+        targetNode.setAttribute('data-date-format', dateFormat)
       }
     }
     this.#updateDuration()
@@ -89,7 +96,6 @@ export class ValueDateRangeElement extends HTMLElement {
     const id = name.replace('data-', '')
     const targetNode = this.shadowRoot.querySelector(`#${id}`)
     if (
-      targetNode &&
       oldValue !== newValue &&
       this.isConnected
     ) {

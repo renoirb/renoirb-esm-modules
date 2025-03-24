@@ -1,24 +1,35 @@
 /**
+ * Work Experience Element
+ *
+ * A custom element for displaying work experience entries with proper date formatting.
+ * Uses data attributes for configuration and relies on date formatting custom elements.
+ *
+ * Created with assistance from Claude (Anthropic), March 20, 2025
+ *
+ * @author Renoir
+ * @contributor Claude AI
+ */
+
+/**
  * The following is scavenged markup from JSONResume Registry for now
  * https://registry.jsonresume.org/renoirb
  */
-const WORK_EXPERIENCE_TEMPLATE = `
+const TEMPLATE = `
   <div class="p-experience">
     <p class="clear-margin relative">
-      <strong id="workPosition"></strong><span id="workFor"></span>
+      <strong id="position-display"></strong><span id="entity-display"></span>
     </p>
-    <p class="text-muted" id="dateRange"></p>
+    <p id="date-range-container"></p>
     <div class="p-summary mop-wrapper space-bottom">
       <slot></slot>
     </div>
     <div class="p-highlights">
       <slot name="highlights"></slot>
     </div>
-    </ul>
   </div>
 `
 
-const WORK_EXPERIENCE_STYLE = `
+const STYLE = `
   :host {
     display: block;
     margin-bottom: 1.5rem;
@@ -46,131 +57,178 @@ const WORK_EXPERIENCE_STYLE = `
   }
 `
 
-/**
- * Transform string from "fooBarBaz" (camelCase) into "foo-bar-baz" (kebab-case)
- */
-const camelCaseToKebab = (str) => str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
+const getCurrentDate = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDay() + 1).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
-const ATTRIBUTES = new Map([
-  /*                 */
-  'workFor',
-  'workForUrl',
-  'workPosition',
-  'dateBegin',
-  'dateEnd',
-].map(i => ([i, `data-${camelCaseToKebab(i)}`])))
-
-
-const DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT = 'value-date-range'
-let WORK_EXPERIENCE_DATE_ELEMENT = DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
-
-const setDateComponentTagName = (candidate) => {
-  if (WORK_EXPERIENCE_DATE_ELEMENT === DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT) {
-    WORK_EXPERIENCE_DATE_ELEMENT = candidate
-  } else if (
-    WORK_EXPERIENCE_DATE_ELEMENT !== DEFAULT_WORK_EXPERIENCE_DATE_ELEMENT
-  ) {
-    const message = `Cannot set to "${candidate}" it is already set to ${WORK_EXPERIENCE_DATE_ELEMENT}.`
-    throw new Error(message)
-  }
+const ATTRIBUTES = {
+  entityName: {
+    name: 'data-entity-name' /*    workFor */,
+  },
+  entityUrl: {
+    name: 'data-entity-url' /*     workForUrl */,
+  },
+  positionTitle: {
+    name: 'data-position-title' /* workPosition */,
+  },
+  /**
+   * Items below should be the same as date-range.
+   * @TODO Import them and insert here in another task.
+   */
+  dateBegin: {
+    name: 'data-date-begin',
+  },
+  dateEnd: {
+    name: 'data-date-end',
+    get default() {
+      return getCurrentDate()
+    },
+  },
+  dateFormat: {
+    name: 'data-date-format',
+    default: 'YYYY-MM',
+  },
+  dateLocale: {
+    name: 'data-date-locale',
+  },
 }
 
 export class WorkExperienceElement extends HTMLElement {
   static get observedAttributes() {
-    return [...ATTRIBUTES.keys()]
+    return Object.values(ATTRIBUTES).map(({ name }) => name)
   }
-
-  static setDateComponentTagName = setDateComponentTagName
 
   constructor() {
     super()
+
     this.attachShadow({ mode: 'open' })
     const styleElement = new CSSStyleSheet()
-    styleElement.replaceSync(WORK_EXPERIENCE_STYLE)
+    styleElement.replaceSync(STYLE)
     this.shadowRoot.adoptedStyleSheets = [styleElement]
 
     const template = document.createElement('template')
-    template.innerHTML = WORK_EXPERIENCE_TEMPLATE
+    template.innerHTML = TEMPLATE
     this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
   connectedCallback() {
-    ;[...ATTRIBUTES.keys()].forEach((attributeName) => {
-      this.#updateAttribute(attributeName)
-    })
+    this.#updateEntityDisplay()
+    this.#updatePositionDisplay()
+    this.#updateDateRange()
   }
-
 
   attributeChangedCallback(name, oldValue, newValue) {
-    // #TODO: Fix observedAttributes updates, it's broken. Later.
-    if (oldValue !== newValue && this.isConnected) {
-      this.#updateAttribute(name)
+    if (oldValue === newValue || !this.isConnected) {
+      return
+    }
+    switch (name) {
+      case 'data-entity-name':
+      case 'data-entity-url': {
+        this.#updateEntityDisplay()
+        break
+      }
+      case 'data-position-title': {
+        this.#updatePositionDisplay()
+        break
+      }
+      case 'data-date-begin':
+      case 'data-date-end':
+      case 'data-date-format': {
+        this.#updateDateRange()
+        break
+      }
+      default: {
+        break
+      }
     }
   }
 
-  #updateDateRange = (dateBegin, dateEnd) => {
-    if (typeof dateBegin === 'string') {
-      const targetElement = this.shadowRoot.getElementById('dateRange')
+  #updateDateRange() {
+    const targetElement = this.shadowRoot.getElementById('date-range-container')
+    if (!targetElement) {
+      return
+    }
+
+    const dateBegin = this.getAttribute('data-date-begin') || ''
+    const dateEnd = this.getAttribute('data-date-end') || getCurrentDate()
+    const dateFormat = this.getAttribute('data-date-format') || 'YYYY-MM'
+
+    // If we do not have a start date, maybe we do not have anything to use.
+    if (dateBegin === '') {
+      return
+    }
+
+    if (!this._dateRangeElement || !this._dateRangeElement.isConnected) {
       targetElement.innerHTML = ''
-      const minted = this.ownerDocument.createElement(WORK_EXPERIENCE_DATE_ELEMENT)
-      minted.setAttribute('data-date-begin', dateBegin)
-      if (dateEnd) {
-        minted.setAttribute('data-date-end', dateEnd)
+      this._dateRangeElement = document.createElement('value-date-range')
+      targetElement.appendChild(this._dateRangeElement)
+    }
+
+    if (dateBegin) {
+      this._dateRangeElement.setAttribute('data-date-begin', dateBegin)
+    }
+
+    this._dateRangeElement.setAttribute('data-date-end', dateEnd)
+    this._dateRangeElement.setAttribute('data-date-format', dateFormat)
+  }
+
+  #updateEntityDisplay() {
+    const targetElement = this.shadowRoot.getElementById('entity-display')
+    if (!targetElement) {
+      return
+    }
+
+    const entityName = this.getAttribute('data-entity-name')
+    const entityUrl = this.getAttribute('data-entity-url')
+
+    // Clear existing content
+    while (targetElement.firstChild) {
+      targetElement.removeChild(targetElement.firstChild)
+    }
+
+    if (entityUrl && entityName) {
+      // Create linked entity name
+      try {
+        const url = new URL(entityUrl) // Validate URL
+        const link = document.createElement('a')
+        link.setAttribute('href', url.toString())
+        link.setAttribute('target', '_blank')
+        link.textContent = entityName
+        targetElement.appendChild(link)
+      } catch (e) {
+        // Invalid URL, fall back to text
+        console.warn(`Invalid URL: ${entityUrl}`, e)
+        targetElement.textContent = entityName
       }
-      minted.setAttribute('data-date-format', 'YYYY-MM')
-      targetElement.appendChild(minted)
+    } else if (entityName) {
+      // Just text for entity name
+      targetElement.textContent = entityName
     }
   }
 
-  #updateAttribute = (attributeName) => {
-    if (!ATTRIBUTES.has(attributeName)) {
-      const supported = [...ATTRIBUTES.keys()].join(', ')
-      const message = `Unsupported attribute "${attributeName}", can only be one of [${supported}]`
-      throw new Error(message)
+  /**
+   * Update the position title display
+   */
+  #updatePositionDisplay() {
+    const targetElement = this.shadowRoot.getElementById('position-display')
+    if (!targetElement) {
+      return
     }
 
-    const workFor = this.getAttribute('workFor')
-    const workForUrl = this.getAttribute('workForUrl')
-    const workPosition = this.getAttribute('workPosition')
-    const dateBegin = this.getAttribute('dateBegin')
-    const dateEnd = this.getAttribute('dateEnd')
+    const positionTitle = this.getAttribute('data-position-title')
 
-    switch (attributeName) {
-      case 'workFor': {
-        const targetElement = this.shadowRoot.getElementById('workFor')
-        targetElement.textContent = workFor
-        break
-      }
-      case 'workForUrl': {
-        const targetElement = this.shadowRoot.getElementById('workFor')
-        let href
-        try {
-          href = (workForUrl !== null) ? new URL(workForUrl) : null
-        } catch (e) {
-          console.error(String(e) + `: ${workForUrl}`)
-          workForUrl = null
-        }
-        if (href) {
-          const minted = this.ownerDocument.createElement('a')
-          minted.setAttribute('id', 'workFor')
-          minted.setAttribute('href', href)
-          minted.setAttribute('target', '_blank')
-          minted.textContent = workFor
-          targetElement.replaceWith(minted)
-        }
-        break
-      }
-      case 'workPosition': {
-        const targetElement = this.shadowRoot.getElementById('workPosition')
-        const textContent = (workPosition !== null) ? workPosition + ', ': ''
-        targetElement.textContent = textContent
-        break
-      }
-      case 'dateEnd':
-      case 'dateBegin': {
-        this.#updateDateRange(dateBegin, dateEnd)
-        break
-      }
+    if (positionTitle) {
+      // Add comma after position if there's an entity name
+      const hasEntityName = !!this.getAttribute('data-entity-name')
+      targetElement.textContent = hasEntityName
+        ? `${positionTitle}, `
+        : positionTitle
+    } else {
+      targetElement.textContent = ''
     }
   }
 }
