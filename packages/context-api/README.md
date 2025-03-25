@@ -1,70 +1,130 @@
-# Context API Web Component Utilities
+# @renoirb/context-api: Web Component Context Protocol Utilities
 
-Implementation of the W3C Web Components Community Group Context API protocol.
+This package provides utilities for implementing the
+[W3C Web Components Community Group's Context Protocol](https://github.com/webcomponents-cg/community-protocols/blob/main/proposals/context.md).
+This protocol offers a lightweight, framework-agnostic way for web components to
+request contextual data from ancestor elements, avoiding prop drilling and
+promoting loose coupling. It's _distinct_ from React's Context API.
 
-Utilities to allow separating the concern handled by a dependency closer to the
-application and further from the web component that can request for it.
+## What is the _Context_ Protocol?
+
+The _Context_ Protocol is a standardized way for web components to request data
+or services from their ancestors in the DOM tree _without_ needing to know
+exactly where that data comes from. Components fire a `context-request` event,
+and any ancestor element can listen for and respond to that event, providing the
+requested data.
+
+**Key Benefits:**
+
+- **Reduced Coupling:** Components don't need direct references to data
+  providers.
+- **Simplified Components:** Avoids "prop drilling" (passing data down through
+  multiple levels of components).
+- **Framework Agnostic:** Works with any web component library or framework (or
+  no framework at all).
+- **Testability:** Easier to test components in isolation by providing mock
+  context providers.
 
 ## Setup
 
-### From a component
+This section demonstrates how to use `@renoirb/context-api` to provide and
+consume contextual data, simplifying component development and avoiding code
+duplication.
 
-For example, you want to create your own element to display a date yourself. You
-may have found
-[@renoirb/value-date-element](@renoirb/value-date-element),
-but you want it differently.
+We'll use the example of a component that needs to display a formatted date.
 
-Assuming you want a date formatted "`2025-02-27`" just need to have data
-formatted as ISO, UNIX Epoch, and a human readable for your component.
+However, keep in mind that this is just _one example_ of how the W3C Context API
+protocol can be used. The power of this protocol lies in its ability to define
+_multiple, named contexts_, each with its own specific data shape.
 
-The shape of data we want, a "_contextResponse_" could look like;
+### 1. Defining a Context: The "date-conversion" Example
+
+The W3C Context API protocol allows you to create _named contexts_ to share data
+between components.
+
+Each context has a defined _data shape_ (the structure of the object it
+provides).
+
+For our example, we'll define a `date-conversion` context. This context provides
+pre-formatted date strings to components, eliminating the need for each
+component to handle its own date formatting logic.
+
+Here's the data shape for the `date-conversion` context:
 
 ```json
 {
-  "date": "...",
-  "isoString": "...",
-  "unixEpoch": "...",
-  "human": "..."
+  "date": "...",   // The original date string (acts as the "input" or "key").
+  "isoString": "", // The date formatted as an ISO 8601 string (e.g., "2025-03-21T14:30:00Z").
+  "unixEpoch": "", // The date as a Unix timestamp (seconds since the epoch).
+  "human": ""      // The date formatted in a human-readable way (e.g., "Mar 21, 2025").
 }
 ```
 
-and we define a name, say `'date-conversion'`.
+You could create other named contexts, such as:
 
-```js
-import { ContextRequestEvent } from '@renoirb/context-api'
+- user-profile: Might contain `{ name, email, avatarUrl, ... }`.
+- product-details: Might contain
+  `{ id, name, price, description, imageUrl, ... }`.
+- theme-settings: Might contain
+  `{ primaryColor, secondaryColor, fontFamily, ... }`.
 
-export class SomeExampleElement extends HTMLElement {
+Each of these contexts would have its own defined data shape, allowing
+components to request the specific contextual information they need.
+
+### 2. Requesting Context (in a Component)
+
+Imagine you're building a custom element, `<my-date>`, to display dates.
+
+You _could_ handle all the date formatting logic directly within the component,
+but that would make it less reusable, harder to test, and potentially lead to
+duplicated code if other components also need formatted dates.
+
+Instead, you can use the Context API protocol to _request_ the pre-formatted
+date strings from an ancestor element. This keeps the `<my-date>` component
+simple and focused on _displaying_ the date, not formatting it. The component
+doesn't need to know _where_ the formatting logic lives, only that it can
+request the `date-conversion` context.
+
+**NOTE**: The following is a simplified implementation of
+[@renoirb/value-date-element](../value-date-element/) to illustrate the
+mechanics.
+
+```javascript
+// Hypothetical location: https://example.org/esm/my-date-component.mjs
+
+import { ContextRequestEvent } from 'https://dist.renoirb.com/esm/own/context-api/v0.1.0/browser.mjs'
+
+export class MyDateComponent extends HTMLElement {
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
-    const template = document.createElement('template')
-    template.innerHTML = `
-      <time datetime>
-        <!-- rest of your implementation -->
-      </time>
+    this.shadowRoot.innerHTML = `
+      <time></time>
+      <style>
+        :host { display: inline-block; }
+      </style>
     `
-    this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
 
   connectedCallback() {
     const datetime = this.getAttribute('datetime')
-    if (datetime) {
-      const subjectEl = this.shadowRoot.querySelector('time')
-      subjectEl.innerText = datetime
-      subjectEl.setAttribute('datetime', datetime)
-      this.dispatchEvent(
-        new ContextRequestEvent(
-          'date-conversion',
-          this,
-          this._onDateConversionContextEvent,
-        ),
-      )
+    if (!datetime) {
+      return // No datetime attribute, nothing to do.
     }
+    this.dispatchEvent(
+      new ContextRequestEvent(
+        'date-conversion',   // The context key (imported or defined here), later found as: event.context
+        this,                // The requesting element, later found as: event.contextTarget.
+        this.handleDateData, // Callback to receive the data, later found as: event.callback.
+      ),
+    )
   }
 
-  _onDateConversionContextEvent = (contextResponse) => {
-    const { human, isoString, unixEpoch } = contextResponse
+  // Use a named method for the callback.
+  handleDateData = (contextData) => {
+    const { human, isoString, unixEpoch } = contextData
     const timeEl = this.shadowRoot.querySelector('time')
+
     if (isoString) {
       timeEl.setAttribute('datetime', isoString)
     }
@@ -72,86 +132,118 @@ export class SomeExampleElement extends HTMLElement {
       timeEl.textContent = human
     }
     if (unixEpoch) {
-      timeEl.setAttribute('data-unix-epoch', unixEpoch)
+      timeEl.dataset.unixEpoch = unixEpoch
     }
   }
 }
+
+// Do NOT call customElements.define here.  This allows for:
+// 1. Renaming:  customElements.define('my-date', MyDateComponent);
+// 2. Extending: class MySpecialDate extends MyDateComponent { ... }
+// 3. Conditional Registration: if (someCondition) { ... }
+
+export default MyDateComponent
 ```
 
-### Setup ContextRequest Event Listener
+### 3. Providing Context (in an Ancestor)
 
-**WARNING** Make sure this is bound to the document earlier than the elements
-making use for that `ContextEvent`
+An ancestor element (or `window.document`) needs to listen for `context-request`
+events and provide the data for the `date-conversion` context.
+
+This provider is typically a higher-level component in your application, or part
+of your application's setup. The provider is responsible for:
+
+1.  Listening for `context-request` events.
+2.  Checking if the requested context is one it can provide (`date-conversion`
+    in this case).
+3.  Retrieving any necessary data from the requesting component (like the date
+    string and desired format).
+4.  Performing the formatting logic (using `dayjs` in this example).
+5.  Calling the `callback` function provided in the `ContextRequestEvent` with
+    the formatted data.
+
+Importantly, the context provider must be registered _before_ any components
+request the context. This is typically done in the `<head>` of your HTML
+document, or very early in your application's initialization.
 
 ```js
+// Hypothetical location: https://example.org/my-date-component-resolver.mjs
+
 import dayjs from 'https://cdn.skypack.dev/dayjs'
 
-window.document.addEventListener('context-request', (event) => {
-  if (event.context === 'date-conversion') {
-    event.stopPropagation()
-    const date = event.target.getAttribute('date')
-    if (date) {
-      const data = dayjs(date)
-      const unixEpoch = data.unix()
-      const isoString = data.toISOString()
-      const human = data.format('MMM D, YYYY')
-      event.callback({ date, isoString, unixEpoch, human })
-    }
+export const contextRequestListener = async (event) => {
+  if (event.context !== 'date-conversion') {
+    return
   }
-})
+  event.stopPropagation()
+
+  const contextTarget = event.contextTarget
+  const format = contextTarget.dataset.dateFormat || 'MMM D, YYYY'
+  const formatLocale = contextTarget.dataset.dateLocale || 'en'
+  const date = contextTarget.getAttribute('datetime')
+  if (date) {
+    const formatter = dayjs(date)
+    const unixEpoch = formatter.unix()
+    const isoString = formatter.toISOString()
+    const human = formatter.locale(formatLocale).format(format, formatLocale)
+    const payload = { date, human, isoString, unixEpoch }
+    event.callback(payload)
+  }
+}
+
+/**
+ * IMPORTANT: Make sure this is bound to the document earlier as possible
+ */
+window.document.addEventListener('context-request', contextRequestListener)
 ```
 
-The shape `{ date: '...', isoString: '...', unixEpoch: '...', human: '...' }` is
-the data for the `'date-conversion'` context.
+### 4. Using
 
-## More To Come
+To use the MyDateComponent, you need to first set up the Context Provider, then
+register your component.
 
-### Upgrade API
+**IMPORTANT**: Make sure that you do not `customElements.define` before setting
+the this is bound to the document earlier as possible
 
-The API version changed since the code samples were created, they're released in
-@lit/context
-
-The experimentations were mostly written back around 2022.
-
-Among the API changes
-[we now have `contextTarget` that's been added](https://github.com/lit/lit/compare/%40lit/context%401.1.3...lit:a66737f#diff-0ac16504b1478a71748d852ad8f58f66301be80264e9caa6307252837992c6e0R30-R78),
-that is probably the thing I was trying to remember when I wrote the
-`__temporary_hack__` and the ContextEvent to have a reference to the node
-emitting the event.
-
-Thoughts:
-
-- It is either I copy-paste from source lit implementation or import
-- If it is importing: maybe I'll have to use
-  [`deps.ts` pattern to import if I want to extend](https://dotland.deno.dev/manual@v1.32.0/examples/manage_dependencies)
-
-<!--
-
-Probably this won't work like that.
-
-Because I use at root import map full URLs as module, I get the error:
-
-> Warning "imports" and "scopes" field is ignored when "importMap" is specified in the root config file.
-
-```patch
-diff --git a/packages/context-api/deno.json b/packages/context-api/deno.json
-index 418d..ad79 100644
---- a/packages/context-api/deno.json
-+++ b/packages/context-api/deno.json
-@@ -4,5 +4,8 @@
-   "exports": {
-     ".": "./browser.mjs"
-+  },
-+  "imports": {
-+    "@lit/context": "npm:@lit/context@1.1.4"
-   }
- }
-\ No newline at end of file
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Context Example</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@renoirb/context-api": "https://dist.renoirb.com/esm/own/context-api/v0.1.0/browser.mjs",
+          "my-date": "https://example.org/esm/my-date-component.mjs"
+        }
+      }
+    </script>
+    <script type="module">
+      // Attach the listener VERY EARLY, in the <head>.
+      const contextRequestListener = async (event) => {
+        /* Earlier contextRequestListener example */
+      }
+      window.document.addEventListener(
+        'context-request',
+        contextRequestListener,
+      )
+    </script>
+  </head>
+  <body>
+    <h1>Context API Example</h1>
+    <my-date-c datetime="2024-07-15" data-date-format="YYYY-MM-DD"></my-date-c>
+    <my-date-c datetime="2025-01-01"></my-date-c>
+    <script type="module">
+      import MyDateComponent from 'my-date'
+      customElements.define('my-date-c', MyDateComponent)
+    </script>
+  </body>
+</html>
 ```
 
--->
+## Other implementations
 
-### Fast has a "Context"
+### Microsoft’s [FAST](https://fast.design/) Design System
 
 [@microsoft/fast](https://www.npmjs.com/package/@microsoft/fast-element) NPM
 package ([site](https://fast.design/)) now also has a
@@ -163,6 +255,7 @@ package ([site](https://fast.design/)) now also has a
 
 ([source](https://fast.design/docs/api/fast-element/context/fast-element#:~:text=Enables%20using:%20W3C%20Community%20Context%20protocol))
 
+<!--
 ```ts
 type Context = Readonly<
     eventType: "context-request";
@@ -177,10 +270,12 @@ type Context = Readonly<
     defineProperty<T_7 extends UnknownContext>(target: Constructable<EventTarget> | EventTarget, propertyName: string, context: T_7): void;
 >
 ```
-
 ([source](https://fast.design/docs/api/fast-element/context/fast-element.context))
+-->
 
-### Look for `ContextConsumer` from lit
+### [Lit.dev](https://lit.dev/)
+
+Look for `ContextConsumer` from lit
 
 See example usage in following Gist.
 
@@ -210,5 +305,4 @@ This is following the ContextAPI community protocol, to read more about it
 - https://github.com/lit/lit/blob/%40lit-labs/context%400.2.0/packages/labs/context/src/lib/value-notifier.ts
 - https://github.com/lit/lit/blob/%40lit-labs/context%400.2.0/packages/labs/context/src/lib/context-root.ts
 
-[renoirb-value-date-element-readme]:
-  @renoirb/value-date-element/v0.1.0/README.md
+[renoirb-value-date-element-readme]: ../value-date-element/
