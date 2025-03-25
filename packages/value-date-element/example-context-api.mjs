@@ -2,18 +2,16 @@ import {
   /*                                  */
   createMemoizedLoader,
   ThrottledProcessor,
- } from '@renoirb/element-utils'
+} from '@renoirb/element-utils'
 import {
   /*                                  */
   ContextRequest_DateConversion,
   assertIsDateConversionContextPayload,
 } from '@renoirb/value-date-element'
 
-
 const loadDayjs = createMemoizedLoader(
   'https://cdn.skypack.dev/dayjs',
   async (module) => {
-
     const dayjs = module.default
 
     // Import and configure plugins in parallel for efficiency
@@ -36,10 +34,10 @@ const loadDayjs = createMemoizedLoader(
     dayjs.extend(customParseFormatPlugin)
 
     return dayjs
-  }
+  },
 )
 
-// Create shared processor for date conversions
+// Let’s use a queue to ensure processing is throttled
 const taskQueue = new ThrottledProcessor({ maxConcurrent: 5 })
 
 export const contextRequestListener = async (event) => {
@@ -48,9 +46,7 @@ export const contextRequestListener = async (event) => {
   }
   event.stopPropagation()
 
-
   await taskQueue.add(async () => {
-
     const dayjsModule = await loadDayjs()
     const dayjs = dayjsModule.default
 
@@ -65,7 +61,9 @@ export const contextRequestListener = async (event) => {
         const formatter = dayjs(date)
         const unixEpoch = formatter.unix()
         const isoString = formatter.toISOString()
-        const human = formatter.locale(formatLocale).format(format, formatLocale)
+        const human = formatter
+          .locale(formatLocale)
+          .format(format, formatLocale)
         const payload = { date, human, isoString, unixEpoch }
         assertIsDateConversionContextPayload(payload)
         event.callback(payload)
@@ -77,26 +75,32 @@ export const contextRequestListener = async (event) => {
         date,
         human: date,
         isoString: date,
-        unixEpoch: 0
+        unixEpoch: 0,
       })
     }
   })
 }
 
-
-if (window?.document?.body) {
+if (typeof window !== 'undefined') {
   const currentUrl = new URL(import.meta.url)
   const setup = currentUrl.searchParams.has('setup')
   if (setup) {
-    window.document.body.addEventListener(
-      'context-request',
-      contextRequestListener,
-    )
-    loadDayjs().catch(error => {
+    loadDayjs().catch((error) => {
       console.warn('Failed to pre-load dayjs:', error)
     })
+    const setupListener = () => {
+      document.addEventListener(
+        'context-request',
+        contextRequestListener,
+      )
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupListener)
+    } else {
+      setupListener()
+    }
     window.addEventListener('unload', () => {
-      window.document.body.removeEventListener(
+      window.document.removeEventListener(
         'context-request',
         contextRequestListener,
       )
