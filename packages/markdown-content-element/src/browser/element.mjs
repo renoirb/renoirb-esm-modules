@@ -107,7 +107,7 @@ export class MarkdownContentElement extends HTMLElement {
 
   connectedCallback() {
     for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
-      if (!this.hasAttribute(config.name)) {
+      if (!this.hasAttribute(config.name) && config.default) {
         this.setAttribute(config.name, config.default)
       }
     }
