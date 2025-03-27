@@ -1,3 +1,11 @@
+/**
+ * ValueDateElement
+ *
+ * Displays a formatted date using the Context API for formatting.
+ *
+ * @author Renoir Boulanger
+ */
+
 import { ContextRequestEvent } from '@renoirb/context-api'
 import {
   bindContextResponseHandlerMethodForDateContext,
@@ -36,9 +44,21 @@ export const STYLE = `
   }
 `
 
+const ATTRIBUTES = {
+  date: {
+    name: 'data-date',
+  },
+  dateFormat: {
+    name: 'data-date-format',
+  },
+  dateLocale: {
+    name: 'data-date-locale',
+  },
+}
+
 export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
-    return ['datetime']
+    return [...Object.values(ATTRIBUTES).map(({ name }) => name), 'datetime']
   }
 
   constructor() {
@@ -54,42 +74,81 @@ export class ValueDateElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const datetime = this.getAttribute('datetime')
-    if (datetime) {
-      this.shadowRoot.host.setAttribute('data-state', 'loading')
+    // Set default attributes
+    for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
+      if (config.default && !this.hasAttribute(config.name)) {
+        this.setAttribute(config.name, config.default)
+      }
+    }
 
+    // Get date from either attribute (prioritize data-date)
+    const dateValue =
+      this.getAttribute(ATTRIBUTES.date.name) || this.getAttribute('datetime')
+
+    if (dateValue) {
+      // Sync the attributes without triggering loops
+      this._syncingAttributes = true
+
+      if (!this.hasAttribute(ATTRIBUTES.date.name)) {
+        this.setAttribute(ATTRIBUTES.date.name, dateValue)
+      }
+      if (!this.hasAttribute('datetime')) {
+        this.setAttribute('datetime', dateValue)
+      }
+
+      this._syncingAttributes = false
+
+      // Initialize the time element
       const timeEl = this.shadowRoot.querySelector('time')
-      timeEl.innerText = '...' // Placeholder
-      timeEl.setAttribute('datetime', datetime)
+      timeEl.setAttribute('datetime', dateValue)
 
-      const contextRequest = new ContextRequestEvent(
-        ContextRequest_DateConversion,
-        this,
-        (data) => {
-          this._onDateConversionContextEvent(data)
-          this.shadowRoot.host.setAttribute('data-state', 'loaded')
-        }
-      )
-      this.dispatchEvent(contextRequest)
-
-      // Optional timeout for long-running requests
-      setTimeout(() => {
-        if (this.shadowRoot.host.getAttribute('data-state') === 'loading') {
-          this.shadowRoot.host.setAttribute('data-state', 'timeout')
-        }
-      }, 5000)
+      // Request formatting
+      this.#requestDateFormatting()
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'datetime' && oldValue !== newValue) {
-      this.dispatchEvent(
-        new ContextRequestEvent(
-          ContextRequest_DateConversion,
-          this,
-          this._onDateConversionContextEvent,
-        ),
-      )
+    if (oldValue === newValue || this._syncingAttributes || !this.isConnected) {
+      return
     }
+
+    this._syncingAttributes = true
+
+    // Handle attribute syncing
+    if (
+      name === 'datetime' &&
+      newValue !== this.getAttribute(ATTRIBUTES.date.name)
+    ) {
+      this.setAttribute(ATTRIBUTES.date.name, newValue)
+    } else if (
+      name === ATTRIBUTES.date.name &&
+      newValue !== this.getAttribute('datetime')
+    ) {
+      this.setAttribute('datetime', newValue)
+    }
+
+    this._syncingAttributes = false
+
+    // Only request formatting for value changes
+    if (name === 'datetime' || name === ATTRIBUTES.date.name) {
+      this.#requestDateFormatting()
+    }
+  }
+
+  #requestDateFormatting() {
+    this.setAttribute('data-state', 'loading')
+    this.dispatchEvent(
+      new ContextRequestEvent(ContextRequest_DateConversion, this, (data) => {
+        this._onDateConversionContextEvent(data)
+        this.setAttribute('data-state', 'loaded')
+      }),
+    )
+
+    // Set timeout for loading state
+    setTimeout(() => {
+      if (this.getAttribute('data-state') === 'loading') {
+        this.setAttribute('data-state', 'timeout')
+      }
+    }, 5000)
   }
 }

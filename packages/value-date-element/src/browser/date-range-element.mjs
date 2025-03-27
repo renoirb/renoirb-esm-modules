@@ -79,7 +79,7 @@ export class ValueDateRangeElement extends HTMLElement {
         }
       }
     }
-    const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
+    const dateFormat = this.getAttribute('data-date-format') ?? ATTRIBUTES.dateFormat.default
     for (const k of ['date-begin', 'date-end']) {
       const datasetKey = `data-${k}`
       const value = this.getAttribute(datasetKey)
