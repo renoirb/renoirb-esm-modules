@@ -56,7 +56,7 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     if (unixEpoch) {
       timeEl.setAttribute('data-unix-epoch', unixEpoch)
     }
-    rootEl.host.setAttribute('data-state', 'loaded')
+    rootEl.host.setAttribute('data-state', 'resolved')
   }
   return handleDateContextResponse
 }

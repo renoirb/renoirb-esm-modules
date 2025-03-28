@@ -16,21 +16,21 @@ export const STYLE = `
   :host {
     display: inline;
   }
-
-  :host([data-state="loading"]) time {
+  :host([data-state="resolving"]) time {
+    /* Don't hide the text entirely, make it slightly visible */
+    opacity: 0.6;
     position: relative;
-    color: transparent;
   }
-  :host([data-state="loading"]) time::before {
+  :host([data-state="resolving"]) time::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
-    height: 1em;
+    height: 100%;
     background: linear-gradient(90deg, #eee, #ddd, #eee);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
-    border-radius: 4px;
+    border-radius: 3px;
   }
   @keyframes shimmer {
     0% { background-position: -200% 0; }
@@ -39,7 +39,7 @@ export const STYLE = `
   :host([data-state="timeout"]) time {
     color: #999;
   }
-  :host([data-state="loaded"]) time {
+  :host([data-state="resolved"]) time {
     transition: color 0.3s ease-out;
   }
 `
@@ -58,7 +58,7 @@ const ATTRIBUTES = {
 
 export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
-    return [...Object.values(ATTRIBUTES).map(({ name }) => name), 'datetime']
+    return Object.values(ATTRIBUTES).map(({ name }) => name)
   }
 
   constructor() {
@@ -80,73 +80,43 @@ export class ValueDateElement extends HTMLElement {
         this.setAttribute(config.name, config.default)
       }
     }
-
-    // Get date from either attribute (prioritize data-date)
-    const dateValue =
-      this.getAttribute(ATTRIBUTES.date.name) || this.getAttribute('datetime')
-
+    const dateValue = this.getAttribute(ATTRIBUTES.date.name)
     if (dateValue) {
-      // Sync the attributes without triggering loops
-      this._syncingAttributes = true
-
-      if (!this.hasAttribute(ATTRIBUTES.date.name)) {
-        this.setAttribute(ATTRIBUTES.date.name, dateValue)
-      }
-      if (!this.hasAttribute('datetime')) {
-        this.setAttribute('datetime', dateValue)
-      }
-
-      this._syncingAttributes = false
-
-      // Initialize the time element
-      const timeEl = this.shadowRoot.querySelector('time')
-      timeEl.setAttribute('datetime', dateValue)
-
-      // Request formatting
-      this.#requestDateFormatting()
+      this.#setValue(dateValue)
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue || this._syncingAttributes || !this.isConnected) {
+    if (oldValue === newValue || !this.isConnected) {
       return
     }
-
-    this._syncingAttributes = true
-
-    // Handle attribute syncing
-    if (
-      name === 'datetime' &&
-      newValue !== this.getAttribute(ATTRIBUTES.date.name)
-    ) {
-      this.setAttribute(ATTRIBUTES.date.name, newValue)
-    } else if (
-      name === ATTRIBUTES.date.name &&
-      newValue !== this.getAttribute('datetime')
-    ) {
-      this.setAttribute('datetime', newValue)
+    if (name === ATTRIBUTES.date.name) {
+      this.#setValue(newValue)
     }
+  }
 
-    this._syncingAttributes = false
 
-    // Only request formatting for value changes
-    if (name === 'datetime' || name === ATTRIBUTES.date.name) {
+  #setValue(value) {
+    if (typeof value === 'string') {
+      const subjectEl = this.shadowRoot.querySelector('time')
+      subjectEl.innerText = value
+      subjectEl.setAttribute('datetime', value)
       this.#requestDateFormatting()
     }
   }
 
   #requestDateFormatting() {
-    this.setAttribute('data-state', 'loading')
+    this.setAttribute('data-state', 'resolving')
     this.dispatchEvent(
-      new ContextRequestEvent(ContextRequest_DateConversion, this, (data) => {
-        this._onDateConversionContextEvent(data)
-        this.setAttribute('data-state', 'loaded')
-      }),
+      new ContextRequestEvent(
+        ContextRequest_DateConversion,
+        this,
+        this._onDateConversionContextEvent,
+      ),
     )
-
-    // Set timeout for loading state
+    // Set timeout for resolving state
     setTimeout(() => {
-      if (this.getAttribute('data-state') === 'loading') {
+      if (this.getAttribute('data-state') === 'resolving') {
         this.setAttribute('data-state', 'timeout')
       }
     }, 5000)

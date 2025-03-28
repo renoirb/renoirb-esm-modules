@@ -154,7 +154,7 @@ export class WorkExperienceElement extends HTMLElement {
     }
 
     const dateBegin = this.getAttribute('data-date-begin') || ''
-    const dateEnd = this.getAttribute('data-date-end') || getCurrentDate()
+    const dateEnd = this.getAttribute('data-date-end')
     const dateFormat = this.getAttribute('data-date-format') || 'YYYY-MM'
 
     // If we do not have a start date, maybe we do not have anything to use.
