@@ -9,7 +9,7 @@ promoting loose coupling. It's _distinct_ from React's Context API.
 ## What is the _Context_ Protocol?
 
 The _Context_ Protocol is a standardized way for web components to request data
-or services from their ancestors in the DOM tree _without_ needing to know
+~~or services~~ from their ancestors in the DOM tree _without_ needing to know
 exactly where that data comes from. Components fire a `context-request` event,
 and any ancestor element can listen for and respond to that event, providing the
 requested data.
