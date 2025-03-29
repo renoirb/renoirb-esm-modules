@@ -1,4 +1,4 @@
-import { WorkExperienceElement } from './work-experience-element.mjs'
+import { WorkExperienceElement } from './element.mjs'
 
 export {
   /*                    */
@@ -6,5 +6,4 @@ export {
 }
 
 export default WorkExperienceElement
-
 

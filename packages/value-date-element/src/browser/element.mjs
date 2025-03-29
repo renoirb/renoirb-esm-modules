@@ -1,5 +1,3 @@
-
-
 import { ContextRequestEvent } from '@renoirb/context-api'
 import {
   bindContextResponseHandlerMethodForDateContext,
@@ -94,7 +92,6 @@ export class ValueDateElement extends HTMLElement {
       this.#setValue(newValue)
     }
   }
-
 
   #setValue(value) {
     if (typeof value === 'string') {

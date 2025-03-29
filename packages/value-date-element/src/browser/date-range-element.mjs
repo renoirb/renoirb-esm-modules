@@ -1,5 +1,5 @@
 import { calculateDuration } from '../core.mjs'
-import { currentIndicator } from './current-indicator.mjs'
+import { currentIndicator, getShortFormIso8601Date } from './index.mjs'
 
 export const STYLE = `
   :host {
@@ -43,11 +43,7 @@ const ATTRIBUTES = {
   dateEnd: {
     name: 'data-date-end',
     get default() {
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = String(today.getMonth() + 1).padStart(2, '0')
-      const day = String(today.getDate() + 1).padStart(2, '0')
-      return `${year}-${month}-${day}`
+      return getShortFormIso8601Date()
     },
   },
   dateFormat: {
@@ -237,7 +233,7 @@ export class ValueDateRangeElement extends HTMLElement {
         .map(([label, value]) => value > 0 ? unpluralizate(value, label) : null)
         .filter((i) => i !== null) //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
         .join(', ') //                                          |
-      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate. 
+      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate.
       //        Pis, ça, comme ça, c’est pas facile a rendre traduisible.
     } catch {
       durationTextContent = ''

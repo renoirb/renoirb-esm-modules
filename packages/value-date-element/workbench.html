@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Value Date Element Workbench</title>
-    <script src="packages/value-date-element/example-context-api.mjs?setup&delay" type="module"></script>
-    <!--                                     ^^^^^^^^^^^^^
+    <script
+      src="packages/value-date-element/example-context-api.mjs?setup&delay"
+      type="module"
+    ></script>
+    <!--
       Reminder: The customElements.define MUST be AFTER the context-request event listener
                 In this example, it is defined in workbench.mjs import above
                 and the registration is done after (below)
@@ -21,8 +24,11 @@
   <body>
     <section>
 
-      <my-component-showcase name="ValueDateElement" slots="alpha bravo charlie">
 
+      <my-component-showcase
+        name="ValueDateElement"
+        slots="alpha bravo charlie"
+      >
         <template slot="alpha" title="Simplest">
           <value-date
             datetime="2025-02-08"
@@ -30,7 +36,10 @@
           </value-date>
         </template>
 
-        <template slot="bravo" title="Change date format to YYYY MMMM DD and change locale">
+        <template
+          slot="bravo"
+          title="Change date format to YYYY MMMM DD and change locale"
+        >
           <value-date
             datetime="2025-02-08"
             data-date-format="YYYY MMMM DD"
@@ -50,9 +59,10 @@
 
       </my-component-showcase>
 
-      <my-component-showcase name="ValueDateRangeElement" slots="bravo charlie delta echo echo1 foxtrot golf">
-
-
+      <my-component-showcase
+        name="ValueDateRangeElement"
+        slots="bravo charlie delta echo echo1 foxtrot golf"
+      >
         <template slot="alpha" title="Changing format">
           <value-date-range
             data-date-begin="2022-05-01"
@@ -70,7 +80,6 @@
           >
           </value-date-range>
         </template>
-
 
         <template slot="charlie" title="Only a begin date">
           <value-date-range

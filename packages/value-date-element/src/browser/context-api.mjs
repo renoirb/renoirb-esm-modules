@@ -22,7 +22,6 @@ export const assertIsDateConversionContextPayload = (data) => {
   }
 }
 
-
 export const bindContextResponseHandlerMethodForDateContext = (element) => {
   // Expecting to find a shadowRoot, that finds only one time element
   const errorMessageSuffix = `
@@ -33,7 +32,6 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     const message = `No shadowRoot found! ${errorMessageSuffix}`
     throw new Error(message)
   }
-
 
   const rootEl = element.shadowRoot
   const timeEl = rootEl.querySelector('time')
