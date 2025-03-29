@@ -119,6 +119,6 @@ export class ValueDateElement extends HTMLElement {
       if (this.getAttribute('data-state') === 'resolving') {
         this.setAttribute('data-state', 'timeout')
       }
-    }, 5000)
+    }, 5_000)
   }
 }
