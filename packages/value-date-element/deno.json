@@ -1,6 +1,6 @@
 {
   "name": "@renoirb/value-date-element",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "exports": {
     ".": "./browser.mjs",
     "./browser": "./browser.mjs",
