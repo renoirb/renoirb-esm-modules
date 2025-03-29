@@ -51,7 +51,7 @@ export const contextRequestListener = async (event) => {
   const delay = currentUrl.searchParams.has('delay')
   // Optionally add some delay for development
   if (delay) {
-    await new Promise(resolve => setTimeout(resolve, 1_000))
+    await new Promise((resolve) => setTimeout(resolve, 1_000))
   }
 
   await taskQueue.add(async () => {

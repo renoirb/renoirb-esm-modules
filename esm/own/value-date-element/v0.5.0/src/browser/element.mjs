@@ -1,11 +1,3 @@
-/**
- * ValueDateElement
- *
- * Displays a formatted date using the Context API for formatting.
- *
- * @author Renoir Boulanger
- */
-
 import { ContextRequestEvent } from '@renoirb/context-api'
 import {
   bindContextResponseHandlerMethodForDateContext,
@@ -18,7 +10,7 @@ export const STYLE = `
   }
   :host([data-state="resolving"]) time {
     /* Don't hide the text entirely, make it slightly visible */
-    opacity: 0.3;
+    opacity: 0.6;
     position: relative;
   }
   :host([data-state="resolving"]) time::before {
@@ -26,7 +18,7 @@ export const STYLE = `
     position: absolute;
     left: 0;
     right: 0;
-    height: 1em;
+    height: 100%;
     background: linear-gradient(90deg, #eee, #ddd, #eee);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
@@ -56,6 +48,13 @@ const ATTRIBUTES = {
   },
 }
 
+/**
+ * Value Date
+ *
+ * Displays a formatted date using the Context API for formatting.
+ *
+ * @author Renoir Boulanger
+ */
 export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
     return Object.values(ATTRIBUTES).map(({ name }) => name)
@@ -74,9 +73,8 @@ export class ValueDateElement extends HTMLElement {
   }
 
   connectedCallback() {
-    // Set default attributes
     for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
-      if (config.default && !this.hasAttribute(config.name)) {
+      if (!this.hasAttribute(config.name) && config.default) {
         this.setAttribute(config.name, config.default)
       }
     }
@@ -94,7 +92,6 @@ export class ValueDateElement extends HTMLElement {
       this.#setValue(newValue)
     }
   }
-
 
   #setValue(value) {
     if (typeof value === 'string') {
@@ -119,6 +116,6 @@ export class ValueDateElement extends HTMLElement {
       if (this.getAttribute('data-state') === 'resolving') {
         this.setAttribute('data-state', 'timeout')
       }
-    }, 5000)
+    }, 5_000)
   }
 }
