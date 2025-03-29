@@ -64,6 +64,13 @@ const ATTRIBUTES = {
   },
 }
 
+/**
+ * Value Date Range
+ *
+ * Display two dates, in semantic HTML and human readable format, and shows the duration.
+ *
+ * @author Renoir Boulanger
+ */
 export class ValueDateRangeElement extends HTMLElement {
   static get observedAttributes() {
     return Object.values(ATTRIBUTES).map(({ name }) => name)
@@ -83,18 +90,12 @@ export class ValueDateRangeElement extends HTMLElement {
   }
 
   connectedCallback() {
-    // Set default attributes
     for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
       if (!this.hasAttribute(config.name) && config.default) {
         this.setAttribute(config.name, config.default)
       }
     }
-
-    // Initialize child date elements
     this.#initializeDateElements()
-    this.#initialized = true
-
-    // Calculate and show duration
     this.#updateDuration()
   }
 
@@ -174,6 +175,7 @@ export class ValueDateRangeElement extends HTMLElement {
 
     // Initialize end date
     this.#setDateEnd(dateEnd)
+    this.#initialized = true
   }
 
   #setDateEnd(value) {
@@ -192,7 +194,6 @@ export class ValueDateRangeElement extends HTMLElement {
       const dateValue = isCurrent ? ATTRIBUTES.dateEnd.default : value
       el.setAttribute('data-date', dateValue)
 
-      // Add data-is-current attribute for styling if needed
       if (isCurrent) {
         el.setAttribute('data-is-current', '')
         this.setAttribute('data-is-current', '')
@@ -226,19 +227,22 @@ export class ValueDateRangeElement extends HTMLElement {
     const durationTargetNode = this.shadowRoot.getElementById('duration-text')
     let durationTextContent = ''
 
+    const unpluralizate = (value, label) =>
+      value + ' ' + (value <= 1 ? label.replace(/s$/, '') : label)
+
     try {
       const calculated = calculateDuration(dateBegin, dateEnd)
       const { years = 0, months = 0 } = calculated
       durationTextContent = Object.entries({ years: years ?? 0, months })
-        .map(([label, value]) => (value > 0 ? `${value} ${label}` : null))
-        .filter((i) => i !== null) //                    ^^^^^^^^
+        .map(([label, value]) => value > 0 ? unpluralizate(value, label) : null)
+        .filter((i) => i !== null) //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
         .join(', ') //                                          |
-      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate
+      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate. 
+      //        Pis, ça, comme ça, c’est pas facile a rendre traduisible.
     } catch {
       durationTextContent = ''
     }
 
-    // Update duration display based on hide-duration flag
     if (this.hasAttribute('data-range-hide-duration')) {
       durationTargetNode.textContent = ''
       this.setAttribute('title', durationTextContent)

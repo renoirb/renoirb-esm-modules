@@ -1,10 +1,4 @@
-/**
- * ValueDateElement
- *
- * Displays a formatted date using the Context API for formatting.
- *
- * @author Renoir Boulanger
- */
+
 
 import { ContextRequestEvent } from '@renoirb/context-api'
 import {
@@ -56,6 +50,13 @@ const ATTRIBUTES = {
   },
 }
 
+/**
+ * Value Date
+ *
+ * Displays a formatted date using the Context API for formatting.
+ *
+ * @author Renoir Boulanger
+ */
 export class ValueDateElement extends HTMLElement {
   static get observedAttributes() {
     return Object.values(ATTRIBUTES).map(({ name }) => name)
@@ -74,9 +75,8 @@ export class ValueDateElement extends HTMLElement {
   }
 
   connectedCallback() {
-    // Set default attributes
     for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
-      if (config.default && !this.hasAttribute(config.name)) {
+      if (!this.hasAttribute(config.name) && config.default) {
         this.setAttribute(config.name, config.default)
       }
     }
