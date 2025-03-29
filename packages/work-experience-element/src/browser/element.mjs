@@ -1,3 +1,8 @@
+import {
+  /*                    */
+  getShortFormIso8601Date, 
+} from '@renoirb/value-date-element'
+
 /**
  * Work Experience Element
  *
@@ -57,14 +62,6 @@ const STYLE = `
   }
 `
 
-const getCurrentDate = () => {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDay() + 1).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
 const ATTRIBUTES = {
   entityName: {
     name: 'data-entity-name' /*    workFor */,
@@ -85,7 +82,7 @@ const ATTRIBUTES = {
   dateEnd: {
     name: 'data-date-end',
     get default() {
-      return getCurrentDate()
+      return getShortFormIso8601Date()
     },
   },
   dateFormat: {
