@@ -22,7 +22,6 @@ export const assertIsDateConversionContextPayload = (data) => {
   }
 }
 
-
 export const bindContextResponseHandlerMethodForDateContext = (element) => {
   // Expecting to find a shadowRoot, that finds only one time element
   const errorMessageSuffix = `
@@ -34,7 +33,8 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     throw new Error(message)
   }
 
-  const timeEl = element.shadowRoot.querySelector('time')
+  const rootEl = element.shadowRoot
+  const timeEl = rootEl.querySelector('time')
   if (!timeEl) {
     const message = `No time element found! ${errorMessageSuffix}`
     throw new Error(message)
@@ -54,6 +54,7 @@ export const bindContextResponseHandlerMethodForDateContext = (element) => {
     if (unixEpoch) {
       timeEl.setAttribute('data-unix-epoch', unixEpoch)
     }
+    rootEl.host.setAttribute('data-state', 'resolved')
   }
   return handleDateContextResponse
 }

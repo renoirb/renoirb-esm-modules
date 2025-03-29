@@ -1,7 +1,15 @@
 import { calculateDuration } from '../core.mjs'
+import { currentIndicator, getShortFormIso8601Date } from './index.mjs'
 
 export const STYLE = `
   :host {
+    display: inline;
+  }
+  #current-indicator-parent {
+    display: none;
+  }
+  /* Show it only when has the is-current flag */
+  :host([data-is-current]) #current-indicator-parent {
     display: inline;
   }
 `
@@ -18,6 +26,9 @@ export const TEMPLATE = `
         id="date-end"
         data-date-format="YYYY-MM"
       ></value-date>
+      <span id="current-indicator-parent">
+        <slot name="current-indicator">${currentIndicator()}</slot>
+      </span>
     </span>
     <small id="duration-text"></small>
   </span>
@@ -25,14 +36,15 @@ export const TEMPLATE = `
 
 const DATE_FORMAT = 'YYYY-MM'
 
-const TEXT_TO_TRANSLATE_TODAY = 'today'
-
 const ATTRIBUTES = {
   dateBegin: {
     name: 'data-date-begin',
   },
   dateEnd: {
     name: 'data-date-end',
+    get default() {
+      return getShortFormIso8601Date()
+    },
   },
   dateFormat: {
     name: 'data-date-format',
@@ -48,10 +60,19 @@ const ATTRIBUTES = {
   },
 }
 
+/**
+ * Value Date Range
+ *
+ * Display two dates, in semantic HTML and human readable format, and shows the duration.
+ *
+ * @author Renoir Boulanger
+ */
 export class ValueDateRangeElement extends HTMLElement {
   static get observedAttributes() {
     return Object.values(ATTRIBUTES).map(({ name }) => name)
   }
+
+  #initialized = false
 
   constructor() {
     super()
@@ -66,58 +87,132 @@ export class ValueDateRangeElement extends HTMLElement {
 
   connectedCallback() {
     for (const [_prop, config] of Object.entries(ATTRIBUTES)) {
-      if (!this.hasAttribute(config.name)) {
-        if (config.default) {
-          this.setAttribute(config.name, config.default)
-        }
+      if (!this.hasAttribute(config.name) && config.default) {
+        this.setAttribute(config.name, config.default)
       }
     }
-    for (const k of ['date-begin', 'date-end']) {
-      const datasetKey = `data-${k}`
-      const value = this.getAttribute(datasetKey)
-      const targetNode = this.shadowRoot.getElementById(k)
-      if (value) {
-        console.assert(targetNode !== null, `Template error missing expected target node`)
-        targetNode.textContent = value
-        targetNode.setAttribute('data-date-format', DATE_FORMAT)
-      }
-    }
+    this.#initializeDateElements()
     this.#updateDuration()
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    const id = name.replace('data-', '')
-    const targetNode = this.shadowRoot.querySelector(`#${id}`)
-    if (
-      targetNode &&
-      oldValue !== newValue &&
-      this.isConnected
-    ) {
-      const dateFormat = this.getAttribute('data-date-format') ?? DATE_FORMAT
-      switch (name) {
-        case 'data-date-end':
-        case 'data-date-begin': {
-          console.assert(targetNode !== null, `Template error missing expected target node`)
-          targetNode.setAttribute('data-date-format', dateFormat)
-          targetNode.setAttribute('datetime', newValue)
-          targetNode.textContent = newValue
-          this.#updateDuration()
-          break
+    if (oldValue === newValue || !this.#initialized) {
+      return
+    }
+
+    switch (name) {
+      case 'data-date-begin': {
+        const dateFormat =
+          this.getAttribute('data-date-format') ?? ATTRIBUTES.dateFormat.default
+        const el = this.shadowRoot.getElementById('date-begin')
+        if (el) {
+          el.setAttribute('data-date', newValue || '')
+          el.setAttribute('data-date-format', dateFormat)
         }
-        case 'data-date-format': {
-          this.shadowRoot.getElementById('date-end')?.setAttribute(name, newValue)
-          this.shadowRoot.getElementById('date-begin')?.setAttribute(name, newValue)
-          break
+        this.#updateDuration()
+        break
+      }
+
+      case 'data-date-end': {
+        this.#setDateEnd(newValue)
+        this.#updateDuration()
+        break
+      }
+
+      case 'data-range-hide-duration': {
+        this.#updateDuration()
+        break
+      }
+
+      case 'data-date-format': {
+        // Update format on both date elements
+        const format = newValue || ATTRIBUTES.dateFormat.default
+        this.shadowRoot
+          .getElementById('date-begin')
+          ?.setAttribute('data-date-format', format)
+        this.shadowRoot
+          .getElementById('date-end')
+          ?.setAttribute('data-date-format', format)
+        break
+      }
+
+      case 'data-range-separator': {
+        const el = this.shadowRoot.getElementById('range-separator')
+        if (el) {
+          el.textContent = newValue
         }
-        case 'data-range-separator': {
-          console.assert(targetNode !== null, `Template error missing expected target node`)
-          targetNode.textContent = newValue
-          break
-        }
-        default: {
-          // nothing
-          break
-        }
+        break
+      }
+    }
+  }
+
+  #initializeDateElements() {
+    const dateFormat =
+      this.getAttribute('data-date-format') ?? ATTRIBUTES.dateFormat.default
+    const beginEl = this.shadowRoot.getElementById('date-begin')
+    const separatorEl = this.shadowRoot.getElementById('range-separator')
+    const dateEnd = this.getAttribute('data-date-end')
+
+    // Set separator text
+    if (separatorEl) {
+      separatorEl.textContent =
+        this.getAttribute('data-range-separator') ||
+        ATTRIBUTES.rangeSeparator.default
+    }
+
+    // Initialize begin date
+    if (beginEl) {
+      const dateBegin = this.getAttribute('data-date-begin')
+      if (dateBegin) {
+        beginEl.setAttribute('data-date', dateBegin)
+        beginEl.setAttribute('data-date-format', dateFormat)
+      }
+    }
+
+    // Initialize end date
+    this.#setDateEnd(dateEnd)
+    this.#initialized = true
+  }
+
+  #setDateEnd(value) {
+    const dateFormat =
+      this.getAttribute('data-date-format') ?? ATTRIBUTES.dateFormat.default
+
+    // Check for all possible "empty" values
+    const isCurrent =
+      !value || value === ATTRIBUTES.dateEnd.default || value === 'null'
+
+    const el = this.shadowRoot.getElementById('date-end')
+    if (el) {
+      el.setAttribute('data-date-format', dateFormat)
+
+      // Set the actual date
+      const dateValue = isCurrent ? ATTRIBUTES.dateEnd.default : value
+      el.setAttribute('data-date', dateValue)
+
+      if (isCurrent) {
+        el.setAttribute('data-is-current', '')
+        this.setAttribute('data-is-current', '')
+      } else {
+        el.removeAttribute('data-is-current')
+        this.removeAttribute('data-is-current')
+      }
+
+      if (this.getAttribute('data-debug')) {
+        console.info(`${this.constructor.name}.#setDateEnd(${value})`, {
+          isCurrent,
+          defaultValue: ATTRIBUTES.dateEnd.default,
+          dateValue,
+          el,
+        })
+      }
+    } else {
+      if (this.getAttribute('data-debug')) {
+        console.info(`${this.constructor.name}.#setDateEnd(${value})`, {
+          isCurrent,
+          defaultValue: ATTRIBUTES.dateEnd.default,
+          el,
+        })
       }
     }
   }
@@ -127,36 +222,31 @@ export class ValueDateRangeElement extends HTMLElement {
     const dateEnd = this.getAttribute('data-date-end')
     const durationTargetNode = this.shadowRoot.getElementById('duration-text')
     let durationTextContent = ''
+
+    const unpluralizate = (value, label) =>
+      value + ' ' + (value <= 1 ? label.replace(/s$/, '') : label)
+
     try {
       const calculated = calculateDuration(dateBegin, dateEnd)
       const { years = 0, months = 0 } = calculated
       durationTextContent = Object.entries({ years: years ?? 0, months })
-        .map(([label, value]) => (value > 0 ? `${value} ${label}` : null))
-        .filter((i) => i !== null) //                    ^^^^^^^^
+        .map(([label, value]) => value > 0 ? unpluralizate(value, label) : null)
+        .filter((i) => i !== null) //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
         .join(', ') //                                          |
-      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate
+      // #TODO: Yeah, OK, j’ai mis ma charrue devant les boeufs | avec translate.
+      //        Pis, ça, comme ça, c’est pas facile a rendre traduisible.
     } catch {
       durationTextContent = ''
     }
-    if (this.getAttribute('data-range-hide-duration') !== null) {
+
+    if (this.hasAttribute('data-range-hide-duration')) {
       durationTargetNode.textContent = ''
       this.setAttribute('title', durationTextContent)
     } else {
       this.removeAttribute('title')
-      durationTargetNode.textContent = '(' + durationTextContent + ')'
-    }
-    if (!dateEnd) {
-      const targetNode = this.shadowRoot.querySelector(`#date-end`)
-      const minted = this.ownerDocument.createElement('span')
-      minted.innerText = TEXT_TO_TRANSLATE_TODAY
-      // https://www.w3.org/TR/2013/CR-html5-20130806/dom.html#the-translate-attribute
-      minted.setAttribute('translate', '')
-      minted.setAttribute('data-translate-key', TEXT_TO_TRANSLATE_TODAY)
-      try {
-        targetNode.replaceWith(minted)
-      } catch {
-        // #TODO When no end date, sometimes it fails, fix later.
-      }
+      durationTargetNode.textContent = durationTextContent
+        ? `(${durationTextContent})`
+        : ''
     }
   }
 }

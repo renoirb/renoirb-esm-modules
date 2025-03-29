@@ -33,21 +33,24 @@ See example in [workbench.mjs](workbench.mjs)
 
 - Display two dates as range
   - Calculate duration
-  - When no end date, use "today", and write "*current*" or another similar label. So we can translate
+  - When no end date, use "today", and write "_current_" or another similar
+    label. So we can translate
 
 ### Calculate Distance Dates
 
 #### Display
 
-To specify a duration using a date, with the length and direction (ago, upcoming)
+To specify a duration using a date, with the length and direction (ago,
+upcoming)
 
 - https://gist.github.com/renoirb/3ac53c986c0284d6f0be585cc5bac3c9
-- `AppContentDate` https://github.com/renoirb/site/blob/2020/components/global/AppContentDate.vue
-
+- `AppContentDate`
+  https://github.com/renoirb/site/blob/2020/components/global/AppContentDate.vue
 
 #### `DateRange` form
 
-Form that allows selecting two dates according to limitations such as only in the future, or only in the past, etc.
+Form that allows selecting two dates according to limitations such as only in
+the future, or only in the past, etc.
 
 - https://github.com/renoirb/evenements-entre-deux-dates/blob/main/src/components/DateRange.vue
 
@@ -62,10 +65,10 @@ Form that allows selecting two dates according to limitations such as only in th
 
 - https://github.com/renoirb/experiments-201908-rush-typescript-just-bili-monorepo/blob/master/packages/date-epoch/src/helpers.ts
 
-
 ## References
 
-- [@renoirb/context-api **Context API**][renoirb-context-api-readme] as per W3C’s Web Component Community Group ContextAPI protocol
+- [@renoirb/context-api **Context API**][renoirb-context-api-readme] as per
+  W3C’s Web Component Community Group ContextAPI protocol
 
 [renoirb-context-api-readme]:
   https://github.com/renoirb/renoirb-esm-modules/blob/main/packages/context-api/README.md

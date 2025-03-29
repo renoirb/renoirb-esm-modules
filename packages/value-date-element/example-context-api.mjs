@@ -40,11 +40,19 @@ const loadDayjs = createMemoizedLoader(
 // Let’s use a queue to ensure processing is throttled
 const taskQueue = new ThrottledProcessor({ maxConcurrent: 5 })
 
+const currentUrl = new URL(import.meta.url)
+
 export const contextRequestListener = async (event) => {
   if (event.context !== ContextRequest_DateConversion) {
     return
   }
   event.stopPropagation()
+
+  const delay = currentUrl.searchParams.has('delay')
+  // Optionally add some delay for development
+  if (delay) {
+    await new Promise((resolve) => setTimeout(resolve, 1_000))
+  }
 
   await taskQueue.add(async () => {
     const dayjsModule = await loadDayjs()
@@ -56,7 +64,7 @@ export const contextRequestListener = async (event) => {
       const contextTarget = event.contextTarget
       const format = contextTarget.dataset.dateFormat || 'MMM D, YYYY'
       const formatLocale = contextTarget.dataset.dateLocale || 'en'
-      date = contextTarget.getAttribute('datetime')
+      date = contextTarget.dataset.date
       if (date) {
         const formatter = dayjs(date)
         const unixEpoch = formatter.unix()
@@ -82,7 +90,6 @@ export const contextRequestListener = async (event) => {
 }
 
 if (typeof window !== 'undefined') {
-  const currentUrl = new URL(import.meta.url)
   const setup = currentUrl.searchParams.has('setup')
   if (setup) {
     loadDayjs().catch((error) => {

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Workbench</title>
     <script
-      src="packages/value-date-element/example-context-api.mjs?setup"
+      src="packages/value-date-element/example-context-api.mjs?setup&delay"
       type="module"
     ></script>
   </head>
@@ -15,11 +15,11 @@
       >
         <template slot="alpha" title="With all props and slots">
           <the-tested-component
-            workFor="GoTo Inc."
-            workForUrl="https://www.GoTo.com/"
-            workPosition="Staff Software Developer"
-            dateBegin="2021-01-01"
-            dateEnd="2022-05-01"
+            data-entity-name="GoTo Inc."
+            data-entity-url="https://www.GoTo.com/"
+            data-position-title="Staff Software Developer"
+            data-date-begin="2021-01-01"
+            data-date-end="2022-05-01"
           >
             <p>
               Contributed to an established micro-frontend architecture based on
@@ -44,12 +44,16 @@
           </the-tested-component>
         </template>
 
-        <template slot="charlie" title="No End Date">
+        <template
+          slot="charlie"
+          title="No End Date Meaning it is current And Another Painful Date Format"
+        >
           <the-tested-component
-            workFor="Myself"
-            workForUrl="https://renoirboulanger.com/"
-            workPosition="Full Time Dad"
-            dateBegin="2022-05-01"
+            data-entity-name="Myself"
+            data-entity-url="https://renoirboulanger.com/"
+            data-position-title="Full Time Dad"
+            data-date-begin="2022-05-01"
+            data-date-format="MMMM D YYYY"
           >
             <p>
               Full-time caregiver for children.
@@ -57,24 +61,26 @@
           </the-tested-component>
         </template>
 
-        <template slot="echo" title="Only Work For">
+        <template slot="echo" title="Only data-entity-name">
           <the-tested-component
-            workFor="Renoir"
+            data-entity-name="Renoir"
           >
           </the-tested-component>
         </template>
 
-        <template slot="foxtrot" title="Work For With URL With Short Duration">
+        <template
+          slot="foxtrot"
+          title="With data-entity-name, an data-entity-url URL, One Month, Strange Date Format"
+        >
           <the-tested-component
-            workFor="Renoir"
-            workForUrl="https://RenoirB.com"
-            dateBegin="2022-05-01"
-            dateEnd="2022-06-01"
-            data-date-format="YY"
+            data-entity-name="Renoir"
+            data-entity-url="https://RenoirB.com"
+            data-date-begin="2022-05-01"
+            data-date-end="2022-06-01"
+            data-date-format="MMMM YYYY"
           >
           </the-tested-component>
         </template>
-
 
       </my-component-showcase>
 
@@ -88,9 +94,8 @@
           /*                                  */
           WorkExperienceElement,
         } from '@renoirb/work-experience-element'
-        WorkExperienceElement.setDateComponentTagName(/*'value-date-range'*/'work-experience-date')
         customElements.define('the-tested-component', WorkExperienceElement)
-        customElements.define('work-experience-date', ValueDateRangeElement)
+        customElements.define('value-date-range', ValueDateRangeElement)
         customElements.define('value-date', ValueDateElement)
       </script>
 
