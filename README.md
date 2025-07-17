@@ -127,7 +127,7 @@ Load and render markdown content from GitHub Gists.
 
 <!-- TODO: Migrate loadFromGitHub -->
 
-### Markdown Content Element
+### [Markdown Content Element](./packages/markdown-content-element/README.md)
 
 A markdown rendering container that lets you use your preferred markdown parser.
 
@@ -244,6 +244,8 @@ Output:
 -->
 
 ### [Workbench Maintenance Utils](./packages/workbench-maintenance-utils/README.md)
+
+The package that allows a **dev-server** Deno task that allows seeing how the component behaves.
 
 ## Contributing
 

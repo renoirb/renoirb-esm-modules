@@ -64,13 +64,20 @@ environment.
 ├── packages/
 │   ├── {package-name}/
 │   │   ├── src/
-│   │   │   ├── core/        # Platform-agnostic logic
-│   │   │   ├── browser/     # Browser-specific entry
-│   │   │   ├── deno/        # Deno-specific entry
-│   │   │   └── {runtime}/   # Other runtime entries
+│   │   │   ├── core/         # Platform-agnostic logic
+│   │   │   ├── core.mjs      # Barrels
+│   │   │   ├── browser/      # Browser-specific entry
+│   │   │   ├── browser.mjs   # Barrels
+│   │   │   ├── deno/         # Deno-specific entry
+│   │   │   ├── deno.mjs      # Barrels
+│   │   │   └── {runtime}/    # Other runtime entries
+│   │   │       ├── index.mjs
+│   │   │       └── foo.mjs   # The logic specific for "foo" 
+│   │   ├── core.mjs          # Core only barrel export
+│   │   ├── browser.mjs       # Browser + core export (etc...)
 │   │   ├── tests/
-│   │   │   ├── core/        # Core logic tests
-│   │   │   └── runtime/     # Runtime-specific tests
+│   │   │   ├── core/         # Core logic tests
+│   │   │   └── runtime/      # Runtime-specific tests
 │   │   └── deno.json
 │   └── ...
 └── scripts/
