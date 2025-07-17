@@ -6,6 +6,7 @@ export const packages = [
   'component-showcase-element',
   'context-api',
   'element-utils',
+  'http-utils',
   'inline-note-element',
   'notice-box-element',
   'value-date-element',

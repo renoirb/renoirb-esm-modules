@@ -6,6 +6,7 @@
     "@renoirb/context-api": "http://localhost:8000/packages/context-api/browser.mjs",
     "https://renoirb.com/esm-modules/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
     "@renoirb/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
+    "@renoirb/http-utils": "http://localhost:8000/packages/http-utils/browser.mjs",
     "@renoirb/inline-note-element": "http://localhost:8000/packages/inline-note-element/browser.mjs",
     "@renoirb/markdown-content-element": "http://localhost:8000/packages/markdown-content-element/browser.mjs",
     "@renoirb/notice-box-element": "http://localhost:8000/packages/notice-box-element/browser.mjs",
