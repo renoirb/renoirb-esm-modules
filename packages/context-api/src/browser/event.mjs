@@ -40,3 +40,16 @@ export class ContextRequestEvent extends Event {
   }
 }
 
+/**
+ * Announcing a new eventListener is available for a context-request context.
+ */
+export class ContextProviderEvent extends Event {
+  constructor(
+    context,
+    contextTarget,
+  ) {
+    super('context-provider', { bubbles: true, composed: true })
+    this.context = context
+    this.contextTarget = contextTarget
+  }
+}
