@@ -12,7 +12,7 @@ export const mergeJsonResume = (overrides, base = EMPTY_JSON_RESUME) => {
 
   if (overrides.work) {
     overrides.work.forEach((override) => {
-      const index = result.work.findIndex((job) => job.name === override.name)
+      const index = result.work.findIndex((job) => job.startDate === override.startDate)
       if (index !== -1) {
         // Merge specific properties
         if (override.highlights !== undefined) {

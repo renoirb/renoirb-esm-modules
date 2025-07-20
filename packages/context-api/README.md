@@ -25,6 +25,31 @@ requested data.
 - **Testability:** Easier to test components in isolation by providing mock
   context providers.
 
+## Implementation Notes
+
+This package provides zero-dependency implementations of core **Context Protocol** utilities:
+
+- `ContextRequestEvent` - For components to request context
+- `ContextProviderEvent` - For providers to announce availability
+- `ContextRoot` - For buffering requests before providers are ready
+- Helper utilities for simplified provider registration
+
+These implementations are inspired by and compatible with
+[Lit's @lit/context](https://lit.dev/docs/data/context/) package,
+but simplified to remove framework dependencies.
+While Lit offers a complete reactive system with ValueNotifier and
+Controllers for automatic updates, this package focuses on the core
+event-based communication pattern.
+
+**Key differences from Lit:**
+- No automatic reactive updates (no ValueNotifier)
+- No lifecycle management (no Controllers)
+- Pure JavaScript, no framework required
+- Same Context Protocol compliance
+
+This makes the Context Protocol accessible to any project without
+requiring a specific framework.
+
 ## Setup
 
 This section demonstrates how to use `@renoirb/context-api` to provide and
@@ -175,7 +200,7 @@ export const contextRequestListener = async (event) => {
   if (event.context !== 'date-conversion') {
     return
   }
-  event.stopPropagation()
+  event.stopImmediatePropagation() // Updated from stopPropagation
 
   const contextTarget = event.contextTarget
   const format = contextTarget.dataset.dateFormat || 'MMM D, YYYY'
@@ -275,7 +300,11 @@ type Context = Readonly<
 
 ### [Lit.dev](https://lit.dev/)
 
-Look for `ContextConsumer` from lit
+### [Lit.dev](https://lit.dev/) (Reference Implementation)
+
+Lit provides the most complete Context API implementation with full reactive capabilities. This `@renoirb/context-api` package draws inspiration from Lit's design while providing a minimal, framework-free alternative.
+
+Look for `ContextConsumer`, `ContextProvider`, and `ContextRoot` in the [@lit/context package](https://github.com/lit/lit/tree/main/packages/context).
 
 See example usage in following Gist.
 

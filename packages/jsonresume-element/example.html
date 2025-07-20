@@ -79,8 +79,12 @@
     </script>
 
     <script type="module">
-      import { ContextProviderEvent } from '@renoirb/context-api'
-      import { getJsonResumeOverrideWith } from '@renoirb/jsonresume-utils'
+      import {
+        ContextProviderEvent,
+      } from '@renoirb/context-api'
+      import {
+        getJsonResumeOverrideWith,
+      } from '@renoirb/jsonresume-utils'
 
       // 'https://gist.githubusercontent.com/renoirb/3994ca5b50f9ad1ef2d794476b459c27/raw/jsonresume-overrides.yaml'
 
@@ -91,6 +95,7 @@
         'https://raw.githubusercontent.com/renoirb/site/refs/heads/2020/content/resume/jsonresume-renoirb.yaml'
 
       URL_JSON_RESUME = 'https://gist.githubusercontent.com/renoirb/3994ca5b50f9ad1ef2d794476b459c27/raw/jsonresume-overrides.yaml'
+      URL_JSON_RESUME = 'https://gist.githubusercontent.com/renoirb/46a3eba9dff621f7ee87762d89fc3d67/raw/982591918808e2a3bb2c2bdfdfcda03acdc085f0/jsonresume-overrides.yaml'
 
       ;(async function init() {
         const [_, __, resumeData] = await Promise.all([
@@ -107,13 +112,12 @@
         document.addEventListener('context-request', (event) => {
           if (event.context === 'jsonresume-basics') {
             event.stopPropagation();
-            event.callback(resumeData.basics || {});
+            event.callback(basics);
           }
-        });
-        // Announce provider is ready - this triggers replay!
+        })
         document.body.dispatchEvent(
           new ContextProviderEvent('jsonresume-basics', document.body)
-        );
+        )
 
         let el = document.createElement('app-work-experience')
 
@@ -157,6 +161,7 @@
             targetInnerEl.appendChild(umd)
           }
         }
+        window.resumeData = resumeData
       })()
     </script>
     <style>
