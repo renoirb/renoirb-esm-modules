@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-CA" class="layout--default zone__sandwich light-mode">
+<html lang="en-CA">
   <head>
     <!--
 
@@ -22,21 +22,10 @@
     ></script>
   </head>
   <body>
-    <app-layout class="nuxt-content">
+    <app-layout>
       <div class="document document--item">
-        <app-notice variant="info">
-          <strong slot="header">Work In Progress</strong>
-          <p>
-            This version is meant to allow visualizing the
-            <abbr>YAML</abbr> into a fully functional, curriculum vitae and
-            it'll be hosted at
-            <a href="https://renoirboulanger.com/resume/as-code/"
-              >https://renoirboulanger.com/resume/</a
-            >
-          </p>
-        </app-notice>
-
         <div class="body">
+
           <app-jsonresume>
             <div id="work-experience" slot="work-experience">
               <app-work-experience
@@ -47,36 +36,26 @@
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </app-work-experience>
-              <app-notice variant="error">Something did not work, that section should be replaced.</app-notice>
+              <app-notice variant="error"
+                >Something did not work, that section should be
+                replaced.</app-notice
+              >
             </div>
           </app-jsonresume>
+
         </div>
       </div>
-
       <div slot="top-right"></div>
+      <div slot="footer-left"></div>
+      <div slot="top-left">
+        <a
+          href="/"
+          class="identity__text text-2xl"
+        >
+          Workbench
+        </a>
+      </div>
     </app-layout>
-
-    <script type="module">
-      import AppLayoutElement from '@renoirb/app-layout-element'
-
-      import {
-        ValueDateRangeElement,
-        ValueDateElement,
-      } from '@renoirb/value-date-element'
-      import { NoticeBoxElement } from '@renoirb/notice-box-element'
-      import { MarkdownContentElement } from '@renoirb/markdown-content-element'
-      import {
-        JsonResumeElement,
-        WorkExperienceElement,
-      } from '@renoirb/jsonresume-element'
-      customElements.define('app-layout', AppLayoutElement)
-      customElements.define('app-notice', NoticeBoxElement)
-      customElements.define('value-date', ValueDateElement)
-      customElements.define('value-date-range', ValueDateRangeElement)
-      customElements.define('app-work-experience', WorkExperienceElement)
-      customElements.define('app-jsonresume', JsonResumeElement)
-      customElements.define('un-markdown', MarkdownContentElement)
-    </script>
 
     <script type="module">
       import {
@@ -86,16 +65,9 @@
         getJsonResumeOverrideWith,
       } from '@renoirb/jsonresume-utils'
 
-      // 'https://gist.githubusercontent.com/renoirb/3994ca5b50f9ad1ef2d794476b459c27/raw/jsonresume-overrides.yaml'
+      let URL_JSON_RESUME = ''
 
-      // export const URL_JSON_RESUME_DEFAULT_YAML = 'https://raw.githubusercontent.com/renoirb/site/refs/heads/2020/content/resume/jsonresume-renoirb.yaml'
-      // https://renoirboulanger.com/files/resume/jsonresume-renoirb.json
-
-      let URL_JSON_RESUME =
-        'https://raw.githubusercontent.com/renoirb/site/refs/heads/2020/content/resume/jsonresume-renoirb.yaml'
-
-      URL_JSON_RESUME = 'https://gist.githubusercontent.com/renoirb/3994ca5b50f9ad1ef2d794476b459c27/raw/jsonresume-overrides.yaml'
-      URL_JSON_RESUME = 'https://gist.githubusercontent.com/renoirb/46a3eba9dff621f7ee87762d89fc3d67/raw/982591918808e2a3bb2c2bdfdfcda03acdc085f0/jsonresume-overrides.yaml'
+      URL_JSON_RESUME = '/workbench-examples/resources/jsonresume-override.yaml'
 
       ;(async function init() {
         const [_, __, resumeData] = await Promise.all([
@@ -104,32 +76,27 @@
           getJsonResumeOverrideWith(URL_JSON_RESUME),
         ])
 
+        const contextRequestEventResumeBasics = 'jsonresume-basics'
+        document.addEventListener('context-request', (event) => {
+          if (event.context === contextRequestEventResumeBasics) {
+            event.stopImmediatePropagation()
+            event.callback(resumeData.basics || {})
+          }
+        })
+        // Announce provider is ready - this triggers replay!
+        document.body.dispatchEvent(
+          new ContextProviderEvent(
+            contextRequestEventResumeBasics,
+            document.body,
+          ),
+        )
 
         const targetEl = document.querySelector('app-jsonresume')
         const targetInnerEl = document.getElementById('work-experience')
         targetInnerEl.innerHTML = ''
 
-        document.addEventListener('context-request', (event) => {
-          if (event.context === 'jsonresume-basics') {
-            event.stopPropagation();
-            event.callback(basics);
-          }
-        })
-        document.body.dispatchEvent(
-          new ContextProviderEvent('jsonresume-basics', document.body)
-        )
-
         let el = document.createElement('app-work-experience')
 
-        // by hand
-        // let el = document.createElement('app-work-experience')
-        // el.setAttribute('data-entity-name', 'Renoir Boulanger')
-        // el.setAttribute('data-position-title', 'Self Employed')
-        // el.setAttribute('data-date-begin', '2024-09-01')
-        // el.setAttribute('data-entity-url', 'https://renoirb.com')
-        // targetInnerEl.appendChild(el)
-
-        // Iterate
         for (const experience of resumeData?.work) {
           const {
             company = '',
@@ -155,14 +122,42 @@
           targetInnerEl.appendChild(el)
           if (highlights && highlights.length > 0) {
             const summaryDetailsEl = document.createElement('summary')
-            const umd = document.createElement('un-markdown')
+            const umd = document.createElement('app-markdown')
             umd.setAttribute('data-transition', 'spinner')
             umd.innerHTML = `${highlights.map((i) => '- ' + i).join('\n')}\n`
             targetInnerEl.appendChild(umd)
           }
         }
-        window.resumeData = resumeData
+
+        // Utility if one needs to get the merged JSON data.
+        Reflect.set(window, 'resumeData', resumeData)
+        window.resumeDataCopy = () => copy(resumeData)
       })()
+    </script>
+
+    <script type="module">
+      import AppLayoutElement from '@renoirb/app-layout-element'
+      import {
+        ValueDateRangeElement,
+        ValueDateElement,
+      } from '@renoirb/value-date-element'
+      import {
+        NoticeBoxElement,
+      } from '@renoirb/notice-box-element'
+      import {
+        MarkdownContentElement,
+      } from '@renoirb/markdown-content-element'
+      import {
+        JsonResumeElement,
+        WorkExperienceElement,
+      } from '@renoirb/jsonresume-element'
+      customElements.define('app-layout', AppLayoutElement)
+      customElements.define('app-notice', NoticeBoxElement)
+      customElements.define('value-date', ValueDateElement)
+      customElements.define('value-date-range', ValueDateRangeElement)
+      customElements.define('app-work-experience', WorkExperienceElement)
+      customElements.define('app-jsonresume', JsonResumeElement)
+      customElements.define('app-markdown', MarkdownContentElement)
     </script>
     <style>
       :not(:defined),

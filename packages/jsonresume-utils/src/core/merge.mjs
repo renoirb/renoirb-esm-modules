@@ -50,6 +50,8 @@ export const mergeJsonResume = (overrides, base = EMPTY_JSON_RESUME) => {
     })
   }
 
+  Reflect.set(result.meta, 'lastModified', new Date().toISOString())
+
   if (Reflect.has(overrides, 'basics')) {
     const { summary, label } = overrides?.basics ?? {}
     if (typeof summary === 'string') {

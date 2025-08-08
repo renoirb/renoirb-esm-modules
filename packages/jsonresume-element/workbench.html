@@ -72,21 +72,16 @@
       >
         <template slot="alpha" title="With all props and slots">
           <app-work-experience
-            data-entity-name="GoTo Inc."
-            data-entity-url="https://www.GoTo.com/"
-            data-position-title="Staff Software Developer"
+            data-entity-name="Hyperspace Communications Inc."
+            data-position-title="Senior Quantum UI Engineer"
             data-date-begin="2021-01-01"
             data-date-end="2022-05-01"
           >
             <p>
-              Contributed to an established micro-frontend architecture based on
-              Web Components and lit-element, helping teams leverage its
-              framework-agnostic foundations. Provided technical guidance on
-              native Web Platform capabilities, demonstrating how to maintain
-              accessibility and performance while integrating with React, and
-              other frameworks. Created documentation and working examples
-              showing how to effectively use the existing component system
-              across different technology stacks.
+              Contributed to an established micro-hyperdimensional architecture
+              based on Quantum Web Components and lit-element-prime,
+              helping teams leverage its framework-agnostic foundations
+              across multiple realities.
             </p>
           </app-work-experience>
         </template>
@@ -104,18 +99,20 @@
           title="No End Date Meaning it is current And Another Painful Date Format"
         >
           <app-work-experience
-            data-entity-name="Myself"
-            data-entity-url="https://renoirboulanger.com/"
-            data-position-title="Full Time Dad"
+            data-entity-name="Full-time parenting"
+            data-position-title="Father"
             data-date-begin="2022-05-01"
-            data-date-format="MMMM D YYYY"
+            data-date-format="YYYY, MMMM D"
           >
             <p>Full-time caregiver for children.</p>
           </app-work-experience>
         </template>
 
         <template slot="echo" title="Only data-entity-name">
-          <app-work-experience data-entity-name="Renoir"> </app-work-experience>
+          <app-work-experience
+            data-entity-name="Senior Quantum Stack Developer"
+          >
+          </app-work-experience>
         </template>
 
         <template
@@ -123,10 +120,10 @@
           title="With data-entity-name, an data-entity-url URL, One Month, Strange Date Format"
         >
           <app-work-experience
-            data-entity-name="Renoir"
+            data-entity-name="Senior Quantum Stack Developer"
             data-entity-url="https://RenoirB.com"
-            data-date-begin="2022-05-01"
-            data-date-end="2022-06-01"
+            data-date-begin="2535-03-01"
+            data-date-end="2535-12-18"
             data-date-format="MMMM YYYY"
           >
           </app-work-experience>
@@ -134,14 +131,21 @@
       </my-component-showcase>
     </section>
 
+    <app-notice variant="info">
+      <strong slot="header">See in action</strong>
+      Full example resume loaded from YAML source merging two documents and displayed in a complete web app. See <a href="/packages/jsonresume-element/example.html">example.html</a>
+    </app-notice>
+
     <script type="module">
-      import { ContextProviderEvent } from '@renoirb/context-api'
+      import {
+        ContextProviderEvent,
+      } from '@renoirb/context-api'
       const basics = {
-        name: 'John Doe',
-        label: 'Developer',
+        name: 'Zephyr Quantum-Beauregard',
+        label: 'Expert Hyperspace UI Architect & Quantum-Entangled Frontend Specialist',
         url: 'http://localhost',
         email: 'root@localhost',
-        summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        summary: 'Experienced full-stack quantum developer dedicated to creating framework-agnostic hyperweb solutions.',
         location: {
           city: 'Montreal',
           region: 'Quebec',
@@ -158,17 +162,12 @@
         new ContextProviderEvent('jsonresume-basics', document.body)
       )
     </script>
-    <!--
+    <script type="module">
+      import {
+        NoticeBoxElement,
+      } from '@renoirb/notice-box-element'
+      customElements.define('app-notice', NoticeBoxElement)
+    </script>
 
-    ------------------------------ COPY-PASTA STUB BELOW ------------------------------
-
-
-
-
-
-
-
-
-    -->
   </body>
 </html>

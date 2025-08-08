@@ -16,14 +16,26 @@
  */
 const TEMPLATE = `
   <div class="p-experience">
-    <p class="clear-margin relative" part="experience-header">
+    <p
+      class="clear-margin relative"
+      part="experience-header"
+    >
       <strong id="position-display"></strong><span id="entity-display"></span>
     </p>
-    <p id="date-range-container" part="experience-date"></p>
-    <div class="p-summary mop-wrapper space-bottom" part="experience-summary">
+    <p
+      id="date-range-container"
+      part="experience-date"
+    ></p>
+    <div
+      class="p-summary mop-wrapper space-bottom"
+      part="experience-summary"
+    >
       <slot></slot>
     </div>
-    <div class="p-highlights" part="experience-highlights">
+    <div
+      class="p-highlights"
+      part="experience-highlights"
+    >
       <slot name="highlights"></slot>
     </div>
   </div>
