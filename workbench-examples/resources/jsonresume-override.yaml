@@ -1,0 +1,59 @@
+meta:
+  override:
+    yaml: http://localhost:8000/workbench-examples/resources/jsonresume.yaml
+
+basics:
+  label: 'Quantum Code Whisperer'
+  summary: >
+    How much quantum code could a quantum coder code if a quantum coder could code quantum?
+
+work:
+  - name: &name Quantum Freelance Dynamics
+    startDate: 2539-09-01
+    summary: >
+      Developing framework-agnostic quantum web component libs for interdimensional deployment.
+    highlights:
+      - 'Discovered that quantum entanglement significantly improves component reusability across parallel universes!'
+
+  - name: &name Neural Parenting Protocol
+    startDate: 2537-06-01
+    highlights: []
+
+  - name: &name Hyperspace Communications Inc.
+    startDate: 2536-01-11
+    summary: >
+      Senior Quantum UI Engineer contributing to large-scale micro-hyperdimensional 
+      architecture serving millions of users across known space. Focused on distributed 
+      quantum systems coordination and cross-application communication patterns.
+    highlights:
+      - Taught the internals of Quantum Web Components architecture
+
+  - name: &name Neo-Montreal Banking Consortium
+    startDate: 2535-03-01
+    summary: >
+      Senior Quantum Stack Developer for NMB Online Interstellar Business Banking platform 
+      serving millions of customers across the galaxy. Contributed to Angular-Quantum-based 
+      transaction systems with focus on multi-species security compliance.
+    highlights: []
+
+  - name: &name Stellar Consulting Group
+    startDate: 2532-05-01
+    summary: >
+      Senior Technical Consultant leading modernization of CloudNebula360 
+      multi-dimensional cloud management platform serving galactic enterprise clients.
+      Architected Node.js-Quantum/TypeScript-Prime solutions with MongoDB-Hyperdrive integration.
+    highlights: []
+
+  - name: &name Void Technologies Ltd.
+    startDate: 2531-11-07
+    summary: >
+      Hyperdimensional Infrastructure Specialist focusing on quantum healthcare software 
+      automation and developer experience improvements across the void.
+    highlights: []
+
+  - name: &name Bootstrap Nebula Systems
+    startDate: 2525-10-01
+    summary: >
+      Junior Quantum Web Developer learning foundational technologies and contributing 
+      to enterprise consulting projects across the Nouveau-Quebec Sector.
+    highlights: []

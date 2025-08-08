@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Workbench</title>
+    <script type="module">
+      import { ContextRoot } from '@renoirb/context-api'
+      new ContextRoot().attach(document.body)
+    </script>
+    <script
+      src="packages/value-date-element/example-context-api.mjs?setup"
+      type="module"
+    ></script>
+    <script type="module">
+      import {
+        /*                                  */
+        default as TheTestedElement,
+        WorkExperienceElement,
+      } from '@renoirb/jsonresume-element'
+      import {
+        default as ValueDateElement,
+        ValueDateRangeElement,
+      } from '@renoirb/value-date-element'
+      customElements.define('the-tested-component', TheTestedElement)
+      window.customElements.whenDefined('the-tested-component').then(() => {
+        customElements.define('app-work-experience', WorkExperienceElement)
+        customElements.define('value-date', ValueDateElement)
+        customElements.define('value-date-range', ValueDateRangeElement)
+      })
+    </script>
+  </head>
+  <body>
+    <section>
+      <my-component-showcase
+        name="JsonResumeParentElement"
+        slots="json-resume-parent-showcase"
+        id="json-resume-parent-showcase"
+      >
+        <template
+          slot="json-resume-parent-showcase"
+          title="JSON Resume Element Parent"
+        >
+          <the-tested-component>
+            <div id="work-experience" slot="work-experience">
+              <app-work-experience
+                data-entity-name="Self-Employed"
+                data-position-title="Open Source Web Components Specialist (part time)"
+                data-date-begin="2024-09-01"
+                data-entity-url="https://RenoirB.com"
+              >
+                Lorem Ipsum dolor sit amet, consectetur adipiscing elit.
+              </app-work-experience>
+              <app-work-experience
+                data-entity-name="Full-time parenting"
+                data-position-title="Father"
+                data-date-begin="2022-06-01"
+                data-date-end="2024-09-01"
+                data-date-format="MMMM YYYY"
+              >
+                Lorem Ipsum dolor sit amet, consectetur adipiscing elit.
+              </app-work-experience>
+            </div>
+            <div slot="education">
+              Lorem Ipsum dolor sit amet, consectetur adipiscing elit.
+            </div>
+          </the-tested-component>
+        </template>
+      </my-component-showcase>
+
+      <my-component-showcase
+        name="WorkExperienceElement"
+        slots="alpha charlie bravo delta echo foxtrot"
+      >
+        <template slot="alpha" title="With all props and slots">
+          <app-work-experience
+            data-entity-name="Hyperspace Communications Inc."
+            data-position-title="Senior Quantum UI Engineer"
+            data-date-begin="2021-01-01"
+            data-date-end="2022-05-01"
+          >
+            <p>
+              Contributed to an established micro-hyperdimensional architecture
+              based on Quantum Web Components and lit-element-prime,
+              helping teams leverage its framework-agnostic foundations
+              across multiple realities.
+            </p>
+          </app-work-experience>
+        </template>
+
+        <template slot="bravo" title="Empty">
+          <app-work-experience></app-work-experience>
+        </template>
+
+        <template slot="delta" title="Only default slot">
+          <app-work-experience> Hello world </app-work-experience>
+        </template>
+
+        <template
+          slot="charlie"
+          title="No End Date Meaning it is current And Another Painful Date Format"
+        >
+          <app-work-experience
+            data-entity-name="Full-time parenting"
+            data-position-title="Father"
+            data-date-begin="2022-05-01"
+            data-date-format="YYYY, MMMM D"
+          >
+            <p>Full-time caregiver for children.</p>
+          </app-work-experience>
+        </template>
+
+        <template slot="echo" title="Only data-entity-name">
+          <app-work-experience
+            data-entity-name="Senior Quantum Stack Developer"
+          >
+          </app-work-experience>
+        </template>
+
+        <template
+          slot="foxtrot"
+          title="With data-entity-name, an data-entity-url URL, One Month, Strange Date Format"
+        >
+          <app-work-experience
+            data-entity-name="Senior Quantum Stack Developer"
+            data-entity-url="https://RenoirB.com"
+            data-date-begin="2535-03-01"
+            data-date-end="2535-12-18"
+            data-date-format="MMMM YYYY"
+          >
+          </app-work-experience>
+        </template>
+      </my-component-showcase>
+    </section>
+
+    <app-notice variant="info">
+      <strong slot="header">See in action</strong>
+      Full example resume loaded from YAML source merging two documents and displayed in a complete web app. See <a href="/packages/jsonresume-element/example.html">example.html</a>
+    </app-notice>
+
+    <script type="module">
+      import {
+        ContextProviderEvent,
+      } from '@renoirb/context-api'
+      const basics = {
+        name: 'Zephyr Quantum-Beauregard',
+        label: 'Expert Hyperspace UI Architect & Quantum-Entangled Frontend Specialist',
+        url: 'http://localhost',
+        email: 'root@localhost',
+        summary: 'Experienced full-stack quantum developer dedicated to creating framework-agnostic hyperweb solutions.',
+        location: {
+          city: 'Montreal',
+          region: 'Quebec',
+          countryCode: 'CA',
+        },
+      }
+      document.addEventListener('context-request', (event) => {
+        if (event.context === 'jsonresume-basics') {
+          event.stopPropagation();
+          event.callback(basics);
+        }
+      })
+      document.body.dispatchEvent(
+        new ContextProviderEvent('jsonresume-basics', document.body)
+      )
+    </script>
+    <script type="module">
+      import {
+        NoticeBoxElement,
+      } from '@renoirb/notice-box-element'
+      customElements.define('app-notice', NoticeBoxElement)
+    </script>
+
+  </body>
+</html>

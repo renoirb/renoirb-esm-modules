@@ -1,16 +1,19 @@
 {
   "imports": {
     "jsonc-parser": "jsr:@std/jsonc@^1.0.1",
+    "@dep/yaml": "https://esm.sh/yaml@2.8.0",
     "@renoirb/app-layout-element": "http://localhost:8000/packages/app-layout-element/browser.mjs",
     "@renoirb/component-showcase-element": "http://localhost:8000/packages/component-showcase-element/browser.mjs",
     "@renoirb/context-api": "http://localhost:8000/packages/context-api/browser.mjs",
     "https://renoirb.com/esm-modules/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
     "@renoirb/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
+    "@renoirb/http-utils": "http://localhost:8000/packages/http-utils/browser.mjs",
     "@renoirb/inline-note-element": "http://localhost:8000/packages/inline-note-element/browser.mjs",
     "@renoirb/markdown-content-element": "http://localhost:8000/packages/markdown-content-element/browser.mjs",
+    "@renoirb/jsonresume-element": "http://localhost:8000/packages/jsonresume-element/browser.mjs",
+    "@renoirb/jsonresume-utils": "http://localhost:8000/packages/jsonresume-utils/core.mjs",
     "@renoirb/notice-box-element": "http://localhost:8000/packages/notice-box-element/browser.mjs",
     "@renoirb/value-date-element": "http://localhost:8000/packages/value-date-element/browser.mjs",
-    "@renoirb/work-experience-element": "http://localhost:8000/packages/work-experience-element/browser.mjs",
     "@renoirb/workbench-maintenance-utils": "http://localhost:8000/packages/workbench-maintenance-utils/browser.mjs"
   }
 }

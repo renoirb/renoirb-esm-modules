@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+  <head>
+    <!--
+
+
+    Example of a Resume leveraging features from this package.
+
+
+    -->
+    <script type="module">
+      import { ContextRoot } from '@renoirb/context-api'
+      new ContextRoot().attach(document.body)
+    </script>
+    <script
+      type="module"
+      src="http://localhost:8000/packages/value-date-element/example-context-api.mjs?setup&delay"
+    ></script>
+    <script
+      type="module"
+      src="http://localhost:8000/packages/markdown-content-element/example-context-api.mjs?setup&delay"
+    ></script>
+  </head>
+  <body>
+    <app-layout>
+      <div class="document document--item">
+        <div class="body">
+
+          <app-jsonresume>
+            <div id="work-experience" slot="work-experience">
+              <app-work-experience
+                data-entity-name="Self-Employed"
+                data-position-title="Open Source Web Components Specialist (part time)"
+                data-date-begin="2024-09-01"
+                data-entity-url="https://renoirb.com"
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </app-work-experience>
+              <app-notice variant="error"
+                >Something did not work, that section should be
+                replaced.</app-notice
+              >
+            </div>
+          </app-jsonresume>
+
+        </div>
+      </div>
+      <div slot="top-right"></div>
+      <div slot="footer-left"></div>
+      <div slot="top-left">
+        <a
+          href="/"
+          class="identity__text text-2xl"
+        >
+          Workbench
+        </a>
+      </div>
+    </app-layout>
+
+    <script type="module">
+      import {
+        ContextProviderEvent,
+      } from '@renoirb/context-api'
+      import {
+        getJsonResumeOverrideWith,
+      } from '@renoirb/jsonresume-utils'
+
+      let URL_JSON_RESUME = ''
+
+      URL_JSON_RESUME = '/workbench-examples/resources/jsonresume-override.yaml'
+
+      ;(async function init() {
+        const [_, __, resumeData] = await Promise.all([
+          customElements.whenDefined('app-jsonresume'),
+          customElements.whenDefined('app-work-experience'),
+          getJsonResumeOverrideWith(URL_JSON_RESUME),
+        ])
+
+        const contextRequestEventResumeBasics = 'jsonresume-basics'
+        document.addEventListener('context-request', (event) => {
+          if (event.context === contextRequestEventResumeBasics) {
+            event.stopImmediatePropagation()
+            event.callback(resumeData.basics || {})
+          }
+        })
+        // Announce provider is ready - this triggers replay!
+        document.body.dispatchEvent(
+          new ContextProviderEvent(
+            contextRequestEventResumeBasics,
+            document.body,
+          ),
+        )
+
+        const targetEl = document.querySelector('app-jsonresume')
+        const targetInnerEl = document.getElementById('work-experience')
+        targetInnerEl.innerHTML = ''
+
+        let el = document.createElement('app-work-experience')
+
+        for (const experience of resumeData?.work) {
+          const {
+            company = '',
+            endDate = '',
+            startDate = '',
+            url,
+            position = '',
+            summary,
+            description,
+            highlights = [],
+          } = experience
+          el = document.createElement('app-work-experience')
+          el.setAttribute('data-entity-name', company)
+          el.setAttribute('data-position-title', position)
+          el.setAttribute('data-date-begin', startDate)
+          el.setAttribute('data-date-end', endDate)
+          if (url) {
+            el.setAttribute('data-entity-url', url)
+          }
+          if (summary) {
+            el.innerHTML = `<p>${summary}</p>`
+          }
+          targetInnerEl.appendChild(el)
+          if (highlights && highlights.length > 0) {
+            const summaryDetailsEl = document.createElement('summary')
+            const umd = document.createElement('app-markdown')
+            umd.setAttribute('data-transition', 'spinner')
+            umd.innerHTML = `${highlights.map((i) => '- ' + i).join('\n')}\n`
+            targetInnerEl.appendChild(umd)
+          }
+        }
+
+        // Utility if one needs to get the merged JSON data.
+        Reflect.set(window, 'resumeData', resumeData)
+        window.resumeDataCopy = () => copy(resumeData)
+      })()
+    </script>
+
+    <script type="module">
+      import AppLayoutElement from '@renoirb/app-layout-element'
+      import {
+        ValueDateRangeElement,
+        ValueDateElement,
+      } from '@renoirb/value-date-element'
+      import {
+        NoticeBoxElement,
+      } from '@renoirb/notice-box-element'
+      import {
+        MarkdownContentElement,
+      } from '@renoirb/markdown-content-element'
+      import {
+        JsonResumeElement,
+        WorkExperienceElement,
+      } from '@renoirb/jsonresume-element'
+      customElements.define('app-layout', AppLayoutElement)
+      customElements.define('app-notice', NoticeBoxElement)
+      customElements.define('value-date', ValueDateElement)
+      customElements.define('value-date-range', ValueDateRangeElement)
+      customElements.define('app-work-experience', WorkExperienceElement)
+      customElements.define('app-jsonresume', JsonResumeElement)
+      customElements.define('app-markdown', MarkdownContentElement)
+    </script>
+    <style>
+      :not(:defined),
+      workbench-nav {
+        display: none;
+      }
+      app-jsonresume::part(work) {
+        font-size: 1em;
+      }
+      app-work-experience::part(experience-header) {
+        font-size: 1.2em;
+      }
+    </style>
+  </body>
+</html>

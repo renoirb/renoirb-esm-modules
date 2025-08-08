@@ -127,7 +127,7 @@ Load and render markdown content from GitHub Gists.
 
 <!-- TODO: Migrate loadFromGitHub -->
 
-### Markdown Content Element
+### [Markdown Content Element](./packages/markdown-content-element/README.md)
 
 A markdown rendering container that lets you use your preferred markdown parser.
 
@@ -176,6 +176,18 @@ There's
 [more to come that isn't migrated](./packages/value-date-element/README.md#more-to-come)
 
 <!-- TODO: moar -->
+
+### [JSONResume Element](./packages/jsonresume-element/README.md)
+
+JSONResume as HTML using Web Components.
+
+### [JSONResume Utils](./packages/jsonresume-utils/README.md)
+
+JSONResume data manipulation and normalization.
+
+### [HTTP-Utils](./packages/http-utils/README.md)
+
+Dependency-free utilities to handle HTTP request patterns.
 
 ### Value Trinary Element
 
@@ -244,6 +256,8 @@ Output:
 -->
 
 ### [Workbench Maintenance Utils](./packages/workbench-maintenance-utils/README.md)
+
+The package that allows a **dev-server** Deno task that allows seeing how the component behaves.
 
 ## Contributing
 
