@@ -1,0 +1,8 @@
+{
+  "name": "@renoirb/context-api",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  }
+}
