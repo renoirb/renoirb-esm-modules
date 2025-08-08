@@ -163,12 +163,18 @@ JavaScript runs.
    - ▣ layout-variant
    - ▣ markdown-content
    - ▢ taxonomy
+   - ▣ [app-layout-element](./packages/app-layout-element/README.md)
+   - ▣ [context-api](./packages/context-api/README.md)
    - ▣ [element-utils](./packages/element-utils/README.md)
-   - ☒ [inline-note-element](./packages/inline-note-element/README.md)
+   - ▣ [http-utils](./packages/http-utils/README.md)
+   - ▣ [inline-note-element](./packages/inline-note-element/README.md)
+   - ▣ [jsonresume-element](./packages/jsonresume-element/README.md)
+   - ▣ [jsonresume-utils](./packages/jsonresume-utils/README.md)
+   - ▣ [markdown-content-element](./packages/markdown-content-element/README.md)
    - ▣ [notice-box-element](./packages/notice-box-element/README.md)
    - ▣ [value-date-element](./packages/value-date-element/README.md)
 
-3. Development Tools
+4. Development Tools
    - ⬚ Component workbench (using migrated components)
      - ⬚ README display (using `markdown-content`)
      - ⬚ Component variants (using

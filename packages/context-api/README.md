@@ -117,7 +117,7 @@ mechanics.
 ```javascript
 // Hypothetical location: https://example.org/esm/my-date-component.mjs
 
-import { ContextRequestEvent } from 'https://dist.renoirb.com/esm/own/context-api/v0.1.0/browser.mjs'
+import { ContextRequestEvent } from 'https://dist.renoirb.com/esm/own/context-api/v1.0.0/browser.mjs'
 
 export class MyDateComponent extends HTMLElement {
   constructor() {
@@ -238,7 +238,7 @@ the this is bound to the document earlier as possible
     <script type="importmap">
       {
         "imports": {
-          "@renoirb/context-api": "https://dist.renoirb.com/esm/own/context-api/v0.1.0/browser.mjs",
+          "@renoirb/context-api": "https://dist.renoirb.com/esm/own/context-api/v1.0.0/browser.mjs",
           "my-date": "https://example.org/esm/my-date-component.mjs"
         }
       }
