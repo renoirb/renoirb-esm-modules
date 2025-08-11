@@ -1,4 +1,4 @@
-export * from './src/browser/context-api.mjs'
+export * from './src/browser.mjs'
 
 let ValueDateElement
 let ValueDateRangeElement
