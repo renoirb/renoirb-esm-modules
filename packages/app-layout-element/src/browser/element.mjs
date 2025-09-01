@@ -38,14 +38,24 @@ const LIST_EXTERNAL_STYLE = [
 const TEMPLATE = `
   <div id="__layout">
     <div class="layouts--homepage">
-      <nav class="app-side-bar--component fixed z-40 w-full top">
+      <nav class="app-side-bar--component fixed z-40 w-full top" id="app-side-bar-nav" >
         <div
           class="zone__sandwich__top container flex items-center justify-between py-4 mx-auto"
           style="position: relative"
         >
-          <div class="app-side-bar__identity md:px-5 flex items-center">
-            <button aria-label="Open Menu" class="md:hidden ml-5 mr-2">
+          <div
+            class="app-side-bar__identity md:px-5 flex items-center"
+          >
+            <button
+              id="hamburger-menu"
+              type="button"
+              aria-expanded="false"
+              aria-controls="app-side-bar"
+              class="md:hidden ml-5 mr-2"
+              data-toggle="slide-out-nav:open"
+            >
               <svg
+                title="Sidebar Menu"
                 fill="none"
                 stroke="currentColor"
                 stroke-linecap="round"
@@ -93,18 +103,23 @@ const TEMPLATE = `
             </slot>
           </div>
         </div>
+
         <aside
           class="md:invisible app-side-bar__aside fixed top-0 left-0 visible w-64 h-full overflow-auto transition-all duration-500 ease-in-out transform -translate-x-full"
+          id="app-side-bar"
+          data-cname-opened="translate-x-0"
+          data-cname-closed="-translate-x-full"
+          hidden
         >
           <div
             class="app-side-bar__identity flex items-center w-full h-16 p-4 border-b"
+
           >
-            <a
-              href="https://renoirboulanger.com/"
-              aria-current="page"
-              class="identity__text nuxt-link-exact-active nuxt-link-active"
-              >Renoir Boulanger</a
-            >
+            <button
+              type="button"
+              aria-label="close navigation"
+              data-toggle="slide-out-nav:close"
+            >&times;</button>
           </div>
           <div part="left-bottom-sidebar">
             <slot name="left-bottom-sidebar">
@@ -129,7 +144,12 @@ const TEMPLATE = `
           </div>
         </aside>
       </nav>
-      <main class="zone__sandwich__meat middle container mx-auto">
+
+      <div class="fixed inset-0 transition-opacity hidden" id="slide-out__overlay">
+        <div class="absolute inset-0 bg-black opacity-75" data-toggle="dismiss-overlay" role="button"></div>
+      </div>
+
+      <main class="zone__sandwich__meat middle container mx-auto is-under-slide-out__inertify">
         <div class="grid">
           <div class="m-20">
             <div class="pages__index--parent nuxt-content" part="slot-parent-default">
@@ -140,7 +160,7 @@ const TEMPLATE = `
           </div>
         </div>
       </main>
-      <div class="app-footer--component disposition-parent w-full bottom">
+      <div class="app-footer--component disposition-parent w-full bottom is-under-slide-out__inertify">
         <footer
           class="zone__sandwich__bottom container flex items-center justify-between p-10 mx-auto no-print"
           part="slot-parent-footer-left"
@@ -229,6 +249,14 @@ const STYLE = `
     transition: background-color .3s;
   }
 
+  .app-side-bar__aside {
+    color: var(--color-primary);
+    background-color: var(--color-container);
+  }
+  .app-side-bar__aside .identity__text {
+    color: var(--color-sandwich-text);
+  }
+
   /**
    * Other customizations
    */
@@ -294,6 +322,12 @@ const STYLE_PRINT = `
 `
 
 export class AppLayoutAlphaElement extends HTMLElement {
+  #isOpened = false
+
+  get isOpen() {
+    return this.#isOpened
+  }
+
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
@@ -317,49 +351,313 @@ export class AppLayoutAlphaElement extends HTMLElement {
     elRoot.appendChild(elBody)
     this.shadowRoot.appendChild(elRoot)
     this.setAttribute('class', 'nuxt-content')
+    this.#onConstructorEnd()
   }
 
   async connectedCallback() {
     if (!this.isConnected) return
+    if (this.shadowRoot) {
+      this.$elAppLayout?.addEventListener('click', this.#onClickMaybeToggle)
+      this.shadowRoot.ownerDocument.body.addEventListener('keydown', this.#onKeyboardEscape)
 
-    try {
-      const styles = await optimizedExternalStyles(
-        window,
-        LIST_EXTERNAL_STYLE,
-        {
-          componentName: this.localName,
-          avoidDuplicates: true
+      try {
+        const styles = await optimizedExternalStyles(
+          window,
+          LIST_EXTERNAL_STYLE,
+          {
+            componentName: this.localName,
+            avoidDuplicates: true,
+          },
+        )
+
+        // Apply to Shadow DOM
+        if (styles.shadow instanceof CSSStyleSheet) {
+          this.shadowRoot.adoptedStyleSheets = [styles.shadow]
+        } else if (styles.shadow) {
+          this.shadowRoot.appendChild(styles.shadow)
         }
+
+        // Apply to document head if not already there
+        if (styles.document && !styles.document.isConnected) {
+          document.head.appendChild(styles.document)
+        }
+      } catch (error) {
+        console.error('Style loading failed:', error)
+      }
+    }
+  }
+
+  async disconnectedCallback() {
+    await Promise.resolve()
+    if (this.shadowRoot) {
+      if (this.$elAppLayout) {
+        this.$elAppLayout.removeEventListener('click', this.#onClickMaybeToggle)
+        this.shadowRoot.ownerDocument.body.removeEventListener('keydown', this.#onKeyboardEscape)
+      }
+    }
+  }
+
+  setSlideOutNavOpenState = (desiredState = false) => {
+    if (this.shadowRoot) {
+      if (this.$elSlideOutNav) {
+        const cnameOpened = this.$elSlideOutNav.dataset.cnameOpened || ''
+        const cnameClosed = this.$elSlideOutNav.dataset.cnameClosed || ''
+        if (desiredState) {
+          this.$elSlideOutNav.removeAttribute('hidden')
+          window.setTimeout(() => {
+            this.$elSlideOutNav?.classList.add(cnameOpened)
+            this.$elSlideOutNav?.classList.remove(cnameClosed)
+          }, 10)
+        } else {
+          this.$elSlideOutNav.classList.remove(cnameOpened)
+          this.$elSlideOutNav.classList.add(cnameClosed)
+          window.setTimeout(() => {
+            if (this.$elSlideOutNav && !this.#isOpened) {
+              this.$elSlideOutNav?.setAttribute('hidden', 'true')
+            }
+          }, 500)
+        }
+      }
+      if (this.$elAppLayout) {
+        if (desiredState) {
+          this.$elAppLayout?.classList.add('is-opened')
+        } else {
+          this.$elAppLayout?.classList.remove('is-opened')
+        }
+      }
+      if (this.$elSlideOutNavOverlay) {
+        if (desiredState) {
+          this.$elSlideOutNavOverlay.classList.remove('hidden')
+        } else {
+          this.$elSlideOutNavOverlay.classList.add('hidden')
+        }
+      }
+      if(this.$elsSlideOutNavOverlayInertify) {
+        this.$elsSlideOutNavOverlayInertify.forEach((el) => {
+          if (desiredState) {
+            el.setAttribute('inert', 'true')
+            el.setAttribute('aria-hidden', 'true') // This looks like it is doing the same as inert
+          } else {
+            el.removeAttribute('inert')
+            el.removeAttribute('aria-hidden')
+          }
+        })
+      }
+      if(this.$elSlideOutNavBtnOpen){
+        this.$elSlideOutNavBtnOpen.setAttribute('aria-expanded', String(desiredState))
+        console.log('this.$elSlideOutNavBtnOpen', this.$elSlideOutNavBtnOpen) // DEBUG
+      }
+      this.#isOpened = desiredState
+    }
+  }
+
+  get $elAppLayout() {
+    if (this.shadowRoot == null) return null
+    return this.shadowRoot.getElementById('__layout')
+  }
+
+  get $elSlideOutNav() {
+    if (this.shadowRoot == null) return null
+    return this.shadowRoot.getElementById('app-side-bar')
+  }
+
+  get $elSlideOutNavOverlay() {
+    if (this.shadowRoot == null) return null
+    return this.shadowRoot.getElementById('slide-out__overlay')
+  }
+
+  /**
+   * Elements we will want to become inert when slide-out navigation is open
+   */
+  get $elsSlideOutNavOverlayInertify() {
+    if (this.shadowRoot == null) return null
+    const els = this.shadowRoot.querySelectorAll('.is-under-slide-out__inertify')
+    return Array.from(els)
+  }
+
+  /**
+   * The button that opens the slide-out navigation
+   */
+  get $elSlideOutNavBtnOpen() {
+    if (this.shadowRoot == null) return null
+    const $elsBtnOpen = this.shadowRoot.querySelectorAll('button[data-toggle="slide-out-nav:open"]')
+    if ($elsBtnOpen.length === 1) {
+      return $elsBtnOpen[0]
+    } else {
+      const message = 'Expected at least one button[data-toggle="slide-out-nav:open"] element'
+      throw new Error(message)
+    }
+  }
+
+  #dispatch = (
+    eventName,
+    evt,
+  ) => {
+    this.dispatchEvent(
+      new CustomEvent(this.localName, {
+        detail: {
+          eventName,
+          isOpen: this.isOpen,
+          originalEvent: evt,
+        },
+        bubbles: true,
+        composed: true,
+      }),
+    )
+  }
+
+  #onKeyboardEscape = (
+    evt /*: HTMLBodyElementEventMap['keydown'] */,
+  ) /*: void */ => {
+    const { key } = evt ?? {}
+    if (this.isOpen) {
+      if (/escape/i.test(key)) {
+        evt.preventDefault()
+        evt.stopImmediatePropagation()
+        this.setSlideOutNavOpenState(false)
+        this.#dispatch('slide-out-nav:close', evt)
+      }
+    }
+  }
+
+  #onClickMaybeToggle = (
+    evt /*: HTMLBodyElementEventMap['click'] */,
+  ) /*: void */ => {
+    let toggle = evt?.target?.dataset.toggle || null
+    const btnEl = evt.target?.closest('button')
+    if (!toggle) {
+      toggle = btnEl?.dataset.toggle || null
+    }
+    if (toggle === 'dismiss-overlay') {
+      evt.preventDefault()
+      evt.stopImmediatePropagation()
+      this.setSlideOutNavOpenState(false)
+      this.#dispatch('slide-out-nav:close', evt)
+      return
+    }
+    if (!(btnEl instanceof HTMLElement)) {
+      return
+    }
+    if (toggle) {
+      evt.preventDefault()
+      evt.stopImmediatePropagation()
+      const newOpenState = !this.isOpen
+      this.setSlideOutNavOpenState(newOpenState)
+      this.#dispatch(
+        newOpenState ? 'slide-out-nav:open' : 'slide-out-nav:close',
+        evt,
       )
+    }
+    window.setTimeout(() => {
+      this.$elSlideOutNav?.querySelector('button')?.focus()
+    }, 10)
+  }
 
-      // Apply to Shadow DOM
-      if (styles.shadow instanceof CSSStyleSheet) {
-        this.shadowRoot.adoptedStyleSheets = [styles.shadow]
-      } else if (styles.shadow) {
-        this.shadowRoot.appendChild(styles.shadow)
-      }
-
-      // Apply to document head if not already there
-      if (styles.document && !styles.document.isConnected) {
-        document.head.appendChild(styles.document)
-      }
-    } catch (error) {
-      console.error('Style loading failed:', error)
+  #onConstructorEnd = () => {
+    this.#enforceOnlyChildOfParent()
+    this.#mutateHostHeadMetaViewport()
+    if (this.shadowRoot == null) {
+      const message = 'No shadowRoot'
+      throw new Error(message)
+    }
+    //
+    // AppLayout is the root of this component that is designed to be the first child of body
+    //
+    if (this.$elAppLayout == null) {
+      throw new Error('No $elAppLayout')
+    }
+    //
+    // $elSlideOutNav is the slide-out navigation element
+    // - It is expected to have data-cname-opened and data-cname-closed attributes to tell what class names to flip to show/hide
+    // - It is expected to be hidden by default
+    //
+    const $elSlideOutNav = this.$elSlideOutNav
+    if ($elSlideOutNav == null) {
+      throw new Error('No $elSlideOutNav')
+    }
+    const { cnameOpened, cnameClosed } = $elSlideOutNav.dataset
+    if (!cnameOpened || !cnameClosed) {
+      const message = `Missing required data-cname-opened or data-cname-closed on $elSlideOutNav`
+      throw new Error(message)
+    }
+    $elSlideOutNav.setAttribute('hidden', 'true')
+    //
+    // $elSlideOutNavOverlay is the overlay that goes behind the slide-out navigation
+    //
+    if (this.$elSlideOutNavOverlay == null) {
+      throw new Error('No $elSlideOutNavOverlay')
+    }
+    //
+    // $elsDismiss are the elements that can dismiss the overlay when clicked
+    // - It is probably the only child of the $elSlideOutNavOverlay
+    //
+    const $elsDismiss = this.shadowRoot.querySelectorAll('[data-toggle="dismiss-overlay"]')
+    if ($elsDismiss.length !== 1) {
+      // Basically the child inside the overlay that gets stretched and we can capture clicks on.
+      const message = 'Expected required one [data-toggle="dismiss-overlay"] element'
+      throw new Error(message)
+    } else if ($elsDismiss[0] instanceof HTMLElement) {
+      // Add role button for accessibility, because it's clickable.
+      $elsDismiss[0].setAttribute('role', 'button')
+    }
+    //
+    // $elsInertify are the elements that should become inert when slide-out navigation is open
+    // - It is expected to have at least one element
+    // - It is intended to add/remove the [inert] attribute to these elements
+    //
+    const $elsInertify = this.$elsSlideOutNavOverlayInertify
+    if ($elsInertify == null) {
+      throw new Error('No $elsSlideOutNavOverlayInertify')
+    }
+    if (!($elsInertify instanceof Array)) {
+      const message = `Expected $elsSlideOutNavOverlayInertify to be an Array, got ${typeof $elsInertify}`
+      throw new Error(message)
+    }
+    if ($elsInertify.length == 0) {
+      const len = $elsInertify.length
+      const message = `Expected at least 2 .is-under-slide-out__inertify elements, got ${len}`
+      throw new Error(message)
+    }
+    //
+    // Hamburger slide-out navigation button
+    //
+    const $elsBtnOpen = this.shadowRoot.querySelectorAll('button[data-toggle="slide-out-nav:open"]')
+    if ($elsBtnOpen.length >= 1) {
+      const elBtn = $elsBtnOpen[0]
+      elBtn.setAttribute('aria-expanded', 'false')
+    } else {
+      const message = 'Expected at least one button[data-toggle="slide-out-nav:open"] element'
+      throw new Error(message)
     }
   }
 
   /**
    * Enforce idea that this component must be as first child of body to ensure
    * that this component takes up all the available space as designed
-   *
-  _enforceOnlyChildOfParent = () => {
-    const parentElement = this.parentElement
-    const isBody = parentElement.localName === 'body'
+   */
+  #enforceOnlyChildOfParent = () => {
+    const isBody = this.parentElement?.localName === 'body'
     if (!isBody) {
       const message = `Invalid location to use <${this.localName} />, make sure it's a direct descendant of body`
+      console.error(message)
+      if (this.shadowRoot == null) return
       this.shadowRoot.innerHTML = `<div style="color: red;">${message}</div>`
       throw new Error(message)
     }
   }
-  */
+
+  #mutateHostHeadMetaViewport = () => {
+    if (this.shadowRoot == null) return
+    const d = this.shadowRoot.ownerDocument
+    const metaViewport = d.querySelector('head > meta[name="viewport"]')
+    if (!metaViewport) {
+      const newMetaViewport = d.createElement('meta')
+      newMetaViewport.setAttribute('name', 'viewport')
+      newMetaViewport.setAttribute(
+        'content',
+        'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no',
+      )
+      d.head.appendChild(newMetaViewport)
+    }
+  }
 }
