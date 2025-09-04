@@ -68,6 +68,13 @@ const ATTRIBUTES = {
  * @author Renoir Boulanger
  */
 export class ValueDateRangeElement extends HTMLElement {
+
+  static get dependentElements() {
+    return Object.freeze({
+      'value-date': 'https://dist.renoirb.com/esm/own/value-date-element/v0.1.0/browser.mjs'
+    });
+  }
+
   static get observedAttributes() {
     return Object.values(ATTRIBUTES).map(({ name }) => name)
   }
