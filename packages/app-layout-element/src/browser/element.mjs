@@ -410,14 +410,13 @@ export class AppLayoutAlphaElement extends HTMLElement {
             $elSlideOutNav.classList.remove(cnameClosed)
           })
         } else {
-          console.log('hello! 2')
           $elSlideOutNav.classList.remove(cnameOpened)
           $elSlideOutNav.classList.add(cnameClosed)
           $elSlideOutNav.addEventListener('transitionend', (e) => {
-            console.log('hello! 1')
             // Only act on the target element (not child transitions)
             if (e.target === $elSlideOutNav && !this.#isOpened) {
               $elSlideOutNav.setAttribute('hidden', 'true')
+              this.$elSlideOutNavOverlay?.classList.add('hidden')
             }
           }, { once: true })
         }
@@ -558,9 +557,9 @@ export class AppLayoutAlphaElement extends HTMLElement {
         { opened },
       )
     }
-    window.setTimeout(() => {
+    requestAnimationFrame(() => {
       this.$elSlideOutNav?.querySelector('button')?.focus()
-    }, 10)
+    })
   }
 
   #onConstructorEnd = () => {
