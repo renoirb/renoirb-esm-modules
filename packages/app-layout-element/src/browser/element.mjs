@@ -351,39 +351,16 @@ export class AppLayoutAlphaElement extends HTMLElement {
     elRoot.appendChild(elBody)
     this.shadowRoot.appendChild(elRoot)
     this.setAttribute('class', 'nuxt-content')
+
     this.#onConstructorEnd()
   }
 
   async connectedCallback() {
     if (!this.isConnected) return
+    await this.#mutateHostForStyleSheets()
     if (this.shadowRoot) {
       this.$elAppLayout?.addEventListener('click', this.#onClickMaybeToggle)
       this.shadowRoot.ownerDocument.body.addEventListener('keydown', this.#onKeyboardEscape)
-
-      try {
-        const styles = await optimizedExternalStyles(
-          window,
-          LIST_EXTERNAL_STYLE,
-          {
-            componentName: this.localName,
-            avoidDuplicates: true,
-          },
-        )
-
-        // Apply to Shadow DOM
-        if (styles.shadow instanceof CSSStyleSheet) {
-          this.shadowRoot.adoptedStyleSheets = [styles.shadow]
-        } else if (styles.shadow) {
-          this.shadowRoot.appendChild(styles.shadow)
-        }
-
-        // Apply to document head if not already there
-        if (styles.document && !styles.document.isConnected) {
-          document.head.appendChild(styles.document)
-        }
-      } catch (error) {
-        console.error('Style loading failed:', error)
-      }
     }
   }
 
@@ -511,6 +488,7 @@ export class AppLayoutAlphaElement extends HTMLElement {
       }),
     )
   }
+
 
   #onKeyboardEscape = (
     evt /*: HTMLBodyElementEventMap['keydown'] */,
@@ -666,7 +644,34 @@ export class AppLayoutAlphaElement extends HTMLElement {
         'content',
         'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no',
       )
+      newMetaViewport.setAttribute('data-comment-for', this.localName)
       d.head.appendChild(newMetaViewport)
+    }
+  }
+
+  async #mutateHostForStyleSheets() {
+    try {
+      const styles = await optimizedExternalStyles(
+        window,
+        LIST_EXTERNAL_STYLE,
+        {
+          componentName: this.localName,
+          avoidDuplicates: true,
+        },
+      )
+      // Apply to Shadow DOM
+      if (styles.shadow instanceof CSSStyleSheet) {
+        this.shadowRoot.adoptedStyleSheets = [styles.shadow]
+      } else if (styles.shadow) {
+        this.shadowRoot.appendChild(styles.shadow)
+      }
+
+      // Apply to document head if not already there
+      if (styles.document && !styles.document.isConnected) {
+        document.head.appendChild(styles.document)
+      }
+    } catch (error) {
+      console.error('Style loading failed:', error)
     }
   }
 }

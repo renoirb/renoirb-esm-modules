@@ -1,4 +1,5 @@
 let AppLayoutAlphaElement
+let AppLayoutGreyElement
 
 /**
  * Gracefully handles environments without Custom Element support.
@@ -13,6 +14,10 @@ if (
     './src/browser.mjs'
   )
   AppLayoutAlphaElement = ElementClass$1
+  const { AppLayoutGreyElement: ElementClass$2 } = await import(
+    './src/browser.mjs'
+  )
+  AppLayoutGreyElement = ElementClass$2
 } else {
   AppLayoutAlphaElement = class NoOpAppLayoutAlphaElement {
     constructor() {
@@ -22,8 +27,20 @@ if (
       )
     }
   }
+  AppLayoutGreyElement = class NoOpAppLayoutGreyElement {
+    constructor() {
+      throw new Error(
+        'AppLayoutGreyElement is not supported in this environment. ' +
+          'Ensure you are running in a browser with support for Custom Elements.',
+      )
+    }
+  }
 }
 
-export { AppLayoutAlphaElement }
+export {
+  /*                    */
+  AppLayoutAlphaElement,
+  AppLayoutGreyElement,
+}
 
 export default AppLayoutAlphaElement
