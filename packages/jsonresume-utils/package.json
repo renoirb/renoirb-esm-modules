@@ -1,0 +1,9 @@
+{
+  "name": "@renoirb/jsonresume-utils",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./core.mjs",
+    "./deno": "./deno.mjs",
+    "./core": "./core.mjs"
+  }
+}

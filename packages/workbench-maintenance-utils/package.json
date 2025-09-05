@@ -1,0 +1,8 @@
+{
+  "name": "@renoirb/workbench-maintenance-utils",
+  "version": "0.1.0",
+  "exports": {
+    "./deno": "./deno.ts",
+    "./browser": "./browser.mjs"
+  }
+}

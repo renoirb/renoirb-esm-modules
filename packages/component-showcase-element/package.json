@@ -1,0 +1,8 @@
+{
+  "name": "@renoirb/component-showcase-element",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./browser.mjs",
+    "./browser": "./browser.mjs"
+  }
+}
