@@ -30,6 +30,12 @@ import {
   optimizedExternalStyles,
 } from '@renoirb/element-utils'
 
+import {
+  /*                    */
+  svgStringSplatterBack,
+  svgStringSplatterTop,
+} from './alpha-element-assets-svg.mjs'
+
 const LIST_EXTERNAL_STYLE = [
   'https://renoirboulanger.com/_nuxt/vendors/app.css',
   'https://renoirboulanger.com/_nuxt/app.css',
@@ -38,11 +44,13 @@ const LIST_EXTERNAL_STYLE = [
 const TEMPLATE = `
   <div id="__layout">
     <div class="layouts--homepage">
+      ${/* Huge SVG file removed for brevity */ svgStringSplatterBack}
       <nav class="app-side-bar--component fixed z-40 w-full top" id="app-side-bar-nav" >
         <div
           class="zone__sandwich__top container flex items-center justify-between py-4 mx-auto"
           style="position: relative"
         >
+          ${/* Huge SVG file removed for brevity */ svgStringSplatterTop}
           <div
             class="app-side-bar__identity md:px-5 flex items-center"
           >
