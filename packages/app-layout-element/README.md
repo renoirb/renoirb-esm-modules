@@ -27,7 +27,7 @@ without routing concerns.
 <script type="importmap">
   {
     "imports": {
-      "@renoirb/app-layout-element": "https://dist.renoirb.com/esm/own/app-layout-element/v1.0.0/browser.mjs",
+      "@renoirb/app-layout-element": "https://dist.renoirb.com/esm/own/app-layout-element/v0.3.0/browser.mjs",
       "@renoirb/element-utils": "https://dist.renoirb.com/esm/own/element-utils/v0.5.0/browser.mjs"
     }
   }
@@ -155,4 +155,5 @@ MIT
 ---
 
 _Part of the
-[@renoirb ESM modules collection](https://dist.renoirb.com/esm/own/)_
+[@renoirb ESM modules collection](https://github.com/renoirb/renoirb-esm-modules)_
+
