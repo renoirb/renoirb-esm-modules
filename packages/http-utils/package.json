@@ -1,0 +1,9 @@
+{
+  "name": "@renoirb/http-utils",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./core.mjs",
+    "./browser": "./browser.mjs",
+    "./core": "./core.mjs"
+  }
+}
