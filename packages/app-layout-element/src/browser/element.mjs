@@ -650,8 +650,6 @@ export class AppLayoutAlphaElement extends HTMLElement {
       const message = `Invalid location to use <${this.localName} />, make sure it's a direct descendant of body`
       console.error(message)
       if (this.shadowRoot == null) return
-      this.shadowRoot.innerHTML = `<div style="color: red;">${message}</div>`
-      throw new Error(message)
     }
   }
 
