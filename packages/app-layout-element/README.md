@@ -1,9 +1,9 @@
-# AppLayoutElement
+# @renoirb/app-layout-element
 
 A responsive application shell Web Component that provides consistent navigation
 structure and content layout across web applications.
 
-Handles the "chrome" of your application - navigation bars, sidebars, footer -
+Handles the "*chrome*" of your Web application —navigation bars, sidebars, footer—
 without routing concerns.
 
 ## Features
