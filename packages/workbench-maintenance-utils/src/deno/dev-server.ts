@@ -66,6 +66,10 @@ async function handleRequest(
 
   console.log(`Request for: ${filepath}`)
 
+  const devServerResponseHeaders = {
+    'Access-Control-Allow-Origin': '*',
+  }
+
   try {
     const normalizedPath = join(
       projectRoot,
@@ -126,11 +130,19 @@ async function handleRequest(
         }
 
         return new Response(modified, {
-          headers: { 'content-type': contentType },
+          headers: {
+            ...devServerResponseHeaders,
+            'content-type': contentType,
+          },
         })
       }
 
-      return new Response(file, { headers: { 'content-type': contentType } })
+      return new Response(file, {
+        headers: {
+          ...devServerResponseHeaders,
+          'content-type': contentType,
+        }
+      })
     } catch (localError) {
       // If this is an import from our mapped URLs, try to resolve it locally first
       if (filepath.startsWith('/esm-modules/')) {
@@ -162,7 +174,10 @@ async function handleRequest(
           const ext = localPath.substring(localPath.lastIndexOf('.'))
           const contentType = MIME_TYPES[ext] || 'text/plain'
           return new Response(file, {
-            headers: { 'content-type': contentType },
+            headers: {
+              ...devServerResponseHeaders,
+              'content-type': contentType,
+            },
           })
         } catch (mappedError) {
           console.error(
