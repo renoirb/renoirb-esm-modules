@@ -23,6 +23,20 @@
   </head>
   <body>
     <app-layout>
+
+      <nav slot="left-bottom-sidebar">
+        <a
+          href="/?package=jsonresume-element"
+          class="hover:bg-teal-500 hover:text-white flex items-center p-4"
+          ><span class="mr-2"> Workspace </span></a
+        >
+        <a
+          href="/packages/jsonresume-element/example.html"
+          class="hover:bg-teal-500 hover:text-white flex items-center p-4"
+          ><span class="mr-2"> Resume Example </span></a
+        >
+      </nav>
+
       <div class="document document--item">
         <div class="body">
 
@@ -45,8 +59,10 @@
 
         </div>
       </div>
-      <div slot="top-right"></div>
-      <div slot="footer-left"></div>
+      <div slot="top-right">
+        <a href="https://github.com/renoirb/renoirb-esm-modules/">renoirb-esm-modules</a>
+        &nbsp;&nbsp;&nbsp;
+      </div>
       <div slot="top-left">
         <a
           href="/"
@@ -55,6 +71,7 @@
           Workbench
         </a>
       </div>
+      <div slot="footer-left"></div>
     </app-layout>
 
     <script type="module">
