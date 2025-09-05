@@ -400,29 +400,34 @@ export class AppLayoutAlphaElement extends HTMLElement {
   setSlideOutNavOpenState = (desiredState = false) => {
     if (this.shadowRoot) {
       if (this.$elSlideOutNav) {
-        const cnameOpened = this.$elSlideOutNav.dataset.cnameOpened || ''
-        const cnameClosed = this.$elSlideOutNav.dataset.cnameClosed || ''
+        const $elSlideOutNav = this.$elSlideOutNav
+        const cnameOpened = $elSlideOutNav.dataset.cnameOpened || '' // Should always be set, see #onConstructorEnd
+        const cnameClosed = $elSlideOutNav.dataset.cnameClosed || ''
         if (desiredState) {
-          this.$elSlideOutNav.removeAttribute('hidden')
-          window.setTimeout(() => {
-            this.$elSlideOutNav?.classList.add(cnameOpened)
-            this.$elSlideOutNav?.classList.remove(cnameClosed)
-          }, 10)
+          $elSlideOutNav.removeAttribute('hidden')
+          requestAnimationFrame(() => {
+            $elSlideOutNav.classList.add(cnameOpened)
+            $elSlideOutNav.classList.remove(cnameClosed)
+          })
         } else {
-          this.$elSlideOutNav.classList.remove(cnameOpened)
-          this.$elSlideOutNav.classList.add(cnameClosed)
-          window.setTimeout(() => {
-            if (this.$elSlideOutNav && !this.#isOpened) {
-              this.$elSlideOutNav?.setAttribute('hidden', 'true')
+          console.log('hello! 2')
+          $elSlideOutNav.classList.remove(cnameOpened)
+          $elSlideOutNav.classList.add(cnameClosed)
+          $elSlideOutNav.addEventListener('transitionend', (e) => {
+            console.log('hello! 1')
+            // Only act on the target element (not child transitions)
+            if (e.target === $elSlideOutNav && !this.#isOpened) {
+              $elSlideOutNav.setAttribute('hidden', 'true')
             }
-          }, 500)
+          }, { once: true })
         }
       }
       if (this.$elAppLayout) {
+        const $elAppLayout = this.$elAppLayout
         if (desiredState) {
-          this.$elAppLayout?.classList.add('is-opened')
+          $elAppLayout?.classList.add('is-opened')
         } else {
-          this.$elAppLayout?.classList.remove('is-opened')
+          $elAppLayout?.classList.remove('is-opened')
         }
       }
       if (this.$elSlideOutNavOverlay) {
@@ -445,7 +450,6 @@ export class AppLayoutAlphaElement extends HTMLElement {
       }
       if(this.$elSlideOutNavBtnOpen){
         this.$elSlideOutNavBtnOpen.setAttribute('aria-expanded', String(desiredState))
-        console.log('this.$elSlideOutNavBtnOpen', this.$elSlideOutNavBtnOpen) // DEBUG
       }
       this.#isOpened = desiredState
     }
@@ -492,12 +496,15 @@ export class AppLayoutAlphaElement extends HTMLElement {
   #dispatch = (
     eventName,
     evt,
+    {
+      opened = this.isOpen /*: boolean */
+    },
   ) => {
     this.dispatchEvent(
       new CustomEvent(this.localName, {
         detail: {
           eventName,
-          isOpen: this.isOpen,
+          opened,
           originalEvent: evt,
         },
         bubbles: true,
@@ -514,8 +521,9 @@ export class AppLayoutAlphaElement extends HTMLElement {
       if (/escape/i.test(key)) {
         evt.preventDefault()
         evt.stopImmediatePropagation()
-        this.setSlideOutNavOpenState(false)
-        this.#dispatch('slide-out-nav:close', evt)
+        const opened = false
+        this.setSlideOutNavOpenState(opened)
+        this.#dispatch('slide-out-nav:close', evt, { opened })
       }
     }
   }
@@ -531,8 +539,9 @@ export class AppLayoutAlphaElement extends HTMLElement {
     if (toggle === 'dismiss-overlay') {
       evt.preventDefault()
       evt.stopImmediatePropagation()
-      this.setSlideOutNavOpenState(false)
-      this.#dispatch('slide-out-nav:close', evt)
+      const opened = false
+      this.setSlideOutNavOpenState(opened)
+      this.#dispatch('slide-out-nav:close', evt, { opened })
       return
     }
     if (!(btnEl instanceof HTMLElement)) {
@@ -541,11 +550,12 @@ export class AppLayoutAlphaElement extends HTMLElement {
     if (toggle) {
       evt.preventDefault()
       evt.stopImmediatePropagation()
-      const newOpenState = !this.isOpen
-      this.setSlideOutNavOpenState(newOpenState)
+      const opened = !this.isOpen
+      this.setSlideOutNavOpenState(opened)
       this.#dispatch(
-        newOpenState ? 'slide-out-nav:open' : 'slide-out-nav:close',
+        opened ? 'slide-out-nav:open' : 'slide-out-nav:close',
         evt,
+        { opened },
       )
     }
     window.setTimeout(() => {
