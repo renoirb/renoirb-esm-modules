@@ -6,8 +6,26 @@
       import {
         /*                                  */
         AppLayoutAlphaElement,
+        AppLayoutGreyElement,
       } from '@renoirb/app-layout-element'
-      customElements.define('app-layout', AppLayoutAlphaElement)
+      
+      const VALID_VARIANTS = ['alpha', 'grey']
+      let variant = 'alpha'
+      const resolver = new URL(window.location).searchParams.get('variant') ?? variant
+      if (VALID_VARIANTS.includes(resolver)) {
+        variant = resolver
+      }
+      switch (variant) {
+        case 'alpha':
+          customElements.define('app-layout', AppLayoutAlphaElement)
+          break
+        case 'grey':
+          customElements.define('app-layout', AppLayoutGreyElement)
+          break
+        default:
+          throw new Error(`Unknown variant "${variant}"`)
+      }
+      console.log('flipping between AppLayoutAlphaElement and AppLayoutGreyElement', { variant, resolver })
     </script>
   </head>
   <body>
@@ -20,6 +38,7 @@
         <a href="https://github.com/renoirb/renoirb-esm-modules/">renoirb-esm-modules</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
       </div>
+
       <div slot="footer-left">
         my own footer.
       </div>
@@ -29,39 +48,32 @@
         <summary>
           <h3>Some Document</h3>
           <details>
-            <p>
-              Renoir Boulanger<br />
-              2025-02-04
-            </p>
-            <p>
-              Hiring Manager<br />
-              SomeCorp Corp.
-            </p>
-            <p>
-              I am writing to express my interest in the Web Developer position at
-              SomeCorp Corp. Your mission of "building a more human Web" deeply
-              resonates with my work in web protocols and standards, particularly
-              through my active participation in
-              <abbr title="World Wide Web Consortium">W3C</abbr> Working Groups.
-              I've contributed to the Web Components Community Group's ContextAPI
-              development and participated in the Solid Community Group, working on
-              decentralized data and access control protocols—areas which feels to
-              be aligned with <em>Lorem</em> and <tt>Ipsum</tt>.
-            </p>
-            <p>
-              Best regards,<br />
-              Renoir Boulanger
-            </p>
+            <h4>Some Photo</h4>
+            <img src="https://placecats.com/500/600?fit=cover&position=center" width="500" height="600" alt="A cat" />
             <hr />
-            <p>
-              Contents from this page is coming from a GitHub Gist:
-              <a
-                href="https://gist.github.com/renoirb/"
-                target="_blank"
-                >Source Gist</a
-              >
-            </p>
           </details>
+          <h2>Variants</h2>
+          <dl>
+            <dd>
+              <button data-variant="grey">AppLayoutGreyElement</button>
+            </dd>
+            <dd>
+              <button data-variant="alpha">AppLayoutAlphaElement</button>
+            </dd>
+          </dl>
+          <script>
+            document.addEventListener('click', (e) => {
+              const srcElement = e.srcElement
+              if (srcElement.tagName !== 'BUTTON') {
+                return
+              }
+              e.preventDefault()
+              const variant = srcElement.dataset.variant
+              const url = new URL(window.location)
+              url.searchParams.set('variant', variant)
+              window.location = url
+            })
+          </script>
         </summary>
       </section>
 
