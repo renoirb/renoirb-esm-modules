@@ -49,6 +49,7 @@
     "./packages/jsonresume-utils",
     "./packages/markdown-content-element",
     "./packages/notice-box-element",
+    "./packages/progress-bar-element",
     "./packages/value-date-element",
     "./packages/workbench-maintenance-utils"
   ],
@@ -64,6 +65,7 @@
     "@renoirb/jsonresume-utils": "./packages/jsonresume-utils/core.mjs",
     "@renoirb/markdown-content-element": "./packages/markdown-content-element/browser.mjs",
     "@renoirb/notice-box-element": "./packages/notice-box-element/browser.mjs",
+    "@renoirb/progress-bar-element": "./packages/progress-bar-element/browser.mjs",
     "@renoirb/value-date-element": "./packages/value-date-element/browser.mjs",
     "@renoirb/workbench-maintenance-utils/": "./packages/workbench-maintenance-utils/"
   }

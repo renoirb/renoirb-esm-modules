@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Progress Bar Element Workbench</title>
+
+    <script type="module">
+      import {
+        /*                                  */
+        ProgressBarElement,
+      } from '@renoirb/progress-bar-element'
+      customElements.define('the-tested-component', ProgressBarElement)
+    </script>
+
+  </head>
+  <body>
+    <section>
+      <my-component-showcase name="progress-bar-element" slots="alpha bravo charlie">
+
+        <template slot="alpha" title="Almost the same width">
+          <the-tested-component percent="15" color-code="warm">
+            <p>-4,9 °C to 7,5 °C</p>
+          </the-tested-component>
+        </template>
+
+
+        <template slot="bravo" title="Clearly fine">
+          <the-tested-component percent="56" color-code="neutral">
+            <p>-4,9 °C to 7,5 °C</p>
+          </the-tested-component>
+        </template>
+
+
+        <template slot="charlie" title="Just too small">
+          <the-tested-component percent="11" color-code="cool">
+            <p>-4,9 °C to 7,5 °C</p>
+          </the-tested-component>
+        </template>
+
+      </my-component-showcase>
+    </section>
+  </body>
+</html>
