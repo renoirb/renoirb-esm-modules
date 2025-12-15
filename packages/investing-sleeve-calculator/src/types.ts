@@ -6,7 +6,20 @@ export type CurrencyCode = 'CAD' | 'USD'
 
 /**
  * Weights configuration for a sleeve
- * Maps security symbol to its weight percentage (e.g., { AVDV: 10, VUN: 13 })
+ * 
+ * Maps security symbol to its weight percentage 
+ * 
+ * @remarks
+ * - Weights should sum to 100 for each sleeve
+ * - Can be fractional (e.g., 33.33)
+ *
+ * @example
+ * ```ts
+ * const weights: SleeveWeights = {
+ *   PHYS: 60.05, // Sprott Physical Gold Trust
+ *   PSLV: 39.95, // Sprott Physical Silver Trust
+ * }
+ * ```
  */
 export interface SleeveWeights {
   [symbol: string]: number

@@ -13,9 +13,10 @@ import {
  * - Edge cases and validation scenarios
  *
  * @example **Usage in tests:**
- * ```typescript
- * import { EXAMPLE_SLEEVES_CONFIG } from './sleeves.examples.ts';
- * const calculator = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG);
+ * ```ts
+ * import { SleeveCalculator } from './calculator.ts'
+ * import { EXAMPLE_SLEEVES_CONFIG } from './sleeves.examples.ts'
+ * const calculator = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG)
  * ```
  *
  * @remark
@@ -166,23 +167,27 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
  *
  * **Example 1: CAD sleeve with USD securities**
  * ```typescript
- * const calc = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG);
- * const result = calc.calculate('core', 10000, 1.35);
+ * import { EXAMPLE_SLEEVES_CONFIG } from './sleeves.examples.ts'
+ * import { SleeveCalculator } from './calculator.ts'
+ * const calculator = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG)
+ * const calcResult = calculator.calculate('core', 10000, 1.35)
  * // AVDV (10%): CAD $1,000 / 1.35 = USD $740.74
  * // AVUV (6%): CAD $600 / 1.35 = USD $444.44
  * // VUN (13%): CAD $1,300 (stays in CAD)
  * ```
  *
  * **Example 2: USD-only sleeve**
- * ```typescript
- * const result = calc.calculate('core-USD', 10000, 1.35);
+ * ```typescript ignore
+ * // ... using the same calculator instance as above
+ * const calcResult = calculator.calculate('core-USD', 10000, 1.35);
  * // All allocations in USD, no conversion needed
  * // VTI (13%): USD $1,300
  * ```
  *
  * **Example 3: CAD-only sleeve**
- * ```typescript
- * const result = calc.calculate('bullion', 5000, 1.35);
+ * ```typescript ignore
+ * // ... using the same calculator instance as above
+ * const calcResult = calculator.calculate('bullion', 5000, 1.35);
  * // PHYS (60%): CAD $3,000
  * // PSLV (40%): CAD $2,000
  * // Exchange rate unused

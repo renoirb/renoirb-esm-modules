@@ -31,22 +31,20 @@ Pure TypeScript calculation engine for portfolio sleeve (i.e. a sub-grouping fro
 
 ```
 ./
-├── CLAUDE.md                          # This file
-├── PACKAGE_CONTEXT.md                 # Comprehensive design doc
-├── PLAN_REFACTOR_SRC_DIRECTORY.md     # Current refactoring plan
-├── README.md                          # Package overview
-├── deno.json                          # Deno configuration
-├── main.ts                            # CLI entry point (bootstrapper)
-├── main_cli.ts                        # Interactive CLI implementation
-├── src/
-│   ├── index.ts                       # Public API exports
-│   ├── types.ts                       # Type definitions
-│   ├── calculator.ts                  # SleeveCalculator class
-│   ├── calculator.test.ts             # SleeveCalculator tests
-│   ├── drift.ts                       # DriftCalculator class
-│   ├── drift.test.ts                  # DriftCalculator tests
-│   ├── sleeves.examples.ts            # Example sleeve configurations
-│   └── example.ts                     # Usage examples
+ ├── CLAUDE.md               # This file
+ ├── PACKAGE_CONTEXT.md      # Comprehensive design doc
+ ├── README.md               # Package overview
+ ├── deno.json               # Deno configuration
+ ├── core.ts                 # Main entry point
+ ├── deno.ts                 # Deno's Interactive CLI implementation
+ └── src/
+     ├── index.ts            # Public API exports
+     ├── types.ts            # Type definitions
+     ├── calculator.ts       # SleeveCalculator class
+     ├── calculator.test.ts  # SleeveCalculator tests (5 test suites)
+     ├── drift.ts            # DriftCalculator class
+     ├── drift.test.ts       # DriftCalculator tests (10 test suites)
+     └── sleeves.examples.ts # Example sleeve configurations
 ```
 
 ## Core Classes
@@ -57,9 +55,9 @@ Pure TypeScript calculation engine for portfolio sleeve (i.e. a sub-grouping fro
 
 **Usage:**
 
-```typescript
+```ts ignore
 const calculator = new SleeveCalculator(sleevesConfig)
-const result = calculator.calculate('core', 5000, 1.42)
+const calcResult = calculator.calculate('core', 5000, 1.42)
 // Returns targets for each security in native currency
 ```
 
@@ -69,8 +67,8 @@ const result = calculator.calculate('core', 5000, 1.42)
 
 **Usage:**
 
-```typescript
-const drift = new DriftCalculator(calculationResult)
+```ts ignore
+const drift = new DriftCalculator(calcResult)
 drift.setCurrentlyOwning('VUN', 946)
 const tasks = drift.getTasks()
 // Returns deltas with buy/sell/hold actions
@@ -97,9 +95,9 @@ const tasks = drift.getTasks()
 - ✓ Drift calculator implementation (`DriftCalculator`)
 - ✓ Type definitions
 - ✓ Comprehensive test suite (15 test suites, 49 test steps)
-  - ✓ `SleeveCalculator` tests (`calculator.test.ts`)
-  - ✓ `DriftCalculator` tests (`drift.test.ts`)
-- ✓ Interactive CLI tool (`main_cli.ts`)
+  - ✓ `SleeveCalculator` tests ([`calculator.test.ts`](./src/calculator.test.ts))
+  - ✓ `DriftCalculator` tests ([`drift.test.ts`](./src/drift.test.ts))
+- ✓ Interactive CLI tool ([`deno.ts`](./deno.ts))
   - ✓ SELL-first task ordering (liquidity prioritization)
   - ✓ Minified state output for logging/reproduction
 - ✓ Example usage files
@@ -128,15 +126,17 @@ const tasks = drift.getTasks()
 This package provides pure calculation utilities for portfolio sleeve allocation and drift analysis.
 
 **Parent System Context:**
+
 - Location: `<Path to Obsidian Vault>/Agentic-Writing-Contexts/2025-11-06-Investing-Portfolio-Balancing-Strategy/`
 - This package will be **imported by** that system for sleeve calculations
 - Self-contained library with no dependencies on parent system files
 
 **Sleeve Configuration:**
+
 - Built-in examples: `./src/sleeves.examples.ts` (for testing and demos)
 - CLI accepts optional path to custom sleeves.yaml:
   ```bash
-  deno run --allow-read main_cli.ts /path/to/sleeves.yaml
+  deno run --allow-read deno.ts /path/to/sleeves.yaml
   ```
 - Production systems provide their own sleeve configurations
 
@@ -159,7 +159,7 @@ deno test
 **Running interactive CLI:**
 
 ```bash
-deno run --allow-read main.ts
+deno --allow-read deno.ts
 # or
 deno task cli
 ```
@@ -174,7 +174,7 @@ deno task cli
 **Running example:**
 
 ```bash
-deno run --allow-read main_cli.ts
+deno run --allow-read deno.ts
 ```
 
 **Before making changes:**

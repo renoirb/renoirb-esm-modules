@@ -12,7 +12,6 @@
   },
   "compilerOptions": {
     "lib": ["deno.ns", "dom"],
-    "allowJs": true,
     "checkJs": true,
     "strict": true,
     "noImplicitAny": true,

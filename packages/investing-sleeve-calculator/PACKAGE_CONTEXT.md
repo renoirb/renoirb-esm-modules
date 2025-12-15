@@ -1,13 +1,3 @@
----
-title: Package Context For Sleeve Calculator
-aliases:
-  - Package Context For Sleeve Calculator
-tags: []
-created: 2025-12-11
-modified: 2025-12-15
-earlier-title-key: Package Context For Sleeve Calculator
----
-
 # Package Context - Sleeve Calculator
 
 A standalone, pure TypeScript calculation engine for portfolio sleeve target amount calculations with USD/CAD currency conversion. Designed to be imported by portfolio management systems.
@@ -57,12 +47,14 @@ It's a single-purpose math utility: **sleeve + amount + rate → breakdown**
 This is a **standalone calculation library** designed to be imported by portfolio management systems.
 
 **Key Characteristics:**
+
 - Zero dependencies (Deno standard library only)
 - Self-contained with example data for testing
 - No file I/O requirements (pure functions)
 - Can be used in Deno, Node, or browser environments
 
 **Relationship to Parent Portfolio System:**
+
 - Parent system imports this package for sleeve calculations
 - This package does NOT depend on parent system files
 - Production systems provide their own sleeve configurations
@@ -74,8 +66,17 @@ This is a **standalone calculation library** designed to be imported by portfoli
 
 The calculator is instantiated once with the full sleeves configuration:
 
-```typescript
-const calculator = new SleeveCalculator(parsedSleevesYamlObj)
+```typescript ignore
+const parsedSleevesObj: SleevesConfig = {
+  sleeves: {
+    bullion: {
+      PHYS: 60,
+      PSLV: 40,
+    },
+  },
+}
+
+const calculator = new SleeveCalculator(parsedSleevesObj)
 ```
 
 **Constructor responsibilities:**
@@ -91,29 +92,9 @@ const calculator = new SleeveCalculator(parsedSleevesYamlObj)
 
 **Option A - Simple positional parameters:**
 
-```typescript
-const amounts = calculator.calculate('core', 5000, 1.40)
+```typescript ignore
+const calcResult = calculator.calculate('core', 5000, 1.40)
 // sleeveName, totalCAD, exchangeRate
-```
-
-**Option B - Options object:**
-
-```typescript
-const amounts = calculator.calculate({
-  sleeve: 'core',
-  totalCAD: 5000,
-  exchangeRate: 1.40,
-})
-```
-
-**Option C - Separate ratio getter:**
-
-```typescript
-// For specific allocation
-const amounts = calculator.calculate('core', 5000, 1.40)
-
-// Or get just the ratios/percentages
-const ratios = calculator.getRatios('core')
 ```
 
 **Current implementation uses Option A** for simplicity, but this should be reviewed.
@@ -135,11 +116,11 @@ const ratios = calculator.getRatios('core')
 
 ## Example Usage
 
-```typescript
+```typescript ignore
 import SleeveCalculator from '@renoirb/investing-sleeve-calculator'
 
 // Load and parse sleeves.yaml
-const parsedSleevesYamlObj = {
+const parsedSleevesObj = {
   sleeves: {
     core: {
       weights: {
@@ -176,12 +157,12 @@ const parsedSleevesYamlObj = {
 }
 
 // Instantiate calculator (validates config)
-const calculator = new SleeveCalculator(parsedSleevesYamlObj)
+const calculator = new SleeveCalculator(parsedSleevesObj)
 
 // Calculate targets for 5K CAD in core sleeve at 1.42 exchange rate
-const result = calculator.calculate('core', 5000, 1.42)
+const calcResult = calculator.calculate('core', 5000, 1.42)
 
-// result.targets contains each security and its target amount:
+// calcResult.targets contains each security and its target amount:
 // [
 //   { symbol: 'AVDV', targetAmount: 352.11, currency: 'USD', weight: 10, normalizedWeight: 0.10 },
 //   { symbol: 'AVUV', targetAmount: 211.27, currency: 'USD', weight: 6, normalizedWeight: 0.06 },
@@ -211,7 +192,6 @@ export interface SleeveWeights {
 export interface SleeveDefinition {
   weights: SleeveWeights
   usd_symbols?: string[] // Optional, defaults to []
-  min_task_threshold?: number // Not used by calculator, but preserved
 }
 
 export interface SleevesConfig {
@@ -224,6 +204,8 @@ export interface SleevesConfig {
 ### Output Types
 
 ```typescript
+import { type CurrencyCode } from './core.ts'
+
 export interface SecurityTarget {
   symbol: string
   targetAmount: number // In security's native currency
@@ -266,7 +248,7 @@ export interface CalculationResult {
 
 All validation errors should fail early with descriptive messages:
 
-```typescript
+```typescript ignore
 // Example error messages
 throw new Error('Sleeve "core" not found in configuration')
 throw new Error('Sleeve "core" weights sum to 95.5%, expected ~100%')
@@ -277,22 +259,21 @@ throw new Error('Exchange rate must be greater than 0')
 ## File Structure
 
 ```
-sleeve-calculator/
-├── PACKAGE_CONTEXT.md     # This file
-├── CLAUDE.md              # Project context for LLM sessions
-├── README.md              # Package overview
-├── deno.json              # Deno configuration
-├── main.ts                # CLI entry point (bootstrapper)
-├── main_cli.ts            # Interactive CLI implementation
-├── src/
-│   ├── index.ts           # Public API exports
-│   ├── types.ts           # Type definitions
-│   ├── calculator.ts      # SleeveCalculator class
-│   ├── calculator.test.ts # SleeveCalculator tests (5 test suites)
-│   ├── drift.ts           # DriftCalculator class
-│   ├── drift.test.ts      # DriftCalculator tests (10 test suites)
-│   ├── sleeves.examples.ts# Example sleeve configurations
-│   └── example.ts         # Usage examples
+./
+ ├── PACKAGE_CONTEXT.md     # This file
+ ├── CLAUDE.md              # Project context for LLM sessions
+ ├── README.md              # Package overview
+ ├── deno.json              # Deno configuration
+ ├── core.ts                # Main entry point (bootstrapper)
+ ├── deno.ts                # Deno's Interactive CLI implementation
+ └── src/
+     ├── index.ts           # Public API exports
+     ├── types.ts           # Type definitions
+     ├── calculator.ts      # SleeveCalculator class
+     ├── calculator.test.ts # SleeveCalculator tests (5 test suites)
+     ├── drift.ts           # DriftCalculator class
+     ├── drift.test.ts      # DriftCalculator tests (10 test suites)
+     └── sleeves.examples.ts# Example sleeve configurations
 ```
 
 ## DriftCalculator - Companion Class
@@ -309,7 +290,7 @@ The `DriftCalculator` class works alongside `SleeveCalculator` to compare target
 
 ### API
 
-```typescript
+```typescript ignore
 // 1. Get targets from calculator
 const targets = calculator.calculate('core', 5000, 1.39)
 
@@ -339,7 +320,7 @@ const restored = DriftCalculator.fromJSON(state)
 
 Currency is inferred from targets - no need to specify when setting actuals:
 
-```typescript
+```typescript ignore
 drift.setCurrentlyOwning('AVDV', 299) // Knows it's USD from targets
 drift.setCurrentlyOwning('VUN', 946) // Knows it's CAD from targets
 ```
@@ -388,10 +369,13 @@ The minified JSON state can be used to:
 
 ```bash
 # Use built-in example sleeves
-deno run --allow-read main.ts
+deno run --allow-read cli.ts
+
+# Or run deno.ts directly
+deno run --allow-read deno.ts
 
 # Load custom sleeves.yaml
-deno run --allow-read main_cli.ts /path/to/sleeves.yaml
+deno run --allow-read deno.ts /path/to/sleeves.yaml
 
 # Via task (uses examples)
 deno task cli
@@ -399,8 +383,8 @@ deno task cli
 
 ### Implementation
 
-- **main.ts**: Minimal bootstrapper (invokes main_cli.ts)
-- **main_cli.ts**: Full interactive implementation
+- **core.ts**: Dependency free module
+- **deno.ts**: Full interactive implementation
   - Input validation with retry
   - Default values for quick testing
   - Cancel support (Ctrl+C)
@@ -453,7 +437,7 @@ This package will be used by:
 
 ### Interactive CLI
 
-- [x] Full implementation (main_cli.ts)
+- [x] Full implementation (deno.ts)
 - [x] Input prompts with validation
 - [x] Task ordering (SELL → BUY → HOLD)
 - [x] Minified state output
@@ -476,6 +460,7 @@ This package will be used by:
 ## Related Files
 
 **Parent Portfolio System** (this package will be imported by):
+
 - System documentation: `<Path to Obsidian Vault>/Agentic-Writing-Contexts/2025-11-06-Investing-Portfolio-Balancing-Strategy/`
 - Key context files:
   - `CLAUDE.md` - Portfolio system overview
@@ -483,11 +468,12 @@ This package will be used by:
   - `2025-11-06-PORTFOLIO-SYSTEM-SUMMARY.md` - Complete requirements
 
 **This Package:**
+
 - Type definitions: `./src/types.ts`
 - Example configurations: `./src/sleeves.examples.ts`
 - Core calculator: `./src/calculator.ts`
 - Drift calculator: `./src/drift.ts`
-- Interactive CLI: `./main_cli.ts`
+- Interactive CLI: `./deno.ts`
 
 ## Notes
 

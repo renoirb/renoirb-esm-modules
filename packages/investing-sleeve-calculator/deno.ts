@@ -1,4 +1,15 @@
-import { parse as parseYAML } from '@std/yaml'
+/**
+ * Main entry point for sleeve calculator CLI
+ *
+ * Usage:
+ *   deno run --allow-read deno.ts
+ *   deno task cli
+ */
+
+import {
+  //
+  parse as parseYAML,
+} from '@std/yaml'
 
 import {
   //
@@ -9,12 +20,12 @@ import {
   DriftCalculator,
   SleeveCalculator,
   SleevesConfig,
-} from './src/index.ts'
+} from './core.ts'
 import type {
   //
   CalculationResult,
   DeltaResult,
-} from './src/types.ts'
+} from './core.ts'
 
 /**
  * Interactive CLI for portfolio sleeve calculator
@@ -130,23 +141,24 @@ const formatCalculationResult = (result: CalculationResult): void => {
 }
 
 const maybeLoadSleevesYaml = async (path: string): Promise<SleevesConfig> => {
-  let out: SleevesConfig
   // Load sleeves.yaml from parent directory
   const sleevesYaml = await Deno.readTextFile(path)
-  out = parseYAML(sleevesYaml) as SleevesConfig
+  const out = parseYAML(sleevesYaml) as SleevesConfig
 
   return out
 }
 
-export const runInteractiveCLI = async (): Promise<void> => {
-  let sleevesConfig: SleevesConfig = {}
+export const main = async (): Promise<void> => {
+  let sleevesConfig: SleevesConfig = {} as SleevesConfig
 
-  const [ possibleSleevesYamlPath ] = Deno.args
+  const [possibleSleevesYamlPath] = Deno.args
   if (possibleSleevesYamlPath) {
     try {
       sleevesConfig = await maybeLoadSleevesYaml(possibleSleevesYamlPath)
     } catch {
-      console.error(`Could not load sleeves.yaml from "${possibleSleevesYamlPath}"`)
+      console.error(
+        `Could not load sleeves.yaml from "${possibleSleevesYamlPath}"`,
+      )
     }
   } else {
     sleevesConfig = EXAMPLE_SLEEVES_CONFIG
@@ -259,9 +271,8 @@ export const runInteractiveCLI = async (): Promise<void> => {
 }
 
 // Export for testing or programmatic use
-export default runInteractiveCLI
+export default main
 
-// Run if executed directly
 if (import.meta.main) {
-  await runInteractiveCLI()
+  await main()
 }

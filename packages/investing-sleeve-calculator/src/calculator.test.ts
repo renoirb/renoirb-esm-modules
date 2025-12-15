@@ -39,11 +39,11 @@ Deno.test('SleeveCalculator - Constructor validation', async (t) => {
   await t.step('rejects sleeve without weights', () => {
     const badConfig = {
       sleeves: {
-        bad: {} as any,
+        bad: {}, // Missing weights property
       },
     }
     assertThrows(
-      () => new SleeveCalculator(badConfig),
+      () => new SleeveCalculator(badConfig as unknown as SleevesConfig),
       Error,
       'must have a "weights" object',
     )

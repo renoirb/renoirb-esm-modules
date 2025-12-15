@@ -1,15 +1,32 @@
 {
   "name": "@renoirb/investing-sleeve-calculator",
-  "version": "0.1.0",
-  "exports": {
-    ".": "./main.ts"
-  },
+  "version": "0.1.1",
+  "description": "Pure TypeScript calculation engine for portfolio sleeve allocation and drift analysis",
+  "license": "MIT",
   "tasks": {
-    "dev": "deno run --watch main.ts",
-    "test": "deno test"
+    "cli": "deno --allow-read cli.ts",
+    "test": "deno task test:src && deno task test:doc-only",
+    "test:src": "deno test",
+    "test:doc-only": "deno check --doc-only **/*.md"
+  },
+  "exports": {
+    ".": "./core.ts",
+    "./deno": "./deno.ts"
+  },
+  "publish": {
+    "exclude": [
+      "!dist/",
+      "*.test.ts",
+      "PLAN_*.md"
+    ]
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
     "@std/yaml": "jsr:@std/yaml@^1.0.10"
+  },
+  "test": {
+    "exclude": [
+      "PLAN_*.md"
+    ]
   }
 }

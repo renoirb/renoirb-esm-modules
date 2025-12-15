@@ -11,9 +11,20 @@ import type {
  * Pure calculation engine for portfolio sleeve target amounts
  *
  * @example
- * ```typescript
+ * ```ts
+ * import { SleeveCalculator } from './calculator.ts';
+ * const parsedSleevesYaml = {
+ *   sleeves: {
+ *     bullion: {
+ *       weights: {
+ *         PHYS: 60,
+ *         PSLV: 40,
+ *       }
+ *     }
+ *   }
+ * }
  * const calculator = new SleeveCalculator(parsedSleevesYaml);
- * const result = calculator.calculate('core', 5000, 1.42);
+ * const result = calculator.calculate('bullion', 5000, 1.42);
  * ```
  */
 export class SleeveCalculator {

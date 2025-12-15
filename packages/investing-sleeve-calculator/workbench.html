@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Workbench</title>
+  <script type="importmap">
+      {
+        "imports": {
+          "@renoirb/investing-sleeve-calculator": "https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1"
+        }
+      }
+    </script>
+</head>
+
+<body>
+  <section>
+    <my-component-showcase name="Investing Sleeve Calculator" slots="alpha">
+      <template slot="alpha" title="Visualize Amounts for Sleeve 'core' at 5K">
+        <div id="alpha-output"></div>
+      </template>
+    </my-component-showcase>
+  </section>
+    <script type="module">
+    import {
+      SleeveCalculator,
+      DriftCalculator
+    } from '@renoirb/investing-sleeve-calculator'
+
+    const config = {
+      sleeves: {
+        core: {
+          weights: {
+            AVDV: 10, // Avantis International Small Cap Value (USD)
+            AVUV: 6,  // Avantis US Small Cap Value (USD)
+            VUN: 13,  // Vanguard US Total Market (CAD-hedged)
+            ZCN: 13,  // BMO S&P/TSX Capped Composite (Canadian)
+            ZEA: 16,  // BMO MSCI EAFE (International Developed)
+            ZDM: 9,   // BMO International Dividend (Developed Markets)
+            ZEM: 11,  // BMO MSCI Emerging Markets (Emerging)
+            STPL: 13, // Spider Global Natural Resources (Real Assets)
+            ZJPN: 3,  // BMO MSCI Japan (Regional)
+            VA: 3,    // Vanguard FTSE Developed All Cap ex US (International)
+            XCH: 3,   // iShares China Index (Regional)
+          }
+        }
+      }
+    }
+
+    const calc = new SleeveCalculator(config)
+    const result = calc.calculate('core', 5000, 1.42)
+    Object.defineProperty(window, 'sleeveCalcResult', {
+      value: result,
+      writable: false,
+      configurable: false,
+    })
+  </script>
+  <script type="module">
+    const {
+      exchangeRate,
+      sleeveName,
+      totalAmountCAD,
+      targets,
+      summary,
+    } = sleeveCalcResult
+    const el = document.getElementById('alpha-output')
+    const blockTitle = document.createElement('h3')
+    blockTitle.textContent = `Sleeve '${sleeveName}' allocation for $${totalAmountCAD} at ${exchangeRate}`
+    const list = document.createElement('ul')
+    for (const { symbol, targetAmount, currency, weight, normalizedWeight } of targets) {
+      console.log(`${symbol}: targetAmount=${targetAmount}, currency=${currency}, weight=${weight}, normalizedWeight=${normalizedWeight}`)
+      const item = document.createElement('li')
+      item.innerText = `${symbol}: ${targetAmount.toFixed(2)} ${currency} (${weight}%, ${normalizedWeight}%)`
+      list?.appendChild(item)
+    }
+    el?.appendChild(blockTitle)
+    el?.appendChild(list)
+    console.log('targets', targets)
+  </script>
+</body>
+
+</html>
