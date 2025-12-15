@@ -44,6 +44,7 @@
     "./packages/context-api",
     "./packages/element-utils",
     "./packages/http-utils",
+    "./packages/investing-sleeve-calculator",
     "./packages/inline-note-element",
     "./packages/jsonresume-element",
     "./packages/jsonresume-utils",
