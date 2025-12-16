@@ -1,23 +1,33 @@
 {
   "name": "@renoirb/investing-sleeve-calculator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pure TypeScript calculation engine for portfolio sleeve allocation and drift analysis",
   "license": "MIT",
   "tasks": {
     "cli": "deno --allow-read cli.ts",
     "test": "deno task test:src && deno task test:doc-only",
     "test:src": "deno test",
-    "test:doc-only": "deno check --doc-only **/*.md"
+    "test:doc-only": "deno check --doc-only **/*.md",
+    "compile": "deno task compile:aarch64-apple-darwin && deno task compile:aarch64-unknown-linux-gnu && deno task compile:x86_64-apple-darwin && deno task compile:x86_64-unknown-linux-gnu",
+    "compile:aarch64-apple-darwin": "deno compile --no-check --target aarch64-apple-darwin --output dist/bin/aarch64-apple-darwin/calculator deno.ts",
+    "compile:aarch64-unknown-linux-gnu": "deno compile --no-check --target aarch64-unknown-linux-gnu --output dist/bin/aarch64-unknown-linux-gnu/calculator deno.ts",
+    "compile:x86_64-apple-darwin": "deno compile --no-check --target x86_64-apple-darwin --output dist/bin/x86_64-apple-darwin/calculator deno.ts",
+    "compile:x86_64-unknown-linux-gnu": "deno compile --no-check --target x86_64-unknown-linux-gnu --output dist/bin/x86_64-unknown-linux-gnu/calculator deno.ts",
   },
   "exports": {
     ".": "./core.ts",
-    "./deno": "./deno.ts"
+    "./deno": "./deno.ts",
+    "./sleeves-examples": "./src/sleeves.examples.ts"
   },
   "publish": {
     "exclude": [
       "!dist/",
+      "!_dist/",
       "*.test.ts",
-      "PLAN_*.md"
+      "CLAUDE.md",
+      "PACKAGE_CONTEXT.md",
+      "PLAN_*.md",
+      "workbench.html"
     ]
   },
   "imports": {

@@ -2,67 +2,75 @@
 
 ## Summary
 
-> [!warning] TODO
-> Reorganize this context for clarity
+**Status:** ✅ **COMPLETE** - Package published and available across all runtimes
 
-This package will be the first in the “`#^@renoirb/investing-*#`” (_investing_) [[Project Renoir ESM Modules]] as part of [[Professional Development ESM Module Distribution System|my public open-source modules library]] and [[Professional Development Cross Runtime Module Architecture|research on cross-runtime code dependency management]] to be available as Deno, Node and [[Published Renoir ESM Modules|import them from my ESM Modules served over HTTP]] on my [[Self-Hosting Dist.RenoirB.Com]] registry so we can import as
+This package is the first in the "`@renoirb/investing-*`" series as part of the renoirb-esm-modules monorepo. Successfully published to JSR with cross-runtime compatibility (Deno, Node, Browser).
 
+**Published Package:**
+- JSR: `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
+- npm: `npm:@jsr/renoirb__investing-sleeve-calculator@^0.1.1`
+- Browser: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
+
+**Import Examples:**
+
+**Browser (via esm.sh CDN):**
 ```html
-<!-- importMap in the document head as early as possible -->
 <script type="importmap">
   {
     "imports": {
-      "@renoirb/investing-sleeve-calculator": "https://dist.renoirb.com/esm/own/investing-sleeve-calculator/v1.0.0/browser.mjs"
+      "@renoirb/investing-sleeve-calculator": "https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1"
     }
   }
 </script>
 <script type="module">
-  import SleeveCalculator from '@renoirb/investing-sleeve-calculator'
-  // …
-</scrip>
+  import { SleeveCalculator } from '@renoirb/investing-sleeve-calculator'
+  // ... use calculator
+</script>
 ```
 
-But would also be accessible via Deno too
-
-**deno.json:**
-
+**Deno:**
 ```json
 {
   "imports": {
-    "@renoirb/investing-sleeve-calculator": "jsr:…"
+    "@renoirb/investing-sleeve-calculator": "jsr:@renoirb/investing-sleeve-calculator@^0.1.1"
   }
 }
 ```
 
-**code:**
+**Node/npm:**
+```bash
+npm install @jsr/renoirb__investing-sleeve-calculator
+```
 
+**All runtimes:**
 ```typescript
-import SleeveCalculator from '@renoirb/investing-sleeve-calculator'
-
-// …
+import { SleeveCalculator, DriftCalculator } from '@renoirb/investing-sleeve-calculator'
+// ... use imports
 ```
 
 ## Details
 
 ### Current Status
 
-**✅ Complete:**
+**✅ All Phases Complete:**
 
-- Core implementation (`SleeveCalculator` + `DriftCalculator`)
-- Comprehensive test suite (15 suites, 49 test steps, all passing)
-- Type definitions and exports
-- Documentation (CLAUDE.md, PACKAGE_CONTEXT.md)
-- Code quality (lint clean, formatted, Deno 2.6.1 compliant)
-- Interactive CLI tool (`deno.ts`)
+- ✅ Core implementation (`SleeveCalculator` + `DriftCalculator`)
+- ✅ Comprehensive test suite (15 suites, 49 test steps, all passing)
+- ✅ Type definitions and exports
+- ✅ Documentation (CLAUDE.md, PACKAGE_CONTEXT.md, this PLAN)
+- ✅ Code quality (lint clean, formatted, Deno 2.6.1 compliant)
+- ✅ Interactive CLI tool (`deno.ts`)
+- ✅ Barrel file structure (`core.ts` → `src/index.ts`)
+- ✅ JSR publishing metadata in `deno.json`
+- ✅ Published to JSR (v0.1.1)
+- ✅ npm compatibility verified
+- ✅ Browser imports available via esm.sh
+- ✅ Transpilation output analyzed and documented
 
-**🔧 Remaining Work:**
+**⏭️ Optional Future Work:**
 
-- Create barrel file structure
-- Update `deno.json` exports configuration
-- Add JSR publishing metadata
-- Update root monorepo imports
-- Publish to JSR
-- (Optional) Serve via dist.renoirb.com
+- Custom dist.renoirb.com CDN (esm.sh works well for now)
+- Monorepo import mapping (workspace-only sufficient currently)
 
 ---
 
@@ -310,33 +318,40 @@ Instead of manually creating barrel files first, we'll:
 
 ## Success Criteria
 
-**Phase 1 Complete When:**
+**Phase 1: ✅ COMPLETE**
 
 - ✅ `deno.json` has JSR metadata (description, license, exports)
-- ✅ Exports point to TypeScript source (`./src/index.ts`)
-- ✅ LICENSE exists (monorepo root or package-level)
+- ✅ Exports point to TypeScript source (`./core.ts` → `./src/index.ts`)
+- ✅ LICENSE exists (MIT - monorepo root)
 - ✅ README.md has usage examples
 
-**Phase 2 Complete When:**
+**Phase 2: ✅ COMPLETE**
 
-- ✅ `deno publish --dry-run` succeeds with no errors
-- ✅ File list looks correct (no unwanted files)
-- ✅ All tests still pass
+- ✅ `deno publish --dry-run` succeeded with no errors
+- ✅ File list confirmed correct (excluded test files and PLAN docs)
+- ✅ All tests passing (15 suites, 49 steps)
 
-**Phase 3 Complete When:**
+**Phase 3: ✅ COMPLETE**
 
-- ✅ Package published to JSR successfully
+- ✅ Package published to JSR successfully (v0.1.1)
 - ✅ JSR page visible at `https://jsr.io/@renoirb/investing-sleeve-calculator`
 - ✅ Can install via `deno add @renoirb/investing-sleeve-calculator`
 - ✅ Import works in fresh Deno project
 - ✅ Documentation auto-generated correctly
+- ✅ npm compatibility confirmed (`npm:@jsr/renoirb__investing-sleeve-calculator@^0.1.1`)
 
-**Phase 4 Complete When (Optional):**
+**Phase 4: ✅ COMPLETE**
 
-- ✅ Examined JSR's transpiled output
-- ✅ Documented observations about transpilation
-- ✅ Created `core.mjs` barrel file (if beneficial)
-- ✅ Updated monorepo imports (if using barrel files)
+- ✅ Examined JSR's transpiled output via npm installation
+- ✅ Documented observations about transpilation (see below)
+- ⏭️ Created `core.mjs` barrel file - **NOT NEEDED** (JSR already provides `core.ts`)
+- ⏭️ Updated monorepo imports - **DEFERRED** (workspace-only sufficient for now)
+
+**Phase 5: ✅ BROWSER IMPORTS AVAILABLE**
+
+- ✅ HTTP distribution available via esm.sh CDN
+- ✅ Import URL: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
+- ⏭️ Custom dist.renoirb.com - **OPTIONAL** (esm.sh works well)
 
 ---
 
@@ -395,3 +410,125 @@ After publishing, examine JSR's output to understand:
 - Best practices for monorepo integration
 
 This knowledge informs future decisions about creating manual `core.mjs` files for other packages in the monorepo.
+
+---
+
+## Transpilation Output Analysis (Phase 4 Results)
+
+**What We Learned:**
+
+After publishing v0.1.1 to JSR and examining the npm-installed output, we confirmed:
+
+### File Structure Generated by JSR
+
+```
+node_modules/@renoirb/investing-sleeve-calculator/
+├── core.js              # Transpiled barrel file
+├── core.js.map          # Source map
+├── core.ts              # Original TypeScript source
+├── deno.js              # Transpiled CLI
+├── deno.ts              # Original CLI source
+├── _dist/               # Type definitions directory
+│   ├── core.d.ts        # Type definitions for exports
+│   ├── core.d.ts.map    # Type source map
+│   └── src/
+│       ├── types.d.ts
+│       ├── calculator.d.ts
+│       ├── drift.d.ts
+│       └── *.d.ts.map
+└── src/
+    ├── calculator.js    # Transpiled implementation
+    ├── calculator.ts    # Original TypeScript
+    ├── calculator.js.map
+    └── ...
+```
+
+### Transpilation Characteristics
+
+**Import Path Transformation:**
+- TypeScript: `export * from './src/index.ts'`
+- JavaScript: `export * from "./src/index.js"`
+- Extension changed, paths preserved
+
+**Type Handling:**
+- All TypeScript types removed from `.js` files
+- Complete `.d.ts` type definitions generated
+- Source maps for both `.js` and `.d.ts` files
+- JSDoc comments preserved in JavaScript output
+
+**Code Quality:**
+- Clean, readable JavaScript
+- Modern ESM syntax (`export`/`import`)
+- Arrow functions preserved
+- Template literals preserved
+- No unnecessary transpilation to older syntax
+
+**Example Transpiled Code:**
+
+From `src/calculator.js`:
+```javascript
+export class SleeveCalculator {
+  config;
+  constructor(config){
+    this.validateConfig(config);
+    this.config = config;
+  }
+  calculate(sleeveName, totalAmountCAD, exchangeRate) {
+    // ... implementation
+  }
+}
+```
+
+### Browser Distribution via esm.sh
+
+**Discovery:** JSR itself does NOT serve files for HTTP imports. When requesting TypeScript files directly from JSR URLs, you get the `.ts` source.
+
+**Solution:** Use esm.sh CDN which serves JSR packages as browser-ready ESM:
+
+```
+https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1
+```
+
+**What esm.sh provides:**
+- ✅ Minified/bundled ESM module
+- ✅ Modern ES2022 syntax
+- ✅ CORS enabled (`Access-Control-Allow-Origin: *`)
+- ✅ Immutable caching (`max-age=31536000`)
+- ✅ TypeScript types header (`X-Typescript-Types`)
+- ✅ Source maps available
+
+**Browser Usage Example:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="importmap">
+    {
+      "imports": {
+        "@renoirb/investing-sleeve-calculator": "https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1"
+      }
+    }
+  </script>
+</head>
+<body>
+  <script type="module">
+    import { SleeveCalculator } from '@renoirb/investing-sleeve-calculator'
+    // Use the calculator...
+  </script>
+</body>
+</html>
+```
+
+### Conclusion
+
+**No manual `.mjs` files needed** - JSR's automatic transpilation is production-ready:
+- Generates clean JavaScript
+- Provides complete type definitions
+- Works seamlessly with npm/Node
+- Browser imports available via esm.sh
+
+**For future packages:** Follow the same JSR-first approach. Manual barrel files only needed if:
+- Custom bundling required
+- Specific browser optimizations needed
+- Private CDN (dist.renoirb.com) with custom processing

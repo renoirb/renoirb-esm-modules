@@ -102,9 +102,13 @@ const tasks = drift.getTasks()
   - ✓ Minified state output for logging/reproduction
 - ✓ Example usage files
 
+**Published:**
+
+- ✓ Published to JSR: `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
+- ✓ Browser ESM imports: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
+
 **In Progress:**
 
-- [ ] Publish to JSR and other registries as “`@renoirb/investing-sleeve-calculator`” (see `./PLAN_PUBLISH_AS_PART_OF_RENOIRESM_MODULES.md`)
 - [ ] Refactoring for code quality (see `./PLAN_REFACTOR_SRC_DIRECTORY.md`)
 
 **Known Issues:**

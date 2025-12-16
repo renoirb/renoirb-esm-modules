@@ -450,6 +450,34 @@ This package will be used by:
 - All tests passing
 - Coverage: Core calculations, edge cases, serialization, real-world scenarios
 
+### Package Publishing
+
+- [x] Published to JSR (v0.1.1)
+  - Package URL: `https://jsr.io/@renoirb/investing-sleeve-calculator`
+  - Deno import: `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
+- [x] Browser ESM imports available via esm.sh
+  - Import URL: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
+  - Minified/bundled ES2022 output
+  - TypeScript types available
+  - CORS enabled for browser usage
+
+**Transpilation Output Observations:**
+
+JSR automatically transpiles TypeScript to JavaScript with:
+- Clean ESM syntax (export/import statements)
+- `.ts` extensions changed to `.js` in import paths
+- Type erasure (pure JavaScript output)
+- Separate `.d.ts` type definitions in `_dist/` directory
+- Source maps for all files (`.js.map`, `.d.ts.map`)
+- All JSDoc comments preserved
+- Modern JavaScript features preserved (arrow functions, template literals)
+
+**Distribution Formats:**
+
+1. **Deno**: Imports TypeScript source directly from JSR
+2. **Node/npm**: Transpiled JavaScript with type definitions
+3. **Browser**: Bundled ESM via esm.sh CDN (minified)
+
 ## Open Questions
 
 1. **Calculate method signature** - Which option (A, B, or C above)?
