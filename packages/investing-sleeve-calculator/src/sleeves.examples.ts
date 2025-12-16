@@ -59,34 +59,28 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
     /**
      * Core equity sleeve for CAD-denominated account
      *
-     * **Allocation Strategy:**
-     * - Canadian equities (ZCN): 13%
-     * - US equities (VUN, AVUV): 19% total
-     * - International developed (AVDV, ZEA, ZDM, ZJPN, VA): 41% total
-     * - Emerging markets (ZEM): 11%
-     * - Real assets (STPL, XCH): 16% total
-     *
-     * **Currency Mix:**
-     * - USD-traded: AVDV (10%), AVUV (6%) = 16% requires conversion
-     * - CAD-traded: All others = 84%
-     *
-     * **Total Weight:** 100% (13+6+13+13+16+9+11+13+3+3+3)
+     * =======================  **WARNING:  This is NOT financial advice** =======================
+     * This is just an example configuration so I can re-balance my own portfolio, less manually.
+     * But if you like want to know where I've learned about this portoflio allocation;
+     * Lookup Ben Felix <https://pwlcapital.com/our-team/benjamin-felix/> from PWL Capital's YouTube channel.
+     * Particularly his videos on the work from Portfolio theory by Fama-French named "Five Factor" investing.
      */
     core: {
+      /**
+       */
       weights: {
-        AVDV: 10, // Avantis International Small Cap Value (USD)
-        AVUV: 6, // Avantis US Small Cap Value (USD)
-        VUN: 13, // Vanguard US Total Market (CAD-hedged)
-        ZCN: 13, // BMO S&P/TSX Capped Composite (Canadian)
-        ZEA: 16, // BMO MSCI EAFE (International Developed)
-        ZDM: 9, // BMO International Dividend (Developed Markets)
-        ZEM: 11, // BMO MSCI Emerging Markets (Emerging)
-        STPL: 13, // Spider Global Natural Resources (Real Assets)
-        ZJPN: 3, // BMO MSCI Japan (Regional)
-        VA: 3, // Vanguard FTSE Developed All Cap ex US (International)
-        XCH: 3, // iShares China Index (Regional)
+        AVDV:  6, // Avantis® International Small Cap Value ETF (USD)
+        AVUV: 10, // Avantis® U.S. Small Cap Value ETF (USD)
+        VUN:  30, // Vanguard US Total Market ETF (CAD-hedged)
+        XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
+        XEF:  16, // Core MSCI EAFE IMI ETF (International Developed)
+        XEC:   8, // Core MSCI EM IMI (Developed Markets)
       },
-      usd_symbols: ['AVDV', 'AVUV'], // Only these 2 require USD→CAD conversion
+      usd_symbols: [
+        // Only these 2 require USD→CAD conversion
+        'AVDV',
+        'AVUV',
+      ],
     },
 
     /**

@@ -2,6 +2,8 @@
 
 ## Details
 
+Continuation of `./PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md`
+
 ### dist.renoirb.com
 
 > [!info] **TODO**

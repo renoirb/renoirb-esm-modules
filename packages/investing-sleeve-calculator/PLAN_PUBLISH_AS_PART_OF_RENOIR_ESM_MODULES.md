@@ -7,9 +7,11 @@
 This package is the first in the "`@renoirb/investing-*`" series as part of the renoirb-esm-modules monorepo. Successfully published to JSR with cross-runtime compatibility (Deno, Node, Browser).
 
 **Published Package:**
-- JSR: `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
-- npm: `npm:@jsr/renoirb__investing-sleeve-calculator@^0.1.1`
-- Browser: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
+- **[JSR](https://jsr.io/@renoirb/investing-sleeve-calculator)**: 
+  - `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
+- **npm**: `npx jsr add @renoirb/investing-sleeve-calculator`
+- **Browser**:
+  - <https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1>
 
 **Import Examples:**
 

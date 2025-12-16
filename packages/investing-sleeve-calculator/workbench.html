@@ -3,58 +3,81 @@
 
 <head>
   <title>Workbench</title>
-  <script type="importmap">
-      {
-        "imports": {
-          "@renoirb/investing-sleeve-calculator": "https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1"
-        }
-      }
-    </script>
-</head>
+  <script type="module">
 
-<body>
-  <section>
-    <my-component-showcase name="Investing Sleeve Calculator" slots="alpha">
-      <template slot="alpha" title="Visualize Amounts for Sleeve 'core' at 5K">
-        <div id="alpha-output"></div>
-      </template>
-    </my-component-showcase>
-  </section>
-    <script type="module">
     import {
       SleeveCalculator,
-      DriftCalculator
+      DriftCalculator,
     } from '@renoirb/investing-sleeve-calculator'
-
-    const config = {
+    /**
+     * @type {import('@renoirb/investing-sleeve-calculator').SleeveCalculatorConfig}
+     */
+    const SLEEVES_CONFIG = /** @type {const} */ ({
       sleeves: {
         core: {
+          /**
+           * **WARNING:** ============== **This is NOT financial advice** =====================
+           * This is just an example configuration so I can re-balance my own portfolio, less manually.
+           * But if you like want to know where I've learned about this portoflio allocation;
+           * Lookup Ben Felix <https://pwlcapital.com/our-team/benjamin-felix/> from PWL Capital's YouTube channel.
+           * Particularly his videos on the work from Portfolio theory by Fama-French named "Five Factor" investing.
+           */
           weights: {
-            AVDV: 10, // Avantis International Small Cap Value (USD)
-            AVUV: 6,  // Avantis US Small Cap Value (USD)
-            VUN: 13,  // Vanguard US Total Market (CAD-hedged)
-            ZCN: 13,  // BMO S&P/TSX Capped Composite (Canadian)
-            ZEA: 16,  // BMO MSCI EAFE (International Developed)
-            ZDM: 9,   // BMO International Dividend (Developed Markets)
-            ZEM: 11,  // BMO MSCI Emerging Markets (Emerging)
-            STPL: 13, // Spider Global Natural Resources (Real Assets)
-            ZJPN: 3,  // BMO MSCI Japan (Regional)
-            VA: 3,    // Vanguard FTSE Developed All Cap ex US (International)
-            XCH: 3,   // iShares China Index (Regional)
-          }
+            AVDV:  6, // Avantis® International Small Cap Value ETF (USD)
+            AVUV: 10, // Avantis® U.S. Small Cap Value ETF (USD)
+            VUN:  30, // Vanguard US Total Market ETF (CAD-hedged)
+            XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
+            XEF:  16, // Core MSCI EAFE IMI ETF (International Developed)
+            XEC:   8, // Core MSCI EM IMI (Developed Markets)
+          },
+          usd_symbols: [
+            'AVDV',
+            'AVUV',
+          ],
         }
       }
-    }
-
-    const calc = new SleeveCalculator(config)
-    const result = calc.calculate('core', 5000, 1.42)
-    Object.defineProperty(window, 'sleeveCalcResult', {
-      value: result,
+    })
+    Object.defineProperty(window, 'SLEEVES_CONFIG', {
+      value: SLEEVES_CONFIG,
+      writable: false,
+      configurable: false,
+    })
+    Object.defineProperty(window, 'SleeveCalculator', {
+      value: SleeveCalculator,
+      writable: false,
+      configurable: false,
+    })
+    Object.defineProperty(window, 'DriftCalculator', {
+      value: DriftCalculator,
+      writable: false,
+      configurable: false,
+    })
+    const calculator = new SleeveCalculator(SLEEVES_CONFIG)
+    Object.defineProperty(window, 'calculator', {
+      value: calculator,
       writable: false,
       configurable: false,
     })
   </script>
+</head>
+
+<body>
+  <section>
+    <my-component-showcase
+      name="Investing Sleeve Calculator"
+      slots="alpha"
+    >
+      <template
+        slot="alpha"
+        title="Visualize Amounts for Sleeve 'core' at 5K"
+      >
+        <div id="alpha-output"></div>
+      </template>
+    </my-component-showcase>
+  </section>
+
   <script type="module">
+    const sleeveCalcResult = window.calculator.calculate('core', 5000, 1.42)
     const {
       exchangeRate,
       sleeveName,
@@ -69,7 +92,8 @@
     for (const { symbol, targetAmount, currency, weight, normalizedWeight } of targets) {
       console.log(`${symbol}: targetAmount=${targetAmount}, currency=${currency}, weight=${weight}, normalizedWeight=${normalizedWeight}`)
       const item = document.createElement('li')
-      item.innerText = `${symbol}: ${targetAmount.toFixed(2)} ${currency} (${weight}%, ${normalizedWeight}%)`
+      const line = `${symbol}: ${targetAmount.toFixed(2)} ${currency} (${weight}%, ${normalizedWeight}%)`
+      item?.innerText = line
       list?.appendChild(item)
     }
     el?.appendChild(blockTitle)
