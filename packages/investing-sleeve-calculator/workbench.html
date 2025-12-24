@@ -4,11 +4,14 @@
 <head>
   <title>Workbench</title>
   <script type="module">
-
     import {
       SleeveCalculator,
       DriftCalculator,
     } from '@renoirb/investing-sleeve-calculator'
+
+    window.SleeveCalculator = SleeveCalculator
+    window.DriftCalculator = DriftCalculator
+
     /**
      * @type {import('@renoirb/investing-sleeve-calculator').SleeveCalculatorConfig}
      */
@@ -37,27 +40,16 @@
         }
       }
     })
-    Object.defineProperty(window, 'SLEEVES_CONFIG', {
-      value: SLEEVES_CONFIG,
-      writable: false,
-      configurable: false,
+    window.SLEEVES_CONFIG = SLEEVES_CONFIG
+    window.calculator = new SleeveCalculator(SLEEVES_CONFIG)
+
+    console.log('workbench.html - 0', { 
+      calculator: window.calculator, 
+      SLEEVES_CONFIG: window.SLEEVES_CONFIG, 
+      SleeveCalculator: window.SleeveCalculator, 
     })
-    Object.defineProperty(window, 'SleeveCalculator', {
-      value: SleeveCalculator,
-      writable: false,
-      configurable: false,
-    })
-    Object.defineProperty(window, 'DriftCalculator', {
-      value: DriftCalculator,
-      writable: false,
-      configurable: false,
-    })
-    const calculator = new SleeveCalculator(SLEEVES_CONFIG)
-    Object.defineProperty(window, 'calculator', {
-      value: calculator,
-      writable: false,
-      configurable: false,
-    })
+
+
   </script>
 </head>
 
@@ -71,34 +63,66 @@
         slot="alpha"
         title="Visualize Amounts for Sleeve 'core' at 5K"
       >
-        <div id="alpha-output"></div>
+        ...
       </template>
     </my-component-showcase>
+    <div>
+      <h2>Investing Sleeve Calculator</h2>
+      <div id="alpha-output">
+        <p>Loading...</p>
+      </div>
+    </div>
   </section>
 
   <script type="module">
-    const sleeveCalcResult = window.calculator.calculate('core', 5000, 1.42)
-    const {
-      exchangeRate,
-      sleeveName,
-      totalAmountCAD,
-      targets,
-      summary,
-    } = sleeveCalcResult
-    const el = document.getElementById('alpha-output')
-    const blockTitle = document.createElement('h3')
-    blockTitle.textContent = `Sleeve '${sleeveName}' allocation for $${totalAmountCAD} at ${exchangeRate}`
-    const list = document.createElement('ul')
-    for (const { symbol, targetAmount, currency, weight, normalizedWeight } of targets) {
-      console.log(`${symbol}: targetAmount=${targetAmount}, currency=${currency}, weight=${weight}, normalizedWeight=${normalizedWeight}`)
-      const item = document.createElement('li')
-      const line = `${symbol}: ${targetAmount.toFixed(2)} ${currency} (${weight}%, ${normalizedWeight}%)`
-      item?.innerText = line
-      list?.appendChild(item)
+    console.log('workbench.html - 1', { 
+      calculator: window.calculator, 
+      SLEEVES_CONFIG: window.SLEEVES_CONFIG, 
+      SleeveCalculator: window.SleeveCalculator, 
+    })
+
+    const fragmentCreateFor = (sleeveCalcResult) => {
+      const {
+        exchangeRate,
+        sleeveName,
+        totalAmountCAD,
+        targets,
+        summary,
+      } = sleeveCalcResult
+
+      const frag = document.createDocumentFragment()
+
+      const blockTitle = document.createElement('h3')
+      blockTitle.textContent = `Sleeve '${sleeveName}' allocation for $${totalAmountCAD} at ${exchangeRate}`
+      const blockTable = document.createElement('table')
+      const blockTableHeader = document.createElement('thead')
+      const blockTableHeaderCells = `<th>Symbol</th><th>Target Amount</th><th>Weight</th><th>Normalized Weight</th>`
+      blockTableHeader.innerHTML = blockTableHeaderCells
+      blockTable.append(blockTableHeader)
+      const blockTableBody = document.createElement('tbody')
+      for (const { symbol, targetAmount, currency, weight, normalizedWeight } of targets) {
+        const blockTableRow = document.createElement('tr')
+        const blockTableRowCells  = `<th>${symbol}</th><td>${targetAmount.toFixed(2)} ${currency}</td><td>${weight}%</td><td>${normalizedWeight}%)</td>`
+        blockTableRow.innerHTML = blockTableRowCells
+        blockTableBody.append(blockTableRow)
+      }
+      frag?.appendChild(blockTitle)
+      frag?.appendChild(blockTableBody)
+
+      return frag
     }
-    el?.appendChild(blockTitle)
-    el?.appendChild(list)
-    console.log('targets', targets)
+
+    const calcResult = calculator.calculate(
+      'core',
+      5000,
+      1.38,
+    )
+
+    const el = document.getElementById('alpha-output')
+    console.log('workbench.html - 2', { el, calcResult })
+    const fragment = fragmentCreateFor(calcResult)
+    const foo = document.createElement('p')
+    el?.replaceWith(fragment)
   </script>
 </body>
 
