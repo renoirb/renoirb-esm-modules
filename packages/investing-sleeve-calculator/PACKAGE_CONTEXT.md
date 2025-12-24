@@ -260,20 +260,37 @@ throw new Error('Exchange rate must be greater than 0')
 
 ```
 ./
- ├── PACKAGE_CONTEXT.md     # This file
- ├── CLAUDE.md              # Project context for LLM sessions
- ├── README.md              # Package overview
- ├── deno.json              # Deno configuration
- ├── core.ts                # Main entry point (bootstrapper)
- ├── deno.ts                # Deno's Interactive CLI implementation
- └── src/
-     ├── index.ts           # Public API exports
-     ├── types.ts           # Type definitions
-     ├── calculator.ts      # SleeveCalculator class
-     ├── calculator.test.ts # SleeveCalculator tests (5 test suites)
-     ├── drift.ts           # DriftCalculator class
-     ├── drift.test.ts      # DriftCalculator tests (10 test suites)
-     └── sleeves.examples.ts# Example sleeve configurations
+ ├── PACKAGE_CONTEXT.md                     # This file - Comprehensive design doc
+ ├── CLAUDE.md                              # LLM context for sessions
+ ├── README.md                              # Package overview
+ ├── deno.json                              # Deno configuration
+ ├── core.ts                                # Main entry point (bootstrapper)
+ ├── deno.ts                                # Interactive CLI implementation
+ ├── DATA_FILE_FORMATS.md                   # File format specifications
+ ├── SECURITY_SYMBOL_REGISTRY.md            # Symbol aliasing design
+ ├── PLAN_PORTFOLIO_AGGREGATOR.md           # 📝 NEXT - Portfolio aggregator spec
+ ├── PLAN_REFACTOR_SRC_DIRECTORY.md         # ⏸️ ON HOLD - Awaiting cross-runtime architecture
+ ├── PLAN_DIST_TARGETS_SCRIPTS.md           # 💭 FUTURE - Distribution variants spec
+ ├── PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md  # ✅ COMPLETE
+ ├── src/
+ │   ├── index.ts                           # Public API exports
+ │   ├── types.ts                           # Type definitions
+ │   ├── calculator.ts                      # SleeveCalculator class
+ │   ├── calculator.test.ts                 # SleeveCalculator tests (5 test suites)
+ │   ├── drift.ts                           # DriftCalculator class
+ │   ├── drift.test.ts                      # DriftCalculator tests (10 test suites)
+ │   └── sleeves.examples.ts                # Example sleeve configurations
+ └── examples/
+     ├── README.md                          # Example data overview
+     ├── USAGE_EXAMPLE_CALCULATE_DRIFT.md   # Complete workflow example
+     └── historical-data/
+         └── 20250115/                      # Example snapshot date
+             ├── allocation.yaml            # Target allocations (Five Factor Portfolio)
+             ├── unallocated.yaml           # Cash positions
+             ├── totals.yaml                # Account totals
+             ├── Alice-RRSP.json            # Holdings snapshot
+             ├── Alice-TFSA.json            # Holdings snapshot
+             └── Bob-RRSP.json              # Holdings snapshot
 ```
 
 ## DriftCalculator - Companion Class
@@ -331,6 +348,68 @@ drift.setCurrentlyOwning('VUN', 946) // Knows it's CAD from targets
 2. **Interactive rebalancing**: Update holdings, see immediate impact
 3. **Task generation**: Generate buy/sell recommendations
 4. **API endpoints**: Serialize/deserialize state
+
+## Planned Extensions - Portfolio Aggregator
+
+**Status:** Design phase complete, implementation pending
+
+See **PLAN_PORTFOLIO_AGGREGATOR.md** for complete design documentation.
+
+### Overview
+
+Extends the calculator with state management for multi-account portfolio aggregation and reverse direction analysis.
+
+**Current capability (forward direction):**
+- SleeveCalculator: allocation amount → target $ per security
+- DriftCalculator: targets vs actuals → buy/sell tasks
+
+**Planned capability (reverse direction):**
+- PortfolioAggregate: manage holdings across accounts/people
+- SleeveWeightAnalyzer: actual holdings → current weight %
+
+### New Classes
+
+#### SleeveWeightAnalyzer
+
+Calculates current weights from actual holdings (reverse of SleeveCalculator).
+
+```typescript ignore
+const analyzer = new SleeveWeightAnalyzer('bullion', sleeveDefinition)
+const result = analyzer.analyze(holdings, exchangeRate)
+// Returns current vs target weights, drift analysis
+```
+
+#### PortfolioAggregate
+
+Manages portfolio-wide state across accounts and people.
+
+```typescript ignore
+const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
+
+// Add holdings incrementally
+snapshot.holdings.forEach(holding => {
+  aggregate.addHolding('Renoir', 'RRSP', holding)
+})
+
+// Analyze account state
+const state = aggregate.getAccountState('Renoir', 'RRSP')
+// Returns sleeve-by-sleeve breakdown with weight analysis
+```
+
+### Key Features
+
+- **Incremental building:** `addHolding()` method for flexible data loading
+- **Multi-account support:** Track holdings across people and accounts
+- **Weight analysis:** Compare current vs target weights
+- **Drift tracking:** Calculate allocated vs actual amounts
+- **String parsing:** Handle brokerage JSON format (money strings, share counts)
+
+### Related Documentation
+
+- **PLAN_PORTFOLIO_AGGREGATOR.md** - Complete design specification
+- **DATA_FILE_FORMATS.md** - File format specifications for brokerage data
+- **SECURITY_SYMBOL_REGISTRY.md** - Symbol aliasing system design
+- **examples/** - Anonymized example data files
 
 ## Interactive CLI Tool
 

@@ -31,20 +31,37 @@ Pure TypeScript calculation engine for portfolio sleeve (i.e. a sub-grouping fro
 
 ```
 ./
- ├── CLAUDE.md               # This file
- ├── PACKAGE_CONTEXT.md      # Comprehensive design doc
- ├── README.md               # Package overview
- ├── deno.json               # Deno configuration
- ├── core.ts                 # Main entry point
- ├── deno.ts                 # Deno's Interactive CLI implementation
- └── src/
-     ├── index.ts            # Public API exports
-     ├── types.ts            # Type definitions
-     ├── calculator.ts       # SleeveCalculator class
-     ├── calculator.test.ts  # SleeveCalculator tests (5 test suites)
-     ├── drift.ts            # DriftCalculator class
-     ├── drift.test.ts       # DriftCalculator tests (10 test suites)
-     └── sleeves.examples.ts # Example sleeve configurations
+ ├── CLAUDE.md                              # This file - LLM context
+ ├── PACKAGE_CONTEXT.md                     # Comprehensive design doc
+ ├── README.md                              # Package overview
+ ├── deno.json                              # Deno configuration
+ ├── core.ts                                # Main entry point
+ ├── deno.ts                                # Interactive CLI implementation
+ ├── DATA_FILE_FORMATS.md                   # File format specifications
+ ├── SECURITY_SYMBOL_REGISTRY.md            # Symbol aliasing design
+ ├── PLAN_PORTFOLIO_AGGREGATOR.md           # 📝 NEXT - Portfolio aggregator spec
+ ├── PLAN_REFACTOR_SRC_DIRECTORY.md         # ⏸️ ON HOLD - Awaiting cross-runtime architecture
+ ├── PLAN_DIST_TARGETS_SCRIPTS.md           # 💭 FUTURE - Distribution variants spec
+ ├── PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md  # ✅ COMPLETE
+ ├── src/
+ │   ├── index.ts                           # Public API exports
+ │   ├── types.ts                           # Type definitions
+ │   ├── calculator.ts                      # SleeveCalculator class
+ │   ├── calculator.test.ts                 # SleeveCalculator tests (5 test suites)
+ │   ├── drift.ts                           # DriftCalculator class
+ │   ├── drift.test.ts                      # DriftCalculator tests (10 test suites)
+ │   └── sleeves.examples.ts                # Example sleeve configurations
+ └── examples/
+     ├── README.md                          # Example data overview
+     ├── USAGE_EXAMPLE_CALCULATE_DRIFT.md   # Complete workflow example
+     └── historical-data/
+         └── 20250115/                      # Example snapshot date
+             ├── allocation.yaml            # Target allocations (Five Factor Portfolio)
+             ├── unallocated.yaml           # Cash positions
+             ├── totals.yaml                # Account totals
+             ├── Alice-RRSP.json            # Holdings snapshot
+             ├── Alice-TFSA.json            # Holdings snapshot
+             └── Bob-RRSP.json              # Holdings snapshot
 ```
 
 ## Core Classes
@@ -107,7 +124,25 @@ const tasks = drift.getTasks()
 - ✓ Published to JSR: `jsr:@renoirb/investing-sleeve-calculator@^0.1.1`
 - ✓ Browser ESM imports: `https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1`
 
-**In Progress:**
+**Next Priority:**
+
+- [ ] **Portfolio Aggregator Implementation** (see `./PLAN_PORTFOLIO_AGGREGATOR.md`)
+  - New classes: `PortfolioAggregate` and `SleeveWeightAnalyzer`
+  - Reverse direction analysis: holdings → current weights
+  - Multi-account/multi-person state aggregation
+  - See also: `./DATA_FILE_FORMATS.md`, `./SECURITY_SYMBOL_REGISTRY.md`
+
+**Next Session TODO:**
+
+- [ ] **Revise examples in design documents** to align with harmonized Alice/Bob structure:
+  - `PLAN_PORTFOLIO_AGGREGATOR.md` - Contains old names (Renoir, Gabi, Leo) and multiple sleeves
+  - `PACKAGE_CONTEXT.md` - Contains old names and multiple sleeves
+  - Update all code examples to use:
+    - Alice/Bob anonymized examples
+    - Five Factor Portfolio ("core" sleeve) as primary example
+    - Simplified structure matching `./examples/` and `DATA_FILE_FORMATS.md`
+
+**Future Work:**
 
 - [ ] Refactoring for code quality (see `./PLAN_REFACTOR_SRC_DIRECTORY.md`)
 

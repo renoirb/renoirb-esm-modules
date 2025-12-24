@@ -1,5 +1,13 @@
 # Portfolio Aggregator - Design Document
 
+## Status
+
+📝 **NEXT** - Specification in progress
+
+**Phase:** Design/specification - refining requirements before implementation
+**Priority:** High - Primary focus after documentation harmonization
+**Dependencies:** Examples harmonization (completed)
+
 ## Overview
 
 **Purpose:** Extend the sleeve calculator package with state management capabilities for multi-account portfolio aggregation and analysis.

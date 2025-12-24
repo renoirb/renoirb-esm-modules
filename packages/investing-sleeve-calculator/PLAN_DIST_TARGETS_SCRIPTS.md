@@ -1,8 +1,24 @@
 # Distribute release packaging and publishing
 
-## Details
+## Status
 
-Continuation of `./PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md`
+💭 **FUTURE** - Specification in progress for multiple distribution variants
+
+**Phase:** Writing specs for bundling and distribution strategies
+**Priority:** Medium - Future enhancement after core features
+**Dependencies:** Package already published to JSR successfully
+
+**Planned Variants:**
+- CLI standalone binary (via `deno compile`)
+- Client-side web form (backend-less, offline-capable browser application)
+- Obsidian integration (visualize weights and amounts within Obsidian vault)
+- Additional formats TBD
+
+## Summary
+
+Continuation of `./PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md` - exploring CLI bundling, web applications, and additional distribution methods beyond JSR.
+
+## Details
 
 ### dist.renoirb.com
 

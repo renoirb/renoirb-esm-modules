@@ -18,12 +18,9 @@ historical-data/
     ├── allocation.yaml    # Target allocations by person/account/sleeve
     ├── unallocated.yaml   # Cash not yet deployed
     ├── totals.yaml        # Account totals with performance
-    ├── Renoir-RRSP.json   # Holdings snapshot
-    ├── Renoir-TFSA.json
-    ├── Renoir-Crypto.json
-    ├── Gabi-RRSP.json
-    ├── Gabi-TFSA.json
-    └── Gabi-Crypto.json
+    ├── Alice-RRSP.json    # Holdings snapshot
+    ├── Alice-TFSA.json
+    └── Bob-RRSP.json
 ```
 
 ---
@@ -31,7 +28,7 @@ historical-data/
 ## 1. Brokerage Snapshot Files
 
 **File Pattern:** `<Person>-<Account>.json`
-**Examples:** `Renoir-RRSP.json`, `Gabi-TFSA.json`
+**Examples:** `Alice-RRSP.json`, `Alice-TFSA.json`, `Bob-RRSP.json`
 
 ### Format Specification
 
@@ -76,35 +73,48 @@ export interface BrokerageHolding {
   "timestamp": "2025-12-23T16:46:09GMT-5",
   "account": {
     "totals": {
-      "CAD": "6628.32",
+      "CAD": "28000.00",
       "USD": "0.00"
     }
   },
   "holdings": [
     {
-      "symbol": "PHYS",
-      "name": "Sprott Physical Gold Trust",
-      "totalValue": "+6628.32",
+      "symbol": "VUN",
+      "name": "Vanguard U.S. Total Market Index ETF",
+      "totalValue": "+7450.00",
       "currency": "CAD",
-      "shares": "1,200",
-      "currentPrice": "+47.19",
-      "currentDiffPercent": "+1.31",
+      "shares": "95",
+      "currentPrice": "+78.42",
+      "currentDiffPercent": "+0.85",
       "allTimeReturn": {
-        "value": "+14139.57",
-        "percent": "+33.28"
+        "value": "+680.00",
+        "percent": "+10.05"
       }
     },
     {
-      "symbol": "BTC",
-      "name": "Bitcoin",
-      "totalValue": "+13685.95",
+      "symbol": "XIC",
+      "name": "BMO S&P/TSX Capped Composite Index ETF",
+      "totalValue": "+6980.00",
       "currency": "CAD",
-      "shares": "0.114 coins",
-      "currentPrice": "+120052.23",
-      "currentDiffPercent": "-0.63",
+      "shares": "210",
+      "currentPrice": "+33.24",
+      "currentDiffPercent": "+0.32",
       "allTimeReturn": {
-        "value": "-2080.79",
-        "percent": "-13.20"
+        "value": "+520.00",
+        "percent": "+8.05"
+      }
+    },
+    {
+      "symbol": "AVUV",
+      "name": "Avantis U.S. Small Cap Value ETF",
+      "totalValue": "+2318.40",
+      "currency": "CAD",
+      "shares": "22",
+      "currentPrice": "+76.32",
+      "currentDiffPercent": "+1.12",
+      "allTimeReturn": {
+        "value": "+198.40",
+        "percent": "+9.36"
       }
     }
   ]
@@ -150,27 +160,23 @@ export interface AllocationsConfig {
 ### Example File
 
 ```yaml
-Gabi:
+# Five Factor Portfolio Allocations
+# "core" sleeve = Ben Felix's Five Factor Investing with ETFs portfolio
+# See src/sleeves.examples.ts for complete portfolio definition
+# Source: Rational Reminder Podcast Episode 129 (December 17, 2020)
+
+Alice:
   RRSP:
-    core: 83000
-
-Leo:
-  RESP:
-    core-RBCDI: 6000
-
-Renoir:
+    core: 24000  # Five Factor Portfolio allocation
   TFSA:
-    core: 5500
-    income: 10500
-    bullion: 5800
+    core: 11000  # Five Factor Portfolio allocation
+
+Bob:
   RRSP:
-    core: 72000
-    bullion: 139000
-    growth-USD: 7300
-  Crypto:
-    BTC: 12400
-    LTC: 500
-    SUI: 500
+    core: 35400  # Five Factor Portfolio allocation
+
+# Total allocated: $70,400 CAD (88% of $80,000)
+# Unallocated: $9,600 CAD (12% - see unallocated.yaml)
 ```
 
 ### Structure Rules
@@ -184,7 +190,7 @@ Renoir:
 ### Validation
 
 - Person names: Any string (case-sensitive)
-- Account names: Common values are RRSP, TFSA, RESP, Crypto
+- Account names: Common values are RRSP, TFSA, RESP (Canadian registered accounts)
 - Sleeve names: Must exist in `SleevesConfig`
 - Amounts: Positive integers (CAD)
 
@@ -215,25 +221,15 @@ export interface UnallocatedConfig {
 ### Example File
 
 ```yaml
-Gabi:
-  TFSA:
-    CAD: 31507
-    USD: 4154
+Alice:
   RRSP:
-    CAD: 118600
-    USD: 166
-  Crypto:
-    CAD: 7
+    CAD: 4000
+  TFSA:
+    CAD: 1000
 
-Renoir:
-  Crypto:
-    CAD: 73
-  TFSA:
-    CAD: 3268
-    USD: 964
+Bob:
   RRSP:
-    CAD: 12819
-    USD: 1891
+    CAD: 4600
 ```
 
 ### Structure Rules
@@ -282,31 +278,26 @@ export interface TotalsConfig {
 ### Example File
 
 ```yaml
-Gabi:
-  Total:
-    CAD: # Calculated field (optional)
-  Cash:
-    CAD: # Calculated field (optional)
-  TFSA:
-    CAD: 169300  # +$9,535.11 (+5.96%) past month
-  RRSP:
-    CAD: 447036  # +$40,325.30 (+9.92%) past month
-  Crypto:
-    CAD: 8950    # −$172.73 (−1.89%) past month
+# Account Totals - Five Factor Portfolio Example
+# Fictional data for demonstration purposes only
 
-Renoir:
+Alice:
   Total:
-    CAD: 308283  # +$79,756.61 (+34.91%) this year
-  Cash:
-    CAD: 789
-  Crypto:
-    CAD: 13757   # −$359.25 (−2.54%) past month
-  TFSA:
-    CAD: 30272   # +$1,002.10 (+3.42%) past month
-    # Contributions:
-    # - 1500
+    CAD: 40000  # +$2,400.00 (+6.38%) past quarter
   RRSP:
-    CAD: 263420  # +$26,979.08 (+11.41%) past month
+    CAD: 28000
+  TFSA:
+    CAD: 12000
+
+Bob:
+  Total:
+    CAD: 40000
+  RRSP:
+    CAD: 40000
+
+# Portfolio Total: $80,000 CAD
+# Allocated: $70,400 (88%)
+# Unallocated: $9,600 (12%)
 ```
 
 ### Field Notes
@@ -366,39 +357,35 @@ export interface SleeveWeights {
 ### Example File
 
 ```yaml
+# Sleeve Definitions - Five Factor Portfolio Example
+# Source: Ben Felix - Rational Reminder Podcast Episode 129
+# See src/sleeves.examples.ts for TypeScript implementation
+
 sleeves:
   core:
-    name: "Portfolio Core 5FP Sleeve in CAD"
-    doc: "Portfolio Core Sleeve"
-    description: "Modified Fama French Five Factor Model"
+    name: "Five Factor Investing with ETFs"
+    doc: "Ben Felix Five Factor Portfolio"
+    description: "Fama-French Five-Factor Model implementation using ETFs"
     weights:
-      AVDV: 10
-      AVUV: 6
-      VUN: 13
-      ZCN: 13
-      ZEA: 16
-      ZDM: 9
-      ZEM: 11
-      STPL: 13
-      ZJPN: 3
-      VA: 3
-      XCH: 3
+      AVDV:  6  # Avantis International Small Cap Value ETF (USD)
+      AVUV: 10  # Avantis U.S. Small Cap Value ETF (USD)
+      VUN:  30  # Vanguard US Total Market ETF (CAD-hedged)
+      XEC:   8  # Core MSCI EM IMI (Emerging Markets)
+      XEF:  16  # Core MSCI EAFE IMI ETF (International Developed)
+      XIC:  30  # Core S&P/TSX Capped Composite ETF (Canadian)
     usd_symbols:
       - AVDV
       - AVUV
     min_task_threshold: 20
 
   bullion:
-    name: "Portfolio Bullion Sleeve"
-    doc: "Portfolio Bullion Sleeve"
-    description: "Precious metals physical trusts"
+    name: "Precious Metals Physical Trusts"
+    doc: "Sprott Physical Bullion Trusts"
+    description: "Physical precious metals held at Royal Canadian Mint"
     weights:
-      PHYS: 40
-      PSLV: 25
-      GOLD: 10
-      U.UN: 15
-      COP.UN: 5
-      GPH: 5
+      PHYS: 60  # Sprott Physical Gold Trust
+      PSLV: 40  # Sprott Physical Silver Trust
+    usd_symbols: []
 ```
 
 ### Validation Rules
@@ -471,7 +458,7 @@ export const parseSleeves = (
 ### Person Names
 
 **Case:** As written (preserve case)
-**Examples:** `Renoir`, `Gabi`, `Leo`
+**Examples:** `Alice`, `Bob`
 
 ### Account Names
 
@@ -598,8 +585,8 @@ const valid = validate(data)
 SNAPSHOT_DIR="./historical-data/20251223"
 
 # Check required files exist
-for person in Renoir Gabi; do
-  for account in RRSP TFSA Crypto; do
+for person in Alice Bob; do
+  for account in RRSP TFSA; do
     file="${SNAPSHOT_DIR}/${person}-${account}.json"
     if [ ! -f "$file" ]; then
       echo "Warning: Missing $file"
@@ -623,15 +610,12 @@ done
 
 ```
 historical-data/20251223/
-├── allocation.yaml       # Target allocations
+├── allocation.yaml       # Target allocations (Five Factor Portfolio)
 ├── unallocated.yaml     # Undeployed cash
 ├── totals.yaml          # Account totals
-├── Gabi-Crypto.json     # 1 holding  (BTC)
-├── Gabi-RRSP.json       # 15 holdings
-├── Gabi-TFSA.json       # 33 holdings
-├── Renoir-Crypto.json   # 3 holdings (BTC, ETH, WLD)
-├── Renoir-RRSP.json     # 38 holdings
-└── Renoir-TFSA.json     # 23 holdings
+├── Alice-RRSP.json      # 6 holdings (Five Factor Portfolio)
+├── Alice-TFSA.json      # 6 holdings (Five Factor Portfolio)
+└── Bob-RRSP.json        # 6 holdings (Five Factor Portfolio)
 ```
 
 ### Typical File Sizes

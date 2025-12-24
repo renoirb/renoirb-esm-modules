@@ -1,5 +1,22 @@
 # Refactoring Plan: `./src/` Directory
 
+## Status
+
+⏸️ **ON HOLD** - Waiting for cross-runtime module architecture finalization
+
+**Blocker:** Need to establish file naming conventions and cross-runtime patterns for the `@renoirb/` ESM modules monorepo.
+
+**Context Required:**
+- [[Professional Development ESM Module Distribution System]]
+- [[Professional Development Cross Runtime Module Architecture]]
+- [[README For Renoir ESM Modules]]
+
+**Current Issue:** File naming conventions (e.g., `./deno.ts` for runtime-specific code) and cross-runtime compatibility patterns need to be standardized across the monorepo before refactoring individual packages.
+
+**Testing Note:** Current Deno tests are working. During cross-runtime refactor, will need to ensure proper testing infrastructure for each target runtime (browser-specific tests in browser, etc.).
+
+---
+
 ## Summary
 
 Refactor the `./src/` directory to align with coding preferences focusing on:
@@ -8,26 +25,26 @@ Refactor the `./src/` directory to align with coding preferences focusing on:
 - Extracted constants for magic numbers
 - Assertion functions for validation
 - Consistent formatting (one action per line, trailing commas)
+- **Cross-runtime compatibility** (Deno, Node, Browser, Bun)
 
 **Scope:** High-priority items only
 **Compatibility:** Preserve all existing exports and public API
-**Tests:** Fix tests first, then ensure they pass after each refactoring step
+**Tests:** Ensure tests pass after each refactoring step
 
 ---
 
 ## Prerequisites
 
-### Step 0: Fix Test Infrastructure
-
-**Status:** Tests are not currently running
+### Establish Cross-Runtime Architecture First
 
 **Action Required:**
 
-- Investigate and fix test configuration
-- Ensure `deno test` runs successfully
-- Verify all existing tests pass before starting refactoring
+- Finalize file naming conventions for runtime-specific code
+- Document cross-runtime patterns and conventions
+- Establish testing strategy across runtimes (Deno, Node, Browser, Bun)
+- See context notes listed in Status section above
 
-**Once tests are working, proceed with refactoring steps below.**
+**Once architecture is established, proceed with refactoring steps below.**
 
 ---
 
