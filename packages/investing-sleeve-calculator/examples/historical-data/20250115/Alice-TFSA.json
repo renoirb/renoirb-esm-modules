@@ -1,0 +1,89 @@
+{
+  "timestamp": "2025-01-15T16:30:00GMT-5",
+  "account": {
+    "totals": {
+      "CAD": "12000.00",
+      "USD": "0.00"
+    }
+  },
+  "holdings": [
+    {
+      "symbol": "VUN",
+      "name": "Vanguard U.S. Total Market Index ETF",
+      "totalValue": "+3380.00",
+      "currency": "CAD",
+      "shares": "43",
+      "currentPrice": "+78.60",
+      "currentDiffPercent": "+0.92",
+      "allTimeReturn": {
+        "value": "+295.00",
+        "percent": "+9.56"
+      }
+    },
+    {
+      "symbol": "XIC",
+      "name": "BMO S&P/TSX Capped Composite Index ETF",
+      "totalValue": "+3250.00",
+      "currency": "CAD",
+      "shares": "98",
+      "currentPrice": "+33.16",
+      "currentDiffPercent": "+0.28",
+      "allTimeReturn": {
+        "value": "+218.00",
+        "percent": "+7.19"
+      }
+    },
+    {
+      "symbol": "XEF",
+      "name": "iShares Core MSCI EAFE IMI Index ETF",
+      "totalValue": "+1805.00",
+      "currency": "CAD",
+      "shares": "55",
+      "currentPrice": "+32.82",
+      "currentDiffPercent": "+0.38",
+      "allTimeReturn": {
+        "value": "+125.00",
+        "percent": "+7.44"
+      }
+    },
+    {
+      "symbol": "XEC",
+      "name": "iShares Core MSCI Emerging Markets IMI Index ETF",
+      "totalValue": "+915.00",
+      "currency": "CAD",
+      "shares": "32",
+      "currentPrice": "+28.59",
+      "currentDiffPercent": "+0.15",
+      "allTimeReturn": {
+        "value": "+62.00",
+        "percent": "+7.27"
+      }
+    },
+    {
+      "symbol": "AVUV",
+      "name": "Avantis U.S. Small Cap Value ETF",
+      "totalValue": "+1095.60",
+      "currency": "CAD",
+      "shares": "10.5",
+      "currentPrice": "+75.52",
+      "currentDiffPercent": "+0.88",
+      "allTimeReturn": {
+        "value": "+87.60",
+        "percent": "+8.69"
+      }
+    },
+    {
+      "symbol": "AVDV",
+      "name": "Avantis International Small Cap Value ETF",
+      "totalValue": "+689.70",
+      "currency": "CAD",
+      "shares": "9.3",
+      "currentPrice": "+53.70",
+      "currentDiffPercent": "+0.75",
+      "allTimeReturn": {
+        "value": "+55.70",
+        "percent": "+8.79"
+      }
+    }
+  ]
+}

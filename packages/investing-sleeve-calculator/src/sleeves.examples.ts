@@ -59,11 +59,17 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
     /**
      * Core equity sleeve for CAD-denominated account
      *
-     * =======================  **WARNING:  This is NOT financial advice** =======================
-     * This is just an example configuration so I can re-balance my own portfolio, less manually.
-     * But if you like want to know where I've learned about this portoflio allocation;
-     * Lookup Ben Felix <https://pwlcapital.com/our-team/benjamin-felix/> from PWL Capital's YouTube channel.
-     * Particularly his videos on the work from Portfolio theory by Fama-French named "Five Factor" investing.
+     * **Five Factor Investing with ETFs Portfolio**
+     *
+     * Source: Benjamin Felix, Portfolio Manager at PWL Capital
+     * - PWL Capital: https://pwlcapital.com/our-team/benjamin-felix/
+     * - Rational Reminder Podcast Episode 129 (December 17, 2020)
+     *   https://rationalreminder.ca/podcast/129
+     *
+     * Implements the Fama-French Five-Factor Model using ETFs.
+     *
+     * **DISCLAIMER:** This is example data for software demonstration only.
+     * Not financial advice. Consult qualified financial professionals for investment decisions.
      */
     core: {
       /**
@@ -72,9 +78,9 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
         AVDV:  6, // Avantis® International Small Cap Value ETF (USD)
         AVUV: 10, // Avantis® U.S. Small Cap Value ETF (USD)
         VUN:  30, // Vanguard US Total Market ETF (CAD-hedged)
-        XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
+        XEC:   8, // Core MSCI EM IMI (Emerging Markets)
         XEF:  16, // Core MSCI EAFE IMI ETF (International Developed)
-        XEC:   8, // Core MSCI EM IMI (Developed Markets)
+        XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
       },
       usd_symbols: [
         // Only these 2 require USD→CAD conversion
@@ -84,106 +90,51 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
     },
 
     /**
-     * Core equity sleeve for USD-denominated account
-     *
-     * **Allocation Strategy:**
-     * - US equities (VTI, DFSV, DISV, VTV): 32% total
-     * - International developed (DFAX, VEA, EWJ): 43% total
-     * - Emerging markets (VWO): 9%
-     * - Real assets (KXI, DRAG): 16% total
-     *
-     * **Currency Mix:**
-     * - All securities trade in USD (100%)
-     * - No currency conversion required
-     *
-     * **Total Weight:** 100% (10+6+13+30+10+9+13+3+3+3)
-     *
-     * **Note:** This demonstrates a sleeve where usd_symbols contains ALL symbols,
-     * meaning the calculator should handle 100% USD allocation correctly.
-     */
-    'core-USD': {
-      weights: {
-        DISV: 10, // Dimensional International Small Cap Value
-        DFSV: 6, // Dimensional US Small Cap Value
-        VTI: 13, // Vanguard Total Stock Market
-        DFAX: 30, // Dimensional World ex US Core Equity
-        VEA: 10, // Vanguard FTSE Developed Markets
-        VWO: 9, // Vanguard FTSE Emerging Markets
-        KXI: 13, // iShares Global Consumer Staples
-        EWJ: 3, // iShares MSCI Japan
-        DRAG: 3, // Dracaris Resources (Real Assets)
-        VTV: 3, // Vanguard Value
-      },
-      usd_symbols: [
-        'VTI',
-        'VEA',
-        'VWO',
-        'DFSV',
-        'DISV',
-        'KXI',
-        'EWJ',
-        'VTV',
-        'DFAX',
-        'DRAG',
-      ], // All symbols trade in USD
-    },
-
-    /**
      * Precious metals sleeve for CAD-denominated account
+     *
+     * **Sprott Physical Bullion Trusts**
+     *
+     * Source: Sprott Asset Management
+     * - Physical Bullion Funds: https://sprott.com/investment-strategies/exchange-listed-products/physical-bullion-funds/
+     *
+     * These closed-end funds provide exposure to physical precious metals:
+     * - Fully allocated and unencumbered metals held at Royal Canadian Mint
+     * - Redeemable for physical metal (subject to minimum thresholds)
+     * - Traded on NYSE Arca and TSX exchanges
      *
      * **Allocation Strategy:**
      * - Physical gold (PHYS): 60%
      * - Physical silver (PSLV): 40%
      *
      * **Currency Mix:**
-     * - All CAD-traded (no usd_symbols array = all CAD)
-     * - No currency conversion required
+     * - All CAD-traded (no currency conversion required)
      *
-     * **Total Weight:** 100% (60+40)
-     *
-     * **Note:** This demonstrates the simplest sleeve pattern:
-     * - Only 2 holdings
-     * - All CAD-denominated
-     * - Missing usd_symbols field (interpreted as empty array)
+     * **DISCLAIMER:** This is example data for software demonstration only.
+     * Not financial advice. Consult qualified financial professionals for investment decisions.
      */
     bullion: {
       weights: {
-        PHYS: 60, // Sprott Physical Gold Trust
-        PSLV: 40, // Sprott Physical Silver Trust
+        PHYS: 60, // Sprott Physical Gold Trust - https://sprott.com/investment-strategies/physical-bullion-trusts/gold/
+        PSLV: 40, // Sprott Physical Silver Trust - https://sprott.com/investment-strategies/exchange-listed-products/physical-bullion-funds/silver/
       },
-      // No usd_symbols field - all securities assumed CAD
+      usd_symbols: [
+        // No USD securities in this sleeve
+      ],
     },
   },
 }
 
 /**
- * Expected behavior examples for testing:
+ * Five Factor Portfolio configuration (core sleeve only)
  *
- * **Example 1: CAD sleeve with USD securities**
- * ```typescript
- * import { EXAMPLE_SLEEVES_CONFIG } from './sleeves.examples.ts'
- * import { SleeveCalculator } from './calculator.ts'
- * const calculator = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG)
- * const calcResult = calculator.calculate('core', 10000, 1.35)
- * // AVDV (10%): CAD $1,000 / 1.35 = USD $740.74
- * // AVUV (6%): CAD $600 / 1.35 = USD $444.44
- * // VUN (13%): CAD $1,300 (stays in CAD)
- * ```
+ * Convenience export containing ONLY the Ben Felix Five Factor Portfolio.
+ * Useful for examples and testing focused specifically on this portfolio.
  *
- * **Example 2: USD-only sleeve**
- * ```typescript ignore
- * // ... using the same calculator instance as above
- * const calcResult = calculator.calculate('core-USD', 10000, 1.35);
- * // All allocations in USD, no conversion needed
- * // VTI (13%): USD $1,300
- * ```
- *
- * **Example 3: CAD-only sleeve**
- * ```typescript ignore
- * // ... using the same calculator instance as above
- * const calcResult = calculator.calculate('bullion', 5000, 1.35);
- * // PHYS (60%): CAD $3,000
- * // PSLV (40%): CAD $2,000
- * // Exchange rate unused
- * ```
+ * Source: Benjamin Felix, Rational Reminder Podcast Episode 129
+ * URL: https://rationalreminder.ca/podcast/129
  */
+export const SLEEVES_FIVE_FACTOR: SleevesConfig = {
+  sleeves: {
+    core: EXAMPLE_SLEEVES_CONFIG.sleeves.core,
+  },
+}

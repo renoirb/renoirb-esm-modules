@@ -1,0 +1,17 @@
+# Target Allocations - Five Factor Portfolio Example
+# Using Ben Felix's Five Factor Investing with ETFs model
+# Source: Rational Reminder Podcast Episode 129
+# https://rationalreminder.ca/podcast/129
+
+Alice:
+  RRSP:
+    core: 24000  # Five Factor Portfolio allocation
+  TFSA:
+    core: 11000  # Five Factor Portfolio allocation
+
+Bob:
+  RRSP:
+    core: 35400  # Five Factor Portfolio allocation
+
+# Total allocated: $70,400 CAD (88% of $80,000)
+# Unallocated: $9,600 CAD (12% - see unallocated.yaml)
