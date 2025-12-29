@@ -138,3 +138,209 @@ export interface DriftCalculatorState {
   /** Current actual holdings (symbol -> amount in native currency) */
   actuals: Record<string, number>
 }
+
+/**
+ * Brokerage holding structure (from JSON files)
+ * Can be passed directly to PortfolioAggregate.addHolding()
+ *
+ * @remarks
+ * - String values preserve precision from brokerage data
+ * - Supports both traditional securities and crypto (with "coins" suffix)
+ *
+ * @example
+ * ```ts
+ * const holding: HoldingInput = {
+ *   symbol: 'PHYS',
+ *   name: 'Sprott Physical Gold Trust',
+ *   totalValue: '+56628.00',
+ *   currency: 'CAD',
+ *   shares: '1,200',
+ *   currentPrice: '+47.19',
+ *   allTimeReturn: {
+ *     value: '+14139.57',
+ *     percent: '+33.28',
+ *   },
+ * }
+ * ```
+ */
+export interface HoldingInput {
+  /** Security symbol (e.g., 'PHYS', 'VUN', 'BTC') */
+  symbol: string
+
+  /** Full security name */
+  name: string
+
+  /** Total value as string (e.g., "+56628.00") */
+  totalValue: string
+
+  /** Currency the security trades in */
+  currency: CurrencyCode
+
+  /** Share count as string (e.g., "1,200" or "0.0745 coins") */
+  shares: string
+
+  /** Current price (optional, preserved but not used) */
+  currentPrice?: string
+
+  /** Current day diff percentage (optional, preserved but not used) */
+  currentDiffPercent?: string
+
+  /** All-time return (optional, preserved but not used) */
+  allTimeReturn?: {
+    /** Return value as string (e.g., "+14139.57") */
+    value: string
+    /** Return percentage as string (e.g., "+33.28") */
+    percent: string
+  }
+}
+
+/**
+ * Complete brokerage snapshot file structure
+ *
+ * @example
+ * ```ts
+ * const snapshot: BrokerageSnapshot = {
+ *   timestamp: '2025-01-15T14:30:22GMT-5',
+ *   account: {
+ *     totals: {
+ *       CAD: '29250.00',
+ *       USD: '1765.00',
+ *     },
+ *   },
+ *   holdings: [...],
+ * }
+ * ```
+ */
+export interface BrokerageSnapshot {
+  /** Timestamp of snapshot */
+  timestamp: string
+
+  /** Account totals */
+  account: {
+    totals: {
+      /** Total CAD value as string */
+      CAD: string
+      /** Total USD value as string */
+      USD: string
+    }
+  }
+
+  /** Array of holdings */
+  holdings: HoldingInput[]
+}
+
+/**
+ * Allocation configuration (from allocation.yaml)
+ * Maps person → account → sleeve → allocated amount in CAD
+ *
+ * @example
+ * ```ts
+ * const allocations: AllocationsConfig = {
+ *   Renoir: {
+ *     RRSP: {
+ *       core: 72000,
+ *       bullion: 139000,
+ *       'growth-USD': 7300,
+ *     },
+ *     TFSA: {
+ *       core: 32000,
+ *       income: 7500,
+ *     },
+ *   },
+ * }
+ * ```
+ */
+export interface AllocationsConfig {
+  [person: string]: {
+    [account: string]: {
+      /** Allocated CAD amount for each sleeve */
+      [sleeveName: string]: number
+    }
+  }
+}
+
+/**
+ * Weight analysis for a single security
+ */
+export interface WeightAnalysis {
+  /** Security symbol */
+  symbol: string
+
+  /** Total value in native currency */
+  totalValue: number
+
+  /** Total value converted to CAD */
+  totalValueCAD: number
+
+  /** Current actual weight percentage (e.g., 52.1 for 52.1%) */
+  currentWeight: number
+
+  /** Target weight from sleeve definition (e.g., 60 for 60%) */
+  targetWeight: number
+
+  /** Weight drift: currentWeight - targetWeight (e.g., -7.9) */
+  weightDrift: number
+
+  /** Currency the security trades in */
+  currency: CurrencyCode
+}
+
+/**
+ * Complete sleeve analysis result
+ */
+export interface SleeveAnalysisResult {
+  /** Name of the sleeve analyzed */
+  sleeveName: string
+
+  /** Total value of all holdings in CAD */
+  totalValueCAD: number
+
+  /** Total value of USD holdings (in USD, not CAD) */
+  totalValueUSD: number
+
+  /** Per-security weight analysis */
+  analysis: WeightAnalysis[]
+}
+
+/**
+ * Simplified holding summary (parsed numeric values)
+ */
+export interface HoldingSummary {
+  /** Security symbol */
+  symbol: string
+
+  /** Security name */
+  name: string
+
+  /** Total value (parsed number) */
+  totalValue: number
+
+  /** Currency */
+  currency: CurrencyCode
+
+  /** Share count (parsed number) */
+  shares: number
+}
+
+/**
+ * Complete state for a sleeve within an account
+ */
+export interface AccountSleeveState {
+  /** Name of the sleeve */
+  sleeveName: string
+
+  /** Allocated amount from allocation.yaml (target) */
+  allocated: number
+
+  /** Actual current value (sum of holdings) */
+  actual: number
+
+  /** Drift: allocated - actual (undeployed cash if positive) */
+  drift: number
+
+  /** Holdings in this sleeve */
+  holdings: HoldingSummary[]
+
+  /** Weight analysis (current vs target weights) */
+  weightAnalysis: SleeveAnalysisResult
+}
