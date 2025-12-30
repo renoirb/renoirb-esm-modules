@@ -160,20 +160,18 @@ export interface AllocationsConfig {
 ### Example File
 
 ```yaml
-# Five Factor Portfolio Allocations
-# "core" sleeve = Ben Felix's Five Factor Investing with ETFs portfolio
-# See src/sleeves.examples.ts for complete portfolio definition
-# Source: Rational Reminder Podcast Episode 129 (December 17, 2020)
+# Example Sleeve Allocations
+# "core" sleeve definition in src/sleeves.examples.ts
 
 Alice:
   RRSP:
-    core: 24000  # Five Factor Portfolio allocation
+    core: 24000
   TFSA:
-    core: 11000  # Five Factor Portfolio allocation
+    core: 11000
 
 Bob:
   RRSP:
-    core: 35400  # Five Factor Portfolio allocation
+    core: 35400
 
 # Total allocated: $70,400 CAD (88% of $80,000)
 # Unallocated: $9,600 CAD (12% - see unallocated.yaml)
@@ -278,7 +276,7 @@ export interface TotalsConfig {
 ### Example File
 
 ```yaml
-# Account Totals - Five Factor Portfolio Example
+# Account Totals - Portfolio Example
 # Fictional data for demonstration purposes only
 
 Alice:
@@ -343,7 +341,6 @@ export interface SleeveDefinition {
   description?: string      // Description (optional)
   weights: SleeveWeights    // Security weights (required)
   usd_symbols?: string[]    // USD-denominated securities (optional)
-  min_task_threshold?: number  // Minimum rebalancing amount (optional)
 }
 
 /**
@@ -357,15 +354,13 @@ export interface SleeveWeights {
 ### Example File
 
 ```yaml
-# Sleeve Definitions - Five Factor Portfolio Example
-# Source: Ben Felix - Rational Reminder Podcast Episode 129
-# See src/sleeves.examples.ts for TypeScript implementation
+# Sleeve Definitions - Example
+# See src/sleeves.examples.ts for complete definitions with attribution
 
 sleeves:
   core:
-    name: "Five Factor Investing with ETFs"
-    doc: "Ben Felix Five Factor Portfolio"
-    description: "Fama-French Five-Factor Model implementation using ETFs"
+    name: "Example Core Equity Sleeve"
+    description: "Example sleeve for testing - see src/sleeves.examples.ts"
     weights:
       AVDV:  6  # Avantis International Small Cap Value ETF (USD)
       AVUV: 10  # Avantis U.S. Small Cap Value ETF (USD)
@@ -376,7 +371,6 @@ sleeves:
     usd_symbols:
       - AVDV
       - AVUV
-    min_task_threshold: 20
 
   bullion:
     name: "Precious Metals Physical Trusts"
@@ -610,12 +604,12 @@ done
 
 ```
 historical-data/20251223/
-├── allocation.yaml       # Target allocations (Five Factor Portfolio)
-├── unallocated.yaml     # Undeployed cash
-├── totals.yaml          # Account totals
-├── Alice-RRSP.json      # 6 holdings (Five Factor Portfolio)
-├── Alice-TFSA.json      # 6 holdings (Five Factor Portfolio)
-└── Bob-RRSP.json        # 6 holdings (Five Factor Portfolio)
+├── allocation.yaml       # Target allocations (example uses "core" sleeve)
+├── unallocated.yaml      # Undeployed cash (example: 12% unallocated)
+├── totals.yaml           # Account totals
+├── Alice-RRSP.json       # 6 holdings
+├── Alice-TFSA.json       # 6 holdings
+└── Bob-RRSP.json         # 6 holdings
 ```
 
 ### Typical File Sizes

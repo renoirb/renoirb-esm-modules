@@ -112,10 +112,11 @@ Instead of manually creating barrel files first, we'll:
      "description": "Pure TypeScript calculation engine for portfolio sleeve allocation and drift analysis",
      "license": "MIT",
      "exports": {
-       ".": "./src/index.ts"
+       ".": "./core.ts",
+       "./deno": "./deno.ts",
      },
      "tasks": {
-       "cli": "deno --allow-read cli.ts",
+       "cli": "deno --allow-read ./deno.ts",
        "test": "deno task test:src && deno task test:doc-only",
        "test:src": "deno test",
        "test:doc-only": "deno check --doc-only **/*.md"

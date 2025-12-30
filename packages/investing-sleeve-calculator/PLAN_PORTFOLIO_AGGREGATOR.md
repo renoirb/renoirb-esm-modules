@@ -244,7 +244,7 @@ export class SleeveWeightAnalyzer {
 
 ### Example Output
 
-```typescript
+```typescript ignore
 {
   sleeveName: 'bullion',
   totalValueCAD: 108580,
@@ -358,7 +358,7 @@ export class PortfolioAggregate {
 
 ### Internal Methods
 
-```typescript
+```typescript ignore
 /**
  * Filter holdings by sleeve based on security symbols
  */

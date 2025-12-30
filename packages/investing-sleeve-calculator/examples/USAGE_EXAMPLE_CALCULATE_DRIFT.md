@@ -2,11 +2,7 @@
 
 This example demonstrates calculating drift between target and actual holdings, then generating rebalancing tasks for a single sleeve.
 
-## Attribution
-
-Portfolio composition based on the **Five Factor Investing with ETFs** model by Benjamin Felix, Portfolio Manager at PWL Capital.
-
-**Source:** [Rational Reminder Podcast Episode 129](https://rationalreminder.ca/podcast/129) (December 17, 2020)
+**Portfolio details and attribution:** See [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts)
 
 **Disclaimer:** This is example code for software demonstration only. Not financial advice.
 
@@ -18,15 +14,7 @@ Portfolio composition based on the **Five Factor Investing with ETFs** model by 
 **Total Allocated:** $24,000 CAD
 **Exchange Rate:** 1.38 (CAD/USD)
 **Date:** 2025-01-15
-
-### Five Factor Portfolio Target Weights
-
-- AVDV 6% - Avantis International Small Cap Value ETF (USD)
-- AVUV 10% - Avantis U.S. Small Cap Value ETF (USD)
-- VUN 30% - Vanguard U.S. Total Market Index ETF (CAD)
-- XEC 8% - iShares Core MSCI Emerging Markets IMI Index ETF (CAD)
-- XEF 16% - iShares Core MSCI EAFE IMI Index ETF (CAD)
-- XIC 30% - BMO S&P/TSX Capped Composite Index ETF (CAD)
+**Sleeve:** "core" (see [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts) for weights)
 
 ---
 
@@ -49,8 +37,9 @@ const targets = calculator.calculate(
   1.38,        // CAD/USD exchange rate
 )
 
-console.log('Target allocation:', targets)
-console.log('Summary:', targets.summary)
+const { summary, ...restTargets } = targets
+console.table(summary)
+console.log('Target allocation:', restTargets)
 
 // Step 3: Create drift calculator with targets
 const drift = new DriftCalculator(targets)
@@ -120,32 +109,67 @@ console.log('\nRestored drift calculator works identically')
 ## Expected Output
 
 ```
+┌───────────────┬───────────────────┐
+│ (idx)         │ Values            │
+├───────────────┼───────────────────┤
+│ totalCAD      │ 20160             │
+│ totalUSD      │ 2782.608695652174 │
+│ totalUSDInCAD │ 3840              │
+└───────────────┴───────────────────┘
+
 Target allocation: {
-  sleeveName: 'core',
+  sleeveName: "core",
   totalAmountCAD: 24000,
   exchangeRate: 1.38,
   targets: [
-    { symbol: 'VUN', targetAmount: 7200, currency: 'CAD', weight: 30, normalizedWeight: 0.3 },
-    { symbol: 'XIC', targetAmount: 7200, currency: 'CAD', weight: 30, normalizedWeight: 0.3 },
-    { symbol: 'XEF', targetAmount: 3840, currency: 'CAD', weight: 16, normalizedWeight: 0.16 },
-    { symbol: 'XEC', targetAmount: 1920, currency: 'CAD', weight: 8, normalizedWeight: 0.08 },
-    { symbol: 'AVUV', targetAmount: 1739.13, currency: 'USD', weight: 10, normalizedWeight: 0.1 },
-    { symbol: 'AVDV', targetAmount: 1043.48, currency: 'USD', weight: 6, normalizedWeight: 0.06 }
+    { symbol: "AVDV", targetAmount: 1043.4782608695652, currency: "USD", weight:  6, normalizedWeight: 0.06 },
+    { symbol: "AVUV", targetAmount: 1739.1304347826087, currency: "USD", weight: 10, normalizedWeight: 0.1 },
+    { symbol: "VUN",  targetAmount: 7200,               currency: "CAD", weight: 30, normalizedWeight: 0.3 },
+    { symbol: "XEC",  targetAmount: 1920,               currency: "CAD", weight:  8, normalizedWeight: 0.08 },
+    { symbol: "XEF",  targetAmount: 3840,               currency: "CAD", weight: 16, normalizedWeight: 0.16 },
+    { symbol: "XIC",  targetAmount: 7200,               currency: "CAD", weight: 30, normalizedWeight: 0.3 }
   ],
-  summary: { totalCAD: 19200, totalUSD: 2782.61, totalUSDInCAD: 3840 }
 }
 
 === Rebalancing Tasks for Alice RRSP ===
 
 SELL (execute first to free liquidity):
+  AVDV: Sell 51.52 USD (from 1095 → 1043)
   VUN: Sell 250.00 CAD (from 7450 → 7200)
   XEF: Sell 85.00 CAD (from 3925 → 3840)
-  AVDV: Sell 51.52 USD (from 1095 → 1043)
 
 BUY (execute after sells):
-  XIC: Buy 220.00 CAD (from 6980 → 7200)
-  XEC: Buy 70.00 CAD (from 1850 → 1920)
   AVUV: Buy 59.13 USD (from 1680 → 1739)
+  XEC: Buy 70.00 CAD (from 1850 → 1920)
+  XIC: Buy 220.00 CAD (from 6980 → 7200)
+```
+
+### Saved State for Reproduction
+
+The `DriftCalculator.toJSON()` method produces a serializable state that combines:
+
+1. **`calculationResult`** - The target allocation from `SleeveCalculator.calculate()` (shown as "Target allocation" above)
+2. **`actuals`** - The current holdings entered via `setCurrentlyOwning()` calls
+
+This saved state can be copy-pasted and later restored using `DriftCalculator.fromJSON()` to reproduce the exact same analysis.
+
+**Example saved state structure:**
+
+```json
+{
+  "calculationResult": {
+    "sleeveName": "core",
+    // ... rest of target allocation as above ...
+  },
+  "actuals": {
+    "VUN": 7450,
+    "XIC": 6980,
+    "XEF": 3925,
+    "XEC": 1850,
+    "AVUV": 1680,
+    "AVDV": 1095
+  }
+}
 ```
 
 ---
@@ -153,11 +177,15 @@ BUY (execute after sells):
 ## Running the Example
 
 ```bash
-# From the package root directory
-deno run examples/USAGE_EXAMPLE_DRIFT_CALCULATOR.md
+# Verify the example code works
+deno test --doc examples/USAGE_EXAMPLE_CALCULATE_DRIFT.md
 
-# Or copy the code to a .ts file and run it
-deno run example-workflow.ts
+# For interactive rebalancing workflow, use the CLI tool:
+deno task use:balance
+# Uses built-in sleeves from ../src/sleeves.examples.ts (reproduces this example)
+
+# Or provide custom sleeve configuration:
+deno task use:balance /path/to/sleeves.yaml
 ```
 
 ---
@@ -211,10 +239,8 @@ deno run example-workflow.ts
 
 ## References
 
-- **Five Factor Portfolio:** [Rational Reminder Podcast Episode 129](https://rationalreminder.ca/podcast/129)
-- **Sleeve Examples:** [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts)
+- **Portfolio Attribution:** [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts)
 - **Calculator Documentation:** [`../README.md`](../README.md)
-- **Rational Reminder Podcast:** <https://rationalreminder.ca/>
 
 ---
 

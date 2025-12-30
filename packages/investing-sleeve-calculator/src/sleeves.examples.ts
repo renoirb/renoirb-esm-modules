@@ -25,6 +25,83 @@ import {
  */
 
 /**
+ * Core equity sleeve for CAD-denominated account
+ *
+ * **Five Factor Investing with ETFs Portfolio**
+ *
+ * This sleeve configuration implements the Fama-French Five-Factor Model using ETFs,
+ * as published by Benjamin Felix, Portfolio Manager at PWL Capital.
+ *
+ * **Why this portfolio is used as an example:**
+ * This package is designed to help individual investors rigorously manage their own
+ * portfolios and learn the systematic work that financial advisors and portfolio
+ * managers perform.
+ *
+ * @see {@link https://jsr.io/@renoirb/investing-sleeve-calculator#why-this-tool Why This Tool - Package purpose and fiduciary duty}
+ *
+ * The Five Factor Portfolio serves as both:
+ * - **Test data** for the calculator's test suite
+ * - **Default configuration** for the interactive CLI tool
+ *
+ * It demonstrates capabilities for investors who want to go beyond simple "couch potato"
+ * strategies and implement more detailed, factor-based portfolio management:
+ * - Mixed CAD/USD securities requiring currency conversion
+ * - Multi-region diversification
+ * - Non-integer weight allocations
+ * - Well-documented public portfolio backed by academic research
+ *
+ * **Attribution:**
+ * - **Author:** Benjamin Felix, CFA, CFP - Portfolio Manager at PWL Capital
+ * - **Firm:** PWL Capital (Canadian financial advisory firm)
+ * - **Source:** Rational Reminder Podcast Episode 129 (December 17, 2020)
+ *   "Five Factor Investing with ETFs"
+ * - **Podcast URL:** https://rationalreminder.ca/podcast/129
+ * - **PWL Capital:** https://pwlcapital.com/our-team/benjamin-felix/
+ *
+ * **About the Rational Reminder Podcast:**
+ * A weekly podcast on sensible investing and financial decision-making, hosted by
+ * Benjamin Felix, Dan Bortolotti, and Cameron Passmore at PWL Capital in Canada.
+ * Website: https://rationalreminder.ca/
+ *
+ * **Alternative USD-Only Variant:**
+ * For a USD-only variant of this portfolio, see:
+ * https://www.optimizedportfolio.com/ben-felix-model-portfolio/
+ *
+ * Note: This resource is not affiliated with Ben Felix or PWL Capital but provides
+ * helpful reference data for U.S.-based investors.
+ *
+ * ---
+ *
+ * **IMPORTANT DISCLAIMER:**
+ *
+ * This is example data for software testing and demonstration purposes ONLY.
+ *
+ * - This is NOT financial advice
+ * - This is NOT a recommendation to buy or sell securities
+ * - This is NOT a solicitation or offer
+ * - This package is a calculation utility and does not provide investment advice
+ * - The portfolio shown is published research used solely to provide realistic
+ *   example data for testing this calculation package
+ * - Past performance does not guarantee future results
+ * - Always consult qualified financial professionals for investment decisions
+ */
+export const EXAMPLE_CORE_SLEEVE_DEFINITION = {
+  weights: {
+    AVDV:  6, // Avantis® International Small Cap Value ETF (USD)
+    AVUV: 10, // Avantis® U.S. Small Cap Value ETF (USD)
+    VUN:  30, // Vanguard US Total Market ETF (CAD-hedged)
+    XEC:   8, // Core MSCI EM IMI (Emerging Markets)
+    XEF:  16, // Core MSCI EAFE IMI ETF (International Developed)
+    XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
+  },
+  usd_symbols: [
+    // Only these 2 require USD→CAD conversion
+    'AVDV',
+    'AVUV',
+  ],
+}
+
+/**
  * Example sleeves configuration mimicking a real-world `sleeves.yaml` file.
  *
  * **Structure:**
@@ -38,13 +115,8 @@ import {
  *    - Contains 2 USD-traded securities (AVDV, AVUV) requiring conversion
  *    - Diversified across regions and market caps
  *
- * 2. **core-USD** - Primary equity allocation in USD account
- *    - All securities trade in USD (no currency conversion needed)
- *    - Similar diversification strategy to 'core' but USD-native
- *    - Demonstrates 100% USD allocation pattern
- *
- * 3. **bullion** - Precious metals allocation
- *    - All CAD-traded (no usd_symbols array)
+ * 2. **bullion** - Precious metals allocation
+ *    - All CAD-traded
  *    - Simpler structure with only 2 holdings
  *    - Demonstrates CAD-only sleeve pattern
  *
@@ -52,42 +124,11 @@ import {
  * - Weight percentages should sum to 100 (±0.1% tolerance acceptable)
  * - usd_symbols array can be empty, partial, or complete
  * - Symbol names should match keys in the weights object
- * - Missing usd_symbols means all securities trade in CAD
  */
 export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
   sleeves: {
-    /**
-     * Core equity sleeve for CAD-denominated account
-     *
-     * **Five Factor Investing with ETFs Portfolio**
-     *
-     * Source: Benjamin Felix, Portfolio Manager at PWL Capital
-     * - PWL Capital: https://pwlcapital.com/our-team/benjamin-felix/
-     * - Rational Reminder Podcast Episode 129 (December 17, 2020)
-     *   https://rationalreminder.ca/podcast/129
-     *
-     * Implements the Fama-French Five-Factor Model using ETFs.
-     *
-     * **DISCLAIMER:** This is example data for software demonstration only.
-     * Not financial advice. Consult qualified financial professionals for investment decisions.
-     */
-    core: {
-      /**
-       */
-      weights: {
-        AVDV:  6, // Avantis® International Small Cap Value ETF (USD)
-        AVUV: 10, // Avantis® U.S. Small Cap Value ETF (USD)
-        VUN:  30, // Vanguard US Total Market ETF (CAD-hedged)
-        XEC:   8, // Core MSCI EM IMI (Emerging Markets)
-        XEF:  16, // Core MSCI EAFE IMI ETF (International Developed)
-        XIC:  30, // Core S&P/TSX Capped Composite ETF (Canadian)
-      },
-      usd_symbols: [
-        // Only these 2 require USD→CAD conversion
-        'AVDV',
-        'AVUV',
-      ],
-    },
+
+    core: EXAMPLE_CORE_SLEEVE_DEFINITION,
 
     /**
      * Precious metals sleeve for CAD-denominated account
@@ -135,6 +176,6 @@ export const EXAMPLE_SLEEVES_CONFIG: SleevesConfig = {
  */
 export const SLEEVES_FIVE_FACTOR: SleevesConfig = {
   sleeves: {
-    core: EXAMPLE_SLEEVES_CONFIG.sleeves.core,
+    core: EXAMPLE_CORE_SLEEVE_DEFINITION,
   },
 }

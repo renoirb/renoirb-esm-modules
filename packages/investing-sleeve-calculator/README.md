@@ -14,6 +14,31 @@ Pure TypeScript calculation engine for portfolio sleeve allocation and drift ana
 - **Pure Calculation Library**: No external dependencies, works in any runtime
 - **Type Safe**: Full TypeScript support with comprehensive type definitions
 
+## Why This Tool
+
+Building and maintaining a balanced portfolio requires repeated ratio calculations every time you rebalance or add new funds. This tool was created to help individual investors—particularly those learning about portfolio management—understand and perform the systematic work that financial advisors and portfolio managers do.
+
+**About Fiduciary Duty:**
+
+When learning about investing, one important concept is "fiduciary duty"—a legal obligation for advisors to act in your best interest, putting your needs ahead of their own financial gain. Understanding this helps you decide whether to work with advisors or manage your own portfolio.
+
+This calculator provides the mathematical foundation for either path: it helps you implement rigorous portfolio management yourself, or understand what your advisor should be doing for you.
+
+**What This Tool Does:**
+
+For a portfolio with target percentage allocations (e.g., 30% Canadian equities, 30% U.S. equities, etc.), this tool calculates exactly how much money should go into each security, handles currency conversions, and identifies what to buy or sell to maintain your target balance.
+
+This tool is designed to help you:
+- **Manage your whole portfolio** - Track risk-bearing positions in their sleeves alongside unallocated cash reserves
+- **Stay calm during market drawdowns** - Having unallocated funds ready and a systematic rebalancing plan reduces nervousness when markets drop
+- **Execute dollar-cost averaging** - Calculate exact amounts for regular contributions across multiple securities
+- **Organize by purpose** - Different sleeves for different goals (e.g., core equity, precious metals, income)
+
+**Important Note on Costs:**
+When selecting ETFs or securities for your portfolio, always verify their fees. For example, a Management Expense Ratio (MER) of 0.06% costs $6/year per $10,000 invested, while 0.50% MER costs $50/year on the same amount. Small differences compound significantly over decades. Be mindful of costs when building your portfolio.
+
+As a programmer, I built this to help me understand these calculations deeply and manage my own investments systematically.
+
 ## Installation
 
 ### Deno

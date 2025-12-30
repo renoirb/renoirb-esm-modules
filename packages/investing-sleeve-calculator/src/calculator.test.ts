@@ -5,20 +5,54 @@ import {
 } from '@std/assert'
 import SleeveCalculator from './index.ts'
 import type { SleevesConfig } from './types.ts'
-import { EXAMPLE_SLEEVES_CONFIG } from './sleeves.examples.ts'
+import {
+  //
+  EXAMPLE_SLEEVES_CONFIG,
+  EXAMPLE_CORE_SLEEVE_DEFINITION,
+} from './sleeves.examples.ts'
 
 // Test fixture - simplified sleeves config
 const testConfig: SleevesConfig = {
   sleeves: {
     ...EXAMPLE_SLEEVES_CONFIG.sleeves,
-    'test-with-zeros': {
+    'testing': {
       weights: {
-        ACTIVE1: 50,
-        ACTIVE2: 50,
-        WATCHING: 0.01, // Below 0.1 threshold
-        DISABLED: 0,
+        ACTIVE1:  50,
+        ACTIVE2:  50,
+        WATCHING:  0.01, // Below 0.1 threshold
+        DISABLED:  0,
       },
     },
+    /**
+     * USD-only variant of the Five Factor Portfolio for testing.
+     *
+     * This sleeve uses US-listed ETFs exclusively, suitable for USD-denominated
+     * accounts or US-based investors. All securities require currency conversion
+     * when calculating from CAD total amounts.
+     *
+     * **Comparison:**
+     * - CAD variant (core): Uses VUN, XIC, XEF, XEC with 2 USD securities
+     * - USD variant (this): Uses VTI, VEA, VWO - all 5 securities in USD
+     *
+     * @see {@link https://www.optimizedportfolio.com/ben-felix-model-portfolio/ Ben Felix USD Portfolio Variant}
+     * @see {@link EXAMPLE_CORE_SLEEVE_DEFINITION} for CAD-hedged variant
+     */
+    'core-USD': {
+      weights: {
+        AVDV:  8,
+        AVUV: 14,
+        VEA:  24,
+        VTI:  42,
+        VWO:  12,
+      },
+      usd_symbols: [
+        'AVDV',
+        'AVUV',
+        'VEA',
+        'VTI',
+        'VWO',
+      ],
+    }
   },
 }
 
@@ -119,59 +153,75 @@ Deno.test('SleeveCalculator - Calculate method', async (t) => {
   })
 
   await t.step('calculates USD-only sleeve correctly', () => {
-    const result = calculator.calculate('core-USD', 1000, 1.42)
+    const coreUsdSleeve = testConfig.sleeves['core-USD']
+    const totalCAD = 1000
+    const exchangeRate = 1.42
+    const result = calculator.calculate('core-USD', totalCAD, exchangeRate)
 
     assertEquals(result.sleeveName, 'core-USD')
-    assertEquals(result.targets.length, 10)
+    assertEquals(result.targets.length, Object.keys(coreUsdSleeve.weights).length)
 
     // All targets should be USD
     for (const target of result.targets) {
       assertEquals(target.currency, 'USD')
     }
 
-    // Check one security - VTI (13%)
+    // Check one security - VTI (weight from source)
+    const vtiWeight = coreUsdSleeve.weights.VTI
     const vti = result.targets.find((t) => t.symbol === 'VTI')!
-    assertEquals(vti.weight, 13)
-    assertEquals(vti.normalizedWeight, 0.13)
-    // 1000 CAD * 0.13 = 130 CAD → 130 / 1.42 = 91.55 USD
-    assertEquals(Math.round(vti.targetAmount * 100) / 100, 91.55)
+    assertEquals(vti.weight, vtiWeight)
+    assertEquals(vti.normalizedWeight, vtiWeight / 100)
+
+    // Verify calculation: totalCAD * weight% / exchangeRate
+    const expectedVtiAmount = (totalCAD * vtiWeight / 100) / exchangeRate
+    assertEquals(vti.targetAmount, expectedVtiAmount)
 
     // Summary - all USD
     assertEquals(result.summary.totalCAD, 0)
-    assertEquals(Math.round(result.summary.totalUSD), 704) // ~1000/1.42
+    assertEquals(Math.round(result.summary.totalUSD), Math.round(totalCAD / exchangeRate))
   })
 
   await t.step('calculates mixed CAD/USD sleeve correctly', () => {
-    const result = calculator.calculate('core', 5000, 1.42)
+    const coreSleeve = EXAMPLE_CORE_SLEEVE_DEFINITION
+    const totalCAD = 5000
+    const exchangeRate = 1.42
+    const result = calculator.calculate('core', totalCAD, exchangeRate)
 
     assertEquals(result.sleeveName, 'core')
-    assertEquals(result.targets.length, 11)
+    assertEquals(result.targets.length, Object.keys(coreSleeve.weights).length)
 
-    // Check USD security - AVDV (10%)
+    // Check USD security - AVDV (weight from source)
+    const avdvWeight = coreSleeve.weights.AVDV
     const avdv = result.targets.find((t) => t.symbol === 'AVDV')!
     assertEquals(avdv.currency, 'USD')
-    assertEquals(avdv.weight, 10)
-    assertEquals(avdv.normalizedWeight, 0.10)
-    // 5000 CAD * 0.10 = 500 CAD → 500 / 1.42 = 352.11 USD
-    assertEquals(Math.round(avdv.targetAmount * 100) / 100, 352.11)
+    assertEquals(avdv.weight, avdvWeight)
+    assertEquals(avdv.normalizedWeight, avdvWeight / 100)
 
-    // Check CAD security - VUN (13%)
+    // Verify calculation: totalCAD * weight% / exchangeRate
+    const expectedAvdvAmount = (totalCAD * avdvWeight / 100) / exchangeRate
+    assertEquals(avdv.targetAmount, expectedAvdvAmount)
+
+    // Check CAD security - VUN (weight from source)
+    const vunWeight = coreSleeve.weights.VUN
     const vun = result.targets.find((t) => t.symbol === 'VUN')!
     assertEquals(vun.currency, 'CAD')
-    assertEquals(vun.weight, 13)
-    assertEquals(vun.normalizedWeight, 0.13)
-    assertEquals(vun.targetAmount, 650) // 5000 * 0.13
+    assertEquals(vun.weight, vunWeight)
+    assertEquals(vun.normalizedWeight, vunWeight / 100)
+
+    // Calculate expected amount: totalCAD * weight%
+    const expectedVunAmount = totalCAD * vunWeight / 100
+    assertEquals(vun.targetAmount, expectedVunAmount)
 
     // Summary should have both CAD and USD
     assertEquals(result.summary.totalCAD > 0, true)
     assertEquals(result.summary.totalUSD > 0, true)
     // Total should equal input (CAD + USD-in-CAD)
     const total = result.summary.totalCAD + result.summary.totalUSDInCAD
-    assertEquals(Math.round(total), 5000)
+    assertEquals(Math.round(total), totalCAD)
   })
 
   await t.step('filters out zero and near-zero weights', () => {
-    const result = calculator.calculate('test-with-zeros', 1000, 1.42)
+    const result = calculator.calculate('testing', 1000, 1.42)
 
     // Should only include ACTIVE1 and ACTIVE2 (not WATCHING or DISABLED)
     assertEquals(result.targets.length, 2)
@@ -185,25 +235,41 @@ Deno.test('SleeveCalculator - Calculate method', async (t) => {
   })
 
   await t.step('handles large allocations', () => {
-    const result = calculator.calculate('core', 70000, 1.42)
-    assertEquals(result.totalAmountCAD, 70000)
+    const coreSleeve = EXAMPLE_CORE_SLEEVE_DEFINITION
+    const totalCAD = 70000
+    const exchangeRate = 1.42
+    const result = calculator.calculate('core', totalCAD, exchangeRate)
 
+    assertEquals(result.totalAmountCAD, totalCAD)
+
+    const avdvWeight = coreSleeve.weights.AVDV
     const avdv = result.targets.find((t) => t.symbol === 'AVDV')!
-    // 70000 * 0.10 / 1.42 = 4929.58 USD
-    assertEquals(Math.round(avdv.targetAmount * 100) / 100, 4929.58)
+
+    // Verify calculation: totalCAD * weight% / exchangeRate
+    const expectedAvdvAmount = (totalCAD * avdvWeight / 100) / exchangeRate
+    assertEquals(avdv.targetAmount, expectedAvdvAmount)
   })
 
   await t.step('handles different exchange rates', () => {
-    const rate1 = calculator.calculate('core', 5000, 1.30)
-    const rate2 = calculator.calculate('core', 5000, 1.50)
+    const coreSleeve = EXAMPLE_CORE_SLEEVE_DEFINITION
+    const totalCAD = 5000
+    const exchangeRate1 = 1.30
+    const exchangeRate2 = 1.50
+
+    const rate1 = calculator.calculate('core', totalCAD, exchangeRate1)
+    const rate2 = calculator.calculate('core', totalCAD, exchangeRate2)
 
     const avdv1 = rate1.targets.find((t) => t.symbol === 'AVDV')!
     const avdv2 = rate2.targets.find((t) => t.symbol === 'AVDV')!
 
-    // Same CAD amount (500) but different USD amounts due to rate
-    // 500/1.30 = 384.62 vs 500/1.50 = 333.33
-    assertEquals(Math.round(avdv1.targetAmount * 100) / 100, 384.62)
-    assertEquals(Math.round(avdv2.targetAmount * 100) / 100, 333.33)
+    // Verify: Same CAD amount but different USD amounts due to exchange rate
+    const avdvWeight = coreSleeve.weights.AVDV
+    const cadAmount = totalCAD * avdvWeight / 100
+    const expectedAmount1 = cadAmount / exchangeRate1
+    const expectedAmount2 = cadAmount / exchangeRate2
+
+    assertEquals(avdv1.targetAmount, expectedAmount1)
+    assertEquals(avdv2.targetAmount, expectedAmount2)
   })
 })
 
@@ -258,7 +324,7 @@ Deno.test('SleeveCalculator - Helper methods', async (t) => {
     const names = calculator.getSleeveNames()
     assertEquals(
       names.sort(),
-      ['bullion', 'core', 'core-USD', 'test-with-zeros'].sort(),
+      ['bullion', 'core', 'core-USD', 'testing'].sort(),
     )
   })
 
@@ -270,23 +336,30 @@ Deno.test('SleeveCalculator - Helper methods', async (t) => {
 })
 
 Deno.test('SleeveCalculator - Real-world example', async (t) => {
-  await t.step('calculates Renoir total AVDV across accounts', () => {
+  await t.step('calculates Alice total AVDV across accounts', () => {
     const calculator = new SleeveCalculator(testConfig)
+    const coreSleeve = EXAMPLE_CORE_SLEEVE_DEFINITION
+    const exchangeRate = 1.42
 
-    // Renoir TFSA: 5K in core
-    const tfsa = calculator.calculate('core', 5000, 1.42)
+    // Alice TFSA: 5K in core
+    const tfsaTotal = 5000
+    const tfsa = calculator.calculate('core', tfsaTotal, exchangeRate)
     const avdvTFSA = tfsa.targets.find((t) => t.symbol === 'AVDV')!
 
-    // Renoir RRSP: 70K in core
-    const rrsp = calculator.calculate('core', 70000, 1.42)
+    // Alice RRSP: 70K in core
+    const rrspTotal = 70000
+    const rrsp = calculator.calculate('core', rrspTotal, exchangeRate)
     const avdvRRSP = rrsp.targets.find((t) => t.symbol === 'AVDV')!
 
     // Total AVDV across both accounts
     const totalAVDV = avdvTFSA.targetAmount + avdvRRSP.targetAmount
 
-    // 5K * 0.10 / 1.42 = 352.11 USD
-    // 70K * 0.10 / 1.42 = 4929.58 USD
-    // Total = 5281.69 USD
-    assertEquals(Math.round(totalAVDV * 100) / 100, 5281.69)
+    // Verify total matches expected calculation from source weight
+    const avdvWeight = coreSleeve.weights.AVDV
+    const expectedTFSA = (tfsaTotal * avdvWeight / 100) / exchangeRate
+    const expectedRRSP = (rrspTotal * avdvWeight / 100) / exchangeRate
+    const expectedTotal = expectedTFSA + expectedRRSP
+
+    assertEquals(totalAVDV, expectedTotal)
   })
 })

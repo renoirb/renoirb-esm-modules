@@ -92,11 +92,12 @@ Deno.test('DriftCalculator - getDelta', async (t) => {
 
   await t.step('calculates buy delta when under-allocated', () => {
     const drift = new DriftCalculator(calculation)
-    drift.setCurrentlyOwning('AVDV', 300)
+    // Set AVDV below target to trigger buy (target ~211 USD)
+    drift.setCurrentlyOwning('AVDV', 150)
 
     const delta = drift.getDelta('AVDV')!
     assertEquals(delta.symbol, 'AVDV')
-    assertEquals(delta.from, 300)
+    assertEquals(delta.from, 150)
     assertEquals(delta.action, 'buy')
     assertEquals(delta.currency, 'USD')
     assertEquals(delta.delta > 0, true) // Should be positive
@@ -104,9 +105,10 @@ Deno.test('DriftCalculator - getDelta', async (t) => {
 
   await t.step('calculates sell delta when over-allocated', () => {
     const drift = new DriftCalculator(calculation)
-    drift.setCurrentlyOwning('ZDM', 500)
+    // Set VUN holding above its target to trigger sell
+    drift.setCurrentlyOwning('VUN', 2000)
 
-    const delta = drift.getDelta('ZDM')!
+    const delta = drift.getDelta('VUN')!
     assertEquals(delta.action, 'sell')
     assertEquals(delta.currency, 'CAD')
     assertEquals(delta.delta < 0, true) // Should be negative
@@ -169,11 +171,11 @@ Deno.test('DriftCalculator - getTasks', async (t) => {
   await t.step('returns mixed buy/sell/hold actions', () => {
     const drift = new DriftCalculator(calculation)
 
-    // Set various holdings
-    drift.setCurrentlyOwning('AVUV', 211)
-    drift.setCurrentlyOwning('AVDV', 350)
-    drift.setCurrentlyOwning('VUN', 600)
-    drift.setCurrentlyOwning('ZDM', 500)
+    // Set various holdings to trigger different actions
+    drift.setCurrentlyOwning('AVUV', 200)   // Below target → buy
+    drift.setCurrentlyOwning('AVDV', 100)   // Below target → buy
+    drift.setCurrentlyOwning('VUN', 2000)   // Above target → sell
+    drift.setCurrentlyOwning('XIC', 2000)   // Above target → sell
 
     const tasks = drift.getTasks()
 
@@ -310,50 +312,42 @@ Deno.test('DriftCalculator - clearActuals', async (t) => {
 Deno.test('DriftCalculator - Real-world rebalancing scenario', async (t) => {
   await t.step('calculates realistic rebalancing tasks', () => {
     const calculator = new SleeveCalculator(EXAMPLE_SLEEVES_CONFIG)
-    const calculation = calculator.calculate(
-      'core',
-      5000,
-      1.42,
-    )
+    const calculation = calculator.calculate('core', 5000, 1.42)
 
     const drift = new DriftCalculator(calculation)
 
-    // Set realistic current holdings (from main.ts example)
-    drift.setCurrentlyOwning('AVUV', 211)
-    drift.setCurrentlyOwning('AVDV', 350)
-    drift.setCurrentlyOwning('VUN', 600)
-    drift.setCurrentlyOwning('XCH', 150)
-    drift.setCurrentlyOwning('VA', 150)
-    drift.setCurrentlyOwning('ZJPN', 150)
-    drift.setCurrentlyOwning('STPL', 650)
-    drift.setCurrentlyOwning('ZEM', 550)
-    drift.setCurrentlyOwning('ZDM', 460)
-    drift.setCurrentlyOwning('ZEA', 800)
-    drift.setCurrentlyOwning('ZCN', 650)
+    // Set realistic current holdings (some under, some over, some at target)
+    drift.setCurrentlyOwning('AVUV', 400)   // Below target → buy
+    drift.setCurrentlyOwning('AVDV', 150)   // Below target → buy
+    drift.setCurrentlyOwning('VUN', 1500)   // At target (5000 * 30% = 1500)
+    drift.setCurrentlyOwning('XEC', 300)    // Below target → buy
+    drift.setCurrentlyOwning('XEF', 900)    // Above target → sell
+    drift.setCurrentlyOwning('XIC', 1800)   // Above target → sell
 
     const tasks = drift.getTasks()
 
-    // Verify we have all securities
-    assertEquals(tasks.length, 11)
+    // Verify we have all securities from Five Factor Portfolio
+    assertEquals(tasks.length, 6)
 
-    // Find specific examples to verify
+    // Test the calculation logic, not hardcoded values
+    const actions = new Set(tasks.map((t) => t.action))
+    assertEquals(actions.has('buy'), true)   // Has at least one buy
+    assertEquals(actions.has('sell'), true)  // Has at least one sell
+    assertEquals(actions.has('hold'), true)  // Has at least one hold
+
+    // Verify specific security actions match what we set
     const avdv = tasks.find((t) => t.symbol === 'AVDV')!
-    const vun = tasks.find((t) => t.symbol === 'VUN')!
-    const zdm = tasks.find((t) => t.symbol === 'ZDM')!
-
-    // AVDV should need buying (350 < ~352)
     assertEquals(avdv.action, 'buy')
     assertEquals(avdv.currency, 'USD')
+    assertEquals(avdv.from, 150)
 
-    // VUN should need buying (600 < 650)
-    assertEquals(vun.action, 'buy')
+    const vun = tasks.find((t) => t.symbol === 'VUN')!
+    assertEquals(vun.action, 'hold')  // At target
     assertEquals(vun.currency, 'CAD')
-    assertEquals(vun.delta, 50)
 
-    // ZDM should need selling (460 > 450)
-    assertEquals(zdm.action, 'sell')
-    assertEquals(zdm.currency, 'CAD')
-    assertEquals(zdm.delta, -10)
+    const xef = tasks.find((t) => t.symbol === 'XEF')!
+    assertEquals(xef.action, 'sell')  // Over target
+    assertEquals(xef.currency, 'CAD')
   })
 })
 
@@ -378,12 +372,17 @@ Deno.test('DriftCalculator - Edge cases', async (t) => {
   await t.step('handles large holdings differences', () => {
     const drift = new DriftCalculator(calculation)
 
-    // Set holding way over target
+    // Set holding way over target (VUN target ~1500 CAD)
     drift.setCurrentlyOwning('VUN', 10000)
 
     const delta = drift.getDelta('VUN')!
+    const vunTarget = calculation.targets.find((t) => t.symbol === 'VUN')!
+
+    // Verify it's a sell action with large negative delta
     assertEquals(delta.action, 'sell')
-    assertEquals(delta.delta < -9000, true)
+    assertEquals(delta.from, 10000)
+    assertEquals(delta.to, vunTarget.targetAmount)
+    assertEquals(delta.delta, vunTarget.targetAmount - 10000) // Negative, large magnitude
   })
 
   await t.step('handles fractional amounts correctly', () => {

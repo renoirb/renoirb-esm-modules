@@ -4,7 +4,7 @@
   "description": "Pure TypeScript calculation engine for portfolio sleeve allocation and drift analysis",
   "license": "MIT",
   "tasks": {
-    "cli": "deno --allow-read cli.ts",
+    "use:balance": "deno --allow-read ./deno.ts",
     "test": "deno task test:src && deno task test:doc-only",
     "test:src": "deno test",
     "test:doc-only": "deno check --doc-only **/*.md",

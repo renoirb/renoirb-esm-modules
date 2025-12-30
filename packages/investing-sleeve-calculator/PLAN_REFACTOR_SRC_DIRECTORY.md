@@ -254,7 +254,7 @@ const assertValidWeight = (
 
 2. Refactor `validateCalculateParams` (lines 202-229) to use assertions:
 
-```typescript
+```typescript ignore
 private validateCalculateParams(
   sleeveName: string,
   totalAmountCAD: number,
@@ -316,7 +316,7 @@ for (const [symbol, weight] of Object.entries(sleeve.weights)) {
   ```
 
 - Format function parameters with trailing comma:
-  ```typescript
+  ```typescript ignore
   calculate(
     sleeveName: string,
     totalAmountCAD: number,
@@ -327,7 +327,7 @@ for (const [symbol, weight] of Object.entries(sleeve.weights)) {
 #### src/drift.ts
 
 - Format Map initialization across multiple lines:
-  ```typescript
+  ```typescript ignore
   this.targetsMap = new Map(
     calculationResult.targets.map((target) => [
       target.symbol,
@@ -337,7 +337,7 @@ for (const [symbol, weight] of Object.entries(sleeve.weights)) {
   ```
 
 - Ensure imports have trailing commas:
-  ```typescript
+  ```typescript ignore
   import type {
     CalculationResult,
     DeltaResult,
@@ -350,7 +350,7 @@ for (const [symbol, weight] of Object.entries(sleeve.weights)) {
 #### src/index.ts
 
 - Ensure consistent formatting with trailing commas:
-  ```typescript
+  ```typescript ignore
   export type {
     CalculationResult,
     CurrencyCode,

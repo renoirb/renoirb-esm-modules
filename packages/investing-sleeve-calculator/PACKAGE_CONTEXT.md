@@ -285,7 +285,7 @@ throw new Error('Exchange rate must be greater than 0')
      ├── USAGE_EXAMPLE_CALCULATE_DRIFT.md   # Complete workflow example
      └── historical-data/
          └── 20250115/                      # Example snapshot date
-             ├── allocation.yaml            # Target allocations (Five Factor Portfolio)
+             ├── allocation.yaml            # Target allocations (example "core" sleeve)
              ├── unallocated.yaml           # Cash positions
              ├── totals.yaml                # Account totals
              ├── Alice-RRSP.json            # Holdings snapshot
@@ -448,9 +448,6 @@ The minified JSON state can be used to:
 
 ```bash
 # Use built-in example sleeves
-deno run --allow-read cli.ts
-
-# Or run deno.ts directly
 deno run --allow-read deno.ts
 
 # Load custom sleeves.yaml

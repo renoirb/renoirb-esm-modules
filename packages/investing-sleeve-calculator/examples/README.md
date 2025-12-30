@@ -2,24 +2,15 @@
 
 This directory contains anonymized example data demonstrating the file formats used in the portfolio management system.
 
-## Portfolio Attribution
+## Example Portfolio
 
-The example portfolio uses the **Five Factor Investing with ETFs** model portfolio published by Benjamin Felix, Portfolio Manager at PWL Capital.
+The example data uses the **Five Factor Investing with ETFs** portfolio as a test case.
 
-**Source:** [Rational Reminder Podcast Episode 129: Five Factor Investing with ETFs](https://rationalreminder.ca/podcast/129) (December 17, 2020)
+**For full portfolio details, attribution, and sources:**
+See [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts)
 
-**Portfolio Composition:**
-- VUN 30% - Vanguard U.S. Total Market Index ETF
-- XIC 30% - BMO S&P/TSX Capped Composite Index ETF
-- XEF 16% - iShares Core MSCI EAFE IMI Index ETF
-- XEC 8% - iShares Core MSCI Emerging Markets IMI Index ETF
-- AVUV 10% - Avantis U.S. Small Cap Value ETF
-- AVDV 6% - Avantis International Small Cap Value ETF
-
-**About Rational Reminder:**
-> The Rational Reminder Podcast is a weekly podcast on sensible investing and financial decision-making. The podcast is hosted by Benjamin Felix and Dan Bortolotti, Portfolio Managers, and Cameron Passmore, Portfolio Manager and CEO at PWL Capital in Canada.
-
-**Disclaimer:** This example is for software demonstration purposes only. It does not constitute financial advice. Consult with qualified financial professionals for investment decisions.
+**Why this portfolio:**
+It demonstrates the package's capability to handle mixed CAD/USD securities, multi-region diversification, and well-documented allocations backed by academic research. This is purely example data for testing - not financial advice.
 
 ---
 
@@ -49,7 +40,7 @@ examples/
 ### Total Portfolio Value
 
 **Total Across Both People:** ~$80,000 CAD
-- **Allocated to Five Factor Portfolio:** ~$70,400 CAD (88%)
+- **Allocated to "core" sleeve:** ~$70,400 CAD (88%)
 - **Unallocated (Cash):** ~$9,600 CAD (12%)
 
 **Alice:** ~$40,000 CAD
@@ -61,7 +52,7 @@ examples/
 
 ### Sleeve Allocations
 
-All allocations use the same Five Factor Portfolio sleeve (`core`):
+All allocations use the example "core" sleeve (see [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts) for weights):
 
 **Alice:**
 - Core: $35,000 total
@@ -73,18 +64,7 @@ All allocations use the same Five Factor Portfolio sleeve (`core`):
 
 ### Securities Held
 
-All positions follow the Five Factor Portfolio weights:
-
-| Symbol | Name | Weight | Currency |
-|--------|------|--------|----------|
-| VUN | Vanguard U.S. Total Market Index ETF | 30% | CAD |
-| XIC | BMO S&P/TSX Capped Composite Index ETF | 30% | CAD |
-| XEF | iShares Core MSCI EAFE IMI Index ETF | 16% | CAD |
-| XEC | iShares Core MSCI Emerging Markets IMI Index ETF | 8% | CAD |
-| AVUV | Avantis U.S. Small Cap Value ETF | 10% | USD |
-| AVDV | Avantis International Small Cap Value ETF | 6% | USD |
-
-**Note:** AVUV and AVDV are USD-denominated securities and require currency conversion in calculations.
+All positions use the securities defined in the "core" sleeve configuration.
 
 ---
 
@@ -112,7 +92,7 @@ These files can be used to test:
 
 - **File Parsing** - Load and parse brokerage JSON and YAML allocation files
 - **Portfolio Aggregation** - Combine holdings across multiple people and accounts
-- **Weight Analysis** - Calculate current vs target weights for the Five Factor Portfolio
+- **Weight Analysis** - Calculate current vs target weights
 - **Drift Calculations** - Identify rebalancing needs across accounts
 - **Report Generation** - Generate allocation breakdowns and task lists
 
@@ -120,17 +100,16 @@ These files can be used to test:
 
 1. **Load Alice's RRSP** - Parse `Alice-RRSP.json` and analyze against `allocation.yaml`
 2. **Calculate Total Portfolio** - Aggregate all accounts to get household-level view
-3. **Identify Rebalancing Tasks** - Compare actual holdings to Five Factor target weights
-4. **Test Currency Conversion** - Verify CAD/USD handling for AVUV and AVDV positions
+3. **Identify Rebalancing Tasks** - Compare actual holdings to target weights
+4. **Test Currency Conversion** - Verify CAD/USD handling for USD-denominated securities
 
 ---
 
 ## References
 
-- **Five Factor Portfolio:** [Rational Reminder Podcast Episode 129](https://rationalreminder.ca/podcast/129)
-- **Format Specification:** `../DATA_FILE_FORMATS.md`
-- **Calculator Package:** `../README.md`
-- **Rational Reminder Podcast:** <https://rationalreminder.ca/>
+- **Portfolio Attribution:** See [`../src/sleeves.examples.ts`](../src/sleeves.examples.ts)
+- **Format Specification:** [`../DATA_FILE_FORMATS.md`](../DATA_FILE_FORMATS.md)
+- **Calculator Package:** [`../README.md`](../README.md)
 
 ---
 
@@ -143,5 +122,3 @@ These files can be used to test:
 - Not a solicitation or offer
 - Consult qualified financial professionals for investment decisions
 - Past performance does not guarantee future results
-
-The Five Factor Portfolio shown is published research by Benjamin Felix at PWL Capital and is used here solely to provide realistic example data for software testing.

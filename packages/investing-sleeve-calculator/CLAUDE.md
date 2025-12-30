@@ -40,6 +40,7 @@ Pure TypeScript calculation engine for portfolio sleeve (i.e. a sub-grouping fro
  ├── DATA_FILE_FORMATS.md                   # File format specifications
  ├── SECURITY_SYMBOL_REGISTRY.md            # Symbol aliasing design
  ├── PLAN_PORTFOLIO_AGGREGATOR.md           # 📝 NEXT - Portfolio aggregator spec
+ ├── PLAN_USD_WHEN_USD_ONLY_SLEEVE_INPUT.md # 💭 FUTURE - USD input for USD-only sleeves
  ├── PLAN_REFACTOR_SRC_DIRECTORY.md         # ⏸️ ON HOLD - Awaiting cross-runtime architecture
  ├── PLAN_DIST_TARGETS_SCRIPTS.md           # 💭 FUTURE - Distribution variants spec
  ├── PLAN_PUBLISH_AS_PART_OF_RENOIR_ESM_MODULES.md  # ✅ COMPLETE
@@ -134,6 +135,7 @@ const tasks = drift.getTasks()
 
 **Next Session TODO:**
 
+- [ ] **Review and frame portfolio fees and exposure tracking** - Future feature to help calculate MER costs and track exposure (see README.md "Important Note on Costs" section for context). This will require security metadata (MER, asset class, geography, etc.) for each holding.
 - [ ] **Revise examples in design documents** to align with harmonized Alice/Bob structure:
   - `PLAN_PORTFOLIO_AGGREGATOR.md` - Contains old names (Renoir, Gabi, Leo) and multiple sleeves
   - `PACKAGE_CONTEXT.md` - Contains old names and multiple sleeves
@@ -144,6 +146,10 @@ const tasks = drift.getTasks()
 
 **Future Work:**
 
+- [ ] **USD input for USD-only sleeves** (see `./PLAN_USD_WHEN_USD_ONLY_SLEEVE_INPUT.md`)
+  - Add explicit `inputCurrency` parameter to `calculate()` method
+  - Eliminates awkward CAD→USD conversion for USD-only portfolios
+  - Feature discovered during test refactoring session
 - [ ] Refactoring for code quality (see `./PLAN_REFACTOR_SRC_DIRECTORY.md`)
 
 **Known Issues:**
