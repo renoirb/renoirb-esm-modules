@@ -236,7 +236,7 @@ export interface BrokerageSnapshot {
  * @example
  * ```ts
  * const allocations: AllocationsConfig = {
- *   Renoir: {
+ *   Bob: {
  *     RRSP: {
  *       core: 72000,
  *       bullion: 139000,

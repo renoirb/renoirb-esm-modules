@@ -480,7 +480,7 @@ const aggregate = new PortfolioAggregate(
 
 // Add holdings - symbols normalized automatically
 snapshot.holdings.forEach(holding => {
-  aggregate.addHolding('Renoir', 'RRSP', holding)
+  aggregate.addHolding('Bob', 'RRSP', holding)
   // If holding.symbol is "ZJPN.F", stored as "ZJPN"
 })
 

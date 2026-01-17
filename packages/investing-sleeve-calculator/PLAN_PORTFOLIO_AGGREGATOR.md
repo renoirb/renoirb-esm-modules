@@ -55,7 +55,7 @@ Add two new classes:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ Brokerage JSON Files (External)                        │
-│  • Renoir-RRSP.json, Gabi-TFSA.json, etc.              │
+│  • Bob-RRSP.json, Alice-TFSA.json, etc.              │
 └─────────────────┬───────────────────────────────────────┘
                   ↓
          (File loading is external)
@@ -306,7 +306,7 @@ export class PortfolioAggregate {
    * Add a single holding to the portfolio
    * Accepts object matching brokerage JSON structure
    *
-   * @param personName - Person name (e.g., 'Renoir', 'Gabi')
+   * @param personName - Person name (e.g., 'Bob', 'Alice')
    * @param accountName - Account name (e.g., 'RRSP', 'TFSA')
    * @param holding - Holding object from JSON
    */
@@ -401,16 +401,16 @@ const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
 
 // Load from JSON file
 const snapshot = JSON.parse(
-  await Deno.readTextFile('./current/Renoir-RRSP.json')
+  await Deno.readTextFile('./current/Bob-RRSP.json')
 )
 
 // Add all holdings - clean iteration
 snapshot.holdings.forEach(holding => {
-  aggregate.addHolding('Renoir', 'RRSP', holding)
+  aggregate.addHolding('Bob', 'RRSP', holding)
 })
 
 // Analyze
-const state = aggregate.getAccountState('Renoir', 'RRSP')
+const state = aggregate.getAccountState('Bob', 'RRSP')
 console.log(state)
 ```
 
@@ -420,10 +420,10 @@ console.log(state)
 const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
 
 const accounts = [
-  { file: 'Renoir-RRSP.json', person: 'Renoir', account: 'RRSP' },
-  { file: 'Renoir-TFSA.json', person: 'Renoir', account: 'TFSA' },
-  { file: 'Gabi-RRSP.json', person: 'Gabi', account: 'RRSP' },
-  { file: 'Gabi-TFSA.json', person: 'Gabi', account: 'TFSA' },
+  { file: 'Bob-RRSP.json', person: 'Bob', account: 'RRSP' },
+  { file: 'Bob-TFSA.json', person: 'Bob', account: 'TFSA' },
+  { file: 'Alice-RRSP.json', person: 'Alice', account: 'RRSP' },
+  { file: 'Alice-TFSA.json', person: 'Alice', account: 'TFSA' },
 ]
 
 for (const { file, person, account } of accounts) {
@@ -437,7 +437,7 @@ for (const { file, person, account } of accounts) {
 }
 
 // Analyze specific account
-const renoirRRSP = aggregate.getAccountState('Renoir', 'RRSP')
+const renoirRRSP = aggregate.getAccountState('Bob', 'RRSP')
 
 for (const sleeve of renoirRRSP) {
   console.log(`\n${sleeve.sleeveName}:`)
@@ -462,7 +462,7 @@ for (const sleeve of renoirRRSP) {
 const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
 
 // User enters holdings manually
-aggregate.addHolding('Renoir', 'RRSP', {
+aggregate.addHolding('Bob', 'RRSP', {
   symbol: 'PHYS',
   name: 'Sprott Physical Gold Trust',
   totalValue: '+56628.00',
@@ -470,7 +470,7 @@ aggregate.addHolding('Renoir', 'RRSP', {
   shares: '1200',
 })
 
-aggregate.addHolding('Renoir', 'RRSP', {
+aggregate.addHolding('Bob', 'RRSP', {
   symbol: 'PSLV',
   name: 'Sprott Physical Silver Trust',
   totalValue: '+51952.00',
@@ -478,7 +478,7 @@ aggregate.addHolding('Renoir', 'RRSP', {
   shares: '1600',
 })
 
-const state = aggregate.getAccountState('Renoir', 'RRSP')
+const state = aggregate.getAccountState('Bob', 'RRSP')
 ```
 
 ### Example 4: Integration with Existing Calculator
@@ -489,7 +489,7 @@ const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
 // ... load holdings ...
 
 // 2. Analyze current state (what IS)
-const accountState = aggregate.getAccountState('Renoir', 'RRSP')
+const accountState = aggregate.getAccountState('Bob', 'RRSP')
 const bullionState = accountState.find(s => s.sleeveName === 'bullion')
 
 console.log('Current weights:', bullionState.weightAnalysis)
@@ -535,7 +535,7 @@ import {
 // Can visualize current state alongside targets
 const aggregate = new PortfolioAggregate(sleeveObj, allocations, 1.38)
 // ... add holdings ...
-const state = aggregate.getAccountState('Renoir', 'RRSP')
+const state = aggregate.getAccountState('Bob', 'RRSP')
 // ... render with Dataview ...
 ```
 
@@ -571,7 +571,7 @@ const state = aggregate.getAccountState('Renoir', 'RRSP')
 
 **Example:**
 ```yaml
-Renoir:
+Bob:
   RRSP:
     bullion: 139000  # PHYS goes here
     core: 72000      # PHYS NOT here

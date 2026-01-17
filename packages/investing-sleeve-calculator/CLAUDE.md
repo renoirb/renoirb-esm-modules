@@ -136,13 +136,12 @@ const tasks = drift.getTasks()
 **Next Session TODO:**
 
 - [ ] **Review and frame portfolio fees and exposure tracking** - Future feature to help calculate MER costs and track exposure (see README.md "Important Note on Costs" section for context). This will require security metadata (MER, asset class, geography, etc.) for each holding.
-- [ ] **Revise examples in design documents** to align with harmonized Alice/Bob structure:
-  - `PLAN_PORTFOLIO_AGGREGATOR.md` - Contains old names (Renoir, Gabi, Leo) and multiple sleeves
-  - `PACKAGE_CONTEXT.md` - Contains old names and multiple sleeves
-  - Update all code examples to use:
-    - Alice/Bob anonymized examples
-    - Five Factor Portfolio ("core" sleeve) as primary example
-    - Simplified structure matching `./examples/` and `DATA_FILE_FORMATS.md`
+- [x] **Revise examples in design documents** to align with harmonized Alice/Bob structure:
+  - `PLAN_PORTFOLIO_AGGREGATOR.md` - Updated to Alice/Bob
+  - `PACKAGE_CONTEXT.md` - Updated to Alice/Bob
+  - `example.ts` - Updated to Alice/Bob
+  - `src/types.ts` - Updated to Alice/Bob
+  - `SECURITY_SYMBOL_REGISTRY.md` - Updated to Alice/Bob
 
 **Future Work:**
 

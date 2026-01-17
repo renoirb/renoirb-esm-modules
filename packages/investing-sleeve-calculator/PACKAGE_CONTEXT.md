@@ -388,11 +388,11 @@ const aggregate = new PortfolioAggregate(sleevesConfig, allocations, 1.36)
 
 // Add holdings incrementally
 snapshot.holdings.forEach(holding => {
-  aggregate.addHolding('Renoir', 'RRSP', holding)
+  aggregate.addHolding('Bob', 'RRSP', holding)
 })
 
 // Analyze account state
-const state = aggregate.getAccountState('Renoir', 'RRSP')
+const state = aggregate.getAccountState('Bob', 'RRSP')
 // Returns sleeve-by-sleeve breakdown with weight analysis
 ```
 
