@@ -191,10 +191,12 @@ export const TEMPLATE = `<div
 
 			<!-- Layer 3: Text with CSS layout -->
 			<div
-				class="absolute inset-0 flex items-center text-sm"
+				class="absolute inset-0 px-3 text-sm"
+				style="overflow: hidden;"
 			>
 				<div
-					class="mr-2 font-medium text-gray-700 bg-pink-200"
+					class="float-left h-full flex items-center text-gray-700 font-medium"
+					style="min-width: 16%;"
 					id="description"
 				>
 					<slot>...</slot>
@@ -241,7 +243,7 @@ export class ProgressBarElement extends HTMLElement {
     const nodes = this.shadowRoot.querySelectorAll('[data-update-percent]')
     const meterSize = this.shadowRoot.querySelector('#meter-size')
 		const percentSign = `${v}%`
-    meterSize.setAttribute('style', `left: ${percentSign}; margin-left: 8px;`);
+    // meterSize.setAttribute('style', `left: ${percentSign}; margin-left: 8px;`);
 		meterSize.textContent = percentSign;
     console.log('#updatePercent', {
       value: v,
@@ -267,7 +269,7 @@ export class ProgressBarElement extends HTMLElement {
 
   #updateColorCode = (v) => {
     const classMap = getClassMap(v)
-    classMap.textColor += ' font-medium absolute bg-purple-200 mr-2'
+    classMap.textColor += ' float-left h-full flex items-center font-medium'
 
     const nodes = this.shadowRoot.querySelectorAll('[data-map-key]')
 
