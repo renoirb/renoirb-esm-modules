@@ -9,6 +9,8 @@
     "@renoirb/element-utils": "http://localhost:8000/packages/element-utils/browser.mjs",
     "@renoirb/http-utils": "http://localhost:8000/packages/http-utils/browser.mjs",
     "@renoirb/inline-note-element": "http://localhost:8000/packages/inline-note-element/browser.mjs",
+    "@renoirb/investing-sleeve-calculator.FIXME": "http://localhost:8000/packages/investing-sleeve-calculator/core.js",
+    "@renoirb/investing-sleeve-calculator": "https://esm.sh/jsr/@renoirb/investing-sleeve-calculator@0.1.1",
     "@renoirb/markdown-content-element": "http://localhost:8000/packages/markdown-content-element/browser.mjs",
     "@renoirb/jsonresume-element": "http://localhost:8000/packages/jsonresume-element/browser.mjs",
     "@renoirb/jsonresume-utils": "http://localhost:8000/packages/jsonresume-utils/core.mjs",

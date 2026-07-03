@@ -1,0 +1,17 @@
+# Unallocated Cash - Not Yet Deployed
+# Total unallocated: $9,600 CAD (12% of $80,000)
+
+Alice:
+  RRSP:
+    CAD: 4000
+  TFSA:
+    CAD: 1000
+
+Bob:
+  RRSP:
+    CAD: 4600
+
+# Breakdown:
+# Alice: $5,000 unallocated ($4k RRSP + $1k TFSA)
+# Bob: $4,600 unallocated (RRSP)
+# Total: $9,600 CAD (12% of portfolio)

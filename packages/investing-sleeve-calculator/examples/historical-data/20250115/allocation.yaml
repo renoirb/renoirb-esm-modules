@@ -1,0 +1,15 @@
+# Target Allocations - Example Data
+# Using "core" sleeve (see ../../../src/sleeves.examples.ts for details)
+
+Alice:
+  RRSP:
+    core: 24000
+  TFSA:
+    core: 11000
+
+Bob:
+  RRSP:
+    core: 35400
+
+# Total allocated: $70,400 CAD (88% of $80,000)
+# Unallocated: $9,600 CAD (12% - see unallocated.yaml)
