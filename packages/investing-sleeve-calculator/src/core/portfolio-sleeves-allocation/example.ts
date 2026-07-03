@@ -6,25 +6,18 @@
  */
 
 import {
+  type Account,
   account,
+  calculateRebalancing,
+  formatResult,
+  type HardAsset,
   hardAsset,
-  holdings,
+  type Person,
   person,
+  type PortfolioInput,
   portfolioInput,
-  sleeveHoldings,
-} from './builders.js'
-
-import { calculateRebalancing } from './calculations.js'
-
-import { formatResult, resultToMarkdown } from './formatters.js'
-
-import type {
-  Account,
-  HardAsset,
-  Person,
-  PortfolioInput,
-  SleeveId,
-} from './types.js'
+  resultToMarkdown,
+} from './index.ts'
 
 // ============================================================================
 // Example: Constructing from YAML-like data
@@ -33,7 +26,7 @@ import type {
 /**
  * Build Alice's portfolio from the provided data.
  */
-function buildAlicePortfolio(): Person {
+const createExamplePersonAlice = (): Person => {
   const tfsa: Account = account({
     type: 'TFSA',
     totalValue: 174775,
@@ -205,7 +198,7 @@ function buildAlicePortfolio(): Person {
 /**
  * Build Bob's portfolio from the provided data.
  */
-function buildBobPortfolio(): Person {
+const createExamplePersonBob = (): Person => {
   const tfsa: Account = account({
     type: 'TFSA',
     totalValue: 31401,
@@ -343,8 +336,8 @@ function buildBobPortfolio(): Person {
  * Run the complete calculation example.
  */
 export function runExample(): string {
-  const alice = buildAlicePortfolio()
-  const bob = buildBobPortfolio()
+  const alice = createExamplePersonAlice()
+  const bob = createExamplePersonBob()
 
   const input: PortfolioInput = portfolioInput({
     persons: [alice, bob],
@@ -382,6 +375,6 @@ export function runExample(): string {
 // - Node: npx tsx src/example.ts
 //
 // Uncomment below for Deno direct execution:
-// if (import.meta.main) {
-//   console.log(runExample());
-// }
+if (import.meta.main) {
+  console.log(runExample())
+}

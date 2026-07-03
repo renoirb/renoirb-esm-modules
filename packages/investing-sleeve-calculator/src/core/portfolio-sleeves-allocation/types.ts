@@ -5,6 +5,8 @@
  * Designed for use across CLI, Web, or document generation contexts.
  */
 
+import { sleeveHoldings } from './builders.ts'
+
 // ============================================================================
 // Primitives & Branded Types
 // ============================================================================
@@ -74,29 +76,36 @@ export const DEFAULT_TARGET_ALLOCATION: TargetAllocation = {
 // ============================================================================
 
 /**
- * Known sleeve identifiers.
- * Maps to sections in Investing-Portfolio-Sleeves document.
+ * Ensure SleeveId matches the naming convention.
+ *
+ * A Sleeve is one alphanumeric word.
+ * If there's a variant of the same intention, add a dash and another alphanumeric word.
+ *
+ * In other words:
+ * One alphanumeric word (e.g. foo) as a sleeve Identifier, OR
+ * One alphanumeric word (e.g. foo) AND a dash AND another alphanumeric word (e.g. foo-USD)
  */
-export type SleeveId =
-  | 'core'
-  | 'core-USD'
-  | 'core-RBCDI'
-  | 'bullion'
-  | 'bullion-USD'
-  | 'bonds'
-  | 'defensive'
-  | 'income'
-  | 'quality'
-  | 'growth'
-  | 'growth-USD'
-  | 'stocks'
-  | 'crypto'
+export type assertIsSleeveId = (
+  input: unknown,
+) => asserts input is SleeveId;
+
+/**
+ * A Sleeve is one alphanumeric word.
+ * A variant of a Sleeve has an extra alphanumeric and a dash in between.
+ * 
+ * @see {@link assertIsSleeveId}
+ */
+export type SleeveId = 
+  | string
+  /** ^ @TODO: RTFM how to make a RegEx based type */
 
 /**
  * Mapping from sleeve to allocation category.
  */
 export type SleeveCategoryMapping = Readonly<
-  Record<SleeveId, AllocationCategory>
+  Partial<
+    Record<SleeveId, AllocationCategory>
+  >
 >
 
 /**
@@ -196,6 +205,7 @@ export const DEFAULT_ACCOUNT_CONSTRAINTS: Readonly<
  */
 export interface Holding {
   readonly symbol: string
+  readonly currency: string
   readonly totalValue: Money
   readonly comment?: string
 }
@@ -209,9 +219,10 @@ export interface SleeveHoldings {
 }
 
 /**
- * Unallocated cash in an account.
+ * Amounts per currency.
+ * In other words, instead of making a total in one given currency, 
  */
-export interface UnallocatedCash {
+export interface AmountPerCurrencyMap {
   readonly CAD: number
   readonly USD: number
 }
@@ -224,7 +235,7 @@ export interface Account {
   readonly label?: string
   readonly totalValue: number // in CAD
   readonly sleeves: readonly SleeveHoldings[]
-  readonly unallocated: UnallocatedCash
+  readonly unallocated: AmountPerCurrencyMap
   readonly constraints: AccountConstraints
 }
 

@@ -23,7 +23,7 @@ import type {
   SleeveHoldings,
   SleeveId,
   TargetAllocation,
-  UnallocatedCash,
+  AmountPerCurrencyMap,
 } from './types.ts'
 
 import {
@@ -79,8 +79,9 @@ export function holding(params: {
 
 /**
  * Create holdings from array of raw data.
+ * unused?
  */
-export function holdings(
+function holdings(
   items: ReadonlyArray<{
     symbol: string
     totalValue: number | string
@@ -97,8 +98,9 @@ export function holdings(
 
 /**
  * Create SleeveHoldings from raw data.
+ * unused?
  */
-export function sleeveHoldings(params: {
+function sleeveHoldings(params: {
   sleeveId: SleeveId
   holdings: ReadonlyArray<{
     symbol: string

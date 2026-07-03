@@ -25,7 +25,7 @@ import type {
   SleeveHoldings,
   SleeveId,
   TargetAllocation,
-  UnallocatedCash,
+  AmountPerCurrencyMap,
 } from './types.ts'
 
 import {
@@ -58,7 +58,7 @@ export function sumHoldingsToCAD(
  * Convert unallocated cash to CAD.
  */
 export function unallocatedToCAD(
-  unallocated: UnallocatedCash,
+  unallocated: AmountPerCurrencyMap,
   rates: ExchangeRates,
 ): number {
   return unallocated.CAD * rates.CAD + unallocated.USD * rates.USD

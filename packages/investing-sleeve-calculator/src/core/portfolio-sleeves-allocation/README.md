@@ -120,7 +120,7 @@ const exampleBasicCalculation = portfolioInput({
 
 const result = calculateRebalancing(exampleBasicCalculation)
 const markdown = resultToMarkdown(formatResult(result))
-console.log('Example Basic Calculations', markdown)
+//console.log('Example Basic Calculations', markdown)
 
 
 
@@ -140,7 +140,7 @@ const exampleOverrideSleeveMapping = portfolioInput({
   },
 })
 
-console.log('Example Override Sleeve Mapping', exampleOverrideSleeveMapping);
+//console.log('Example Override Sleeve Mapping', exampleOverrideSleeveMapping);
 
 
 
@@ -155,7 +155,7 @@ const exampleCustomizedTTargetAllocation = portfolioInput({
     speculation: 0.1, // 10%
   },
 })
-console.log('Example Customized Target Allocation', exampleCustomizedTTargetAllocation);
+//console.log('Example Customized Target Allocation', exampleCustomizedTTargetAllocation);
 ```
 
 ## Calculation Flow
@@ -226,46 +226,43 @@ const handleCalculate = (formData: FormData) => {
 
 ### CLI
 
-```typescript ignore
-// Deno example
-const input = await loadPortfolioFromYaml('portfolio.yaml')
+```typescript
+import {
+  type PortfolioInput,
+  type SleeveCategoryMapping,
+  DEFAULT_TARGET_ALLOCATION,
+} from './index.ts'
+
+const input: PortfolioInput = {
+  persons: [],
+  exchangeRates: { 
+    // TODO: Confirm if this is to mean 1$ USD = 1.38 $ CAD
+    USD: 1,
+    CAD: 1.38,
+  },
+  targetAllocation: {
+    ...DEFAULT_TARGET_ALLOCATION,
+  },
+  sleeveCategoryMapping: {
+    core: 'stocks',
+    bullion: 'reserve',
+  } as SleeveCategoryMapping,
+} as any as PortfolioInput;
+
 const result = calculateRebalancing(input)
-console.log(resultToMarkdown(formatResult(result)))
-```
-
-### Document Generation
-
-```typescript ignore
+console.log('Document generation', result)
 const markdown = resultToMarkdown(formatResult(result))
 await Deno.writeTextFile('rebalancing-report.md', markdown)
 ```
 
-## Development
+
+
+## Maintaining This Document
+
+### In Document Code Examples Correctness
+
+You can leverage `deno test --doc` to run the code snippets embedded within this file.
 
 ```bash
-# Type check
-deno task check
-
-# Run example
-deno task example
-
-# Run tests
-deno task test
+deno test --doc ./README.md
 ```
-
-## License
-
-Private / Internal Use
-
-
-
-<!--
-# Maintaining This Document
-
-You can edit the document and leverage Deno to run the code snippets and verify correctness.
-
-```
-deno test --doc src/core/portfolio-sleeves-allocation/README.md
-```
-
--->
